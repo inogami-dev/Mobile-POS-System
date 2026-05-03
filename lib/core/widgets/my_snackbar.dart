@@ -1,0 +1,81 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+
+void showMyAnimatedSnackBar({
+  required BuildContext context,
+  required String dataToDisplay,
+  // Color borderColor = Colors.white,
+  // Color bgColor = Colors.white60,
+  // Color bgColor = const Color.fromARGB(242, 255, 255, 255),
+  // Color bgColor = Colors.white70,
+  Color? borderColor,
+  Color? bgColor,
+  bool isAutoDismiss = true,
+  Icon? icon,
+}) {
+  final myColorScheme = Theme.of(context).colorScheme;
+
+  final overlay = Overlay.of(context);
+
+  final overlayEntry = OverlayEntry(
+    builder: (context) {
+      return Positioned(
+        top: 20,
+        left: 20,
+        right: 20,
+        child: TweenAnimationBuilder<Offset>(
+          tween: Tween(begin: Offset.zero, end: const Offset(0, 1)),
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeOutCubic,
+          builder: (context, offset, child) {
+            return Transform.translate(offset: offset * 80, child: child);
+          },
+          child: Material(
+            color: Colors.transparent,
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: bgColor,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: myColorScheme.inversePrimary),
+                  boxShadow: [
+                    BoxShadow(
+                      color: myColorScheme.surfaceContainerHigh,
+                      blurRadius: 4,
+                      offset: Offset.zero,
+                      blurStyle: BlurStyle.outer,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    icon ??
+                        Icon(
+                          Icons.info_outline_rounded,
+                          color: myColorScheme.outline,
+                          size: 26,
+                        ),
+                    SizedBox(width: 5),
+                    Text(dataToDisplay),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    },
+  );
+
+  overlay.insert(overlayEntry);
+
+  // Auto dismiss after 2s
+  Future.delayed(const Duration(milliseconds: 3500), () {
+    if (isAutoDismiss) {
+      overlayEntry.remove();
+    }
+  });
+}
