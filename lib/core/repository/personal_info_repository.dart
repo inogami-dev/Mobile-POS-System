@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pos_system/core/models/personal_info.dart';
+import 'package:pos_system/core/models/personal_info/personal_info.dart';
 import 'package:pos_system/core/utilities/error_logger.dart';
 
 class MyPersonalInfoRepository {

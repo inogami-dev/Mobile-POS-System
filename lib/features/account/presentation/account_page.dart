@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
+import 'package:pos_system/core/widgets/appbar.dart';
 import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/my_alert_dialog.dart';
@@ -28,9 +29,17 @@ class _AccountPageState extends State<AccountPage> {
         width: MyDimensions.getWidth(context),
         height: MyDimensions.getHeight(context),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            MyAppBar(
+              title: "Profile",
+              enableBackButton: true,
+              // actionsButtons: [
+              //   Container(width: 50, height: 50, color: Colors.amber),
+              //   Container(width: 50, height: 50, color: Colors.purple),
+              // ],
+            ),
             MyContainer(
               width: 100,
               height: 80,

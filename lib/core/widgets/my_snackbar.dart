@@ -12,6 +12,7 @@ void showMyAnimatedSnackBar({
   Color? borderColor,
   Color? bgColor,
   bool isAutoDismiss = true,
+  bool enabledBlurEffect = false,
   Icon? icon,
 }) {
   final myColorScheme = Theme.of(context).colorScheme;
@@ -32,8 +33,10 @@ void showMyAnimatedSnackBar({
             return Transform.translate(offset: offset * 80, child: child);
           },
           child: Material(
-            color: Colors.transparent,
+            // color: Colors.transparent,
+            color: Colors.white70,
             child: BackdropFilter(
+              enabled: enabledBlurEffect,
               filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
               child: Container(
                 padding: const EdgeInsets.all(16),
