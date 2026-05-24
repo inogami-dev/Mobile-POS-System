@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
+import 'package:pos_system/core/utilities/image_displayer.dart';
+import 'package:pos_system/core/utilities/image_picker.dart';
 import 'package:pos_system/core/widgets/appbar.dart';
 import 'package:pos_system/core/widgets/button.dart';
-import 'package:pos_system/core/widgets/container.dart';
-import 'package:pos_system/core/widgets/my_alert_dialog.dart';
+import 'package:pos_system/core/widgets/dropdown.dart';
 import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/core/widgets/progress_indicator_static.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
@@ -18,9 +18,12 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends State<AccountPage> {
   bool isLoggingOut = false;
+  String? _profileImage;
 
   @override
   Widget build(BuildContext context) {
+    double width = MyDimensions.getWidth(context);
+    double height = MyDimensions.getHeight(context);
     final myColorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -40,12 +43,59 @@ class _AccountPageState extends State<AccountPage> {
               //   Container(width: 50, height: 50, color: Colors.purple),
               // ],
             ),
-            MyContainer(
-              width: 100,
-              height: 80,
-              child: const MyText(text: "Account"),
+            SizedBox(height: 32),
+
+            GestureDetector(
+              onTap: () async {
+                String pickedImageBase64 =
+                    await MyImageProcessor.myImagePicker();
+                setState(() => _profileImage = pickedImageBase64);
+              },
+              child: MyImageDisplayer(
+                profileImageSize: width * 0.3,
+                base64ImageString: MyImageProcessor.decodeStringToUint8List(
+                  _profileImage ?? "",
+                ),
+              ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 24),
+
+            // MyContainer(
+            //   width: 100,
+            //   height: 80,
+            //   child: const MyText(text: "Account"),
+            // ),
+            // SizedBox(height: 16),
+            FittedBox(
+              child: MyText(
+                text: "Lian Dyelo",
+                fontSize: 36,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(height: 12),
+
+            SizedBox(
+              height: 50,
+              child: MyDropdownMenuButton(
+                items: ["TINDAGAN 1", "TINDAHAN 2", "TINDAHAN 3"],
+                initialValue: "TINDAGAN 1",
+                isLeadingIconVisible: false,
+                onChanged: (string) {},
+                widthPercentage: 0.7,
+                heightPercentage: 0.02,
+              ),
+            ),
+            MyText(
+              text: "Owner".toUpperCase(),
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.5,
+              color: myColorScheme.primaryFixed,
+            ),
+            SizedBox(height: 16),
+
+            Spacer(),
             (isLoggingOut)
                 ? const MyProgressIndicator()
                 : MyCustButton(
@@ -69,6 +119,7 @@ class _AccountPageState extends State<AccountPage> {
                       );
                     },
                   ),
+            SizedBox(height: 16),
           ],
         ),
       ),

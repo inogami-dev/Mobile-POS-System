@@ -1,31 +1,3 @@
-// import 'package:flutter/material.dart';
-
-// class MyTextFormatter {
-//   static Text p({
-//     required String text,
-//     double fontSize = kDefaultFontSize,
-//     int maxLines = 1,
-//     TextOverflow textOverFlow = TextOverflow.clip,
-//     FontWeight fontWeight = FontWeight.w400,
-//     Color? color,
-//   }) {
-//     color = Colors.grey.shade900;
-
-//     return Text(
-//       text,
-//       softWrap: (maxLines > 1) ? true : false,
-//       style: TextStyle(
-//         fontSize: fontSize,
-//         fontWeight: fontWeight,
-//         overflow: (maxLines > 1)
-//             ? TextOverflow.ellipsis
-//             : textOverFlow, // to be observed pa
-//         color: color,
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 
 class MyText extends StatelessWidget {
@@ -34,7 +6,9 @@ class MyText extends StatelessWidget {
   final int maxLines;
   final TextOverflow textOverFlow;
   final FontWeight fontWeight;
+  final String fontFamily;
   final Color? color;
+  final double? letterSpacing;
 
   const MyText({
     super.key,
@@ -43,7 +17,9 @@ class MyText extends StatelessWidget {
     this.maxLines = 1,
     this.textOverFlow = TextOverflow.clip,
     this.fontWeight = FontWeight.w400,
+    this.fontFamily = "Quicksand",
     this.color,
+    this.letterSpacing,
   });
 
   @override
@@ -58,10 +34,12 @@ class MyText extends StatelessWidget {
       style: TextStyle(
         fontSize: fontSize,
         fontWeight: fontWeight,
+        fontFamily: fontFamily,
         overflow: (maxLines > 1)
             ? TextOverflow.ellipsis
             : textOverFlow, // to be observed pa
         color: color ?? myColorScheme.onSurface,
+        letterSpacing: letterSpacing,
       ),
     );
   }
