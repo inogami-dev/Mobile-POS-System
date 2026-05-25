@@ -1,6 +1,6 @@
 # Mobile Point of Sale System
 
-This is made for small businesses to track and manage their business efficiently through the device that they enteract everyday,`smartphones`, though it is not limited to just that device.
+This is made for small businesses to track and manage their business efficiently through the device that they interact everyday, such as `smartphones`, though it is not limited to just that device.
 
 ## Made with
 
