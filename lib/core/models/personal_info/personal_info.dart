@@ -1,15 +1,17 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:pos_system/core/models/base_entity.dart';
 
 part 'personal_info.freezed.dart';
 part 'personal_info.g.dart';
 
 // @freezed
 @Freezed()
-class PersonalInfo with _$PersonalInfo {
+class PersonalInfo with _$PersonalInfo implements BaseEntity {
   const PersonalInfo._();
 
   const factory PersonalInfo({
-    required String userID,
+    String? id,
+    // required String userID,
     required String name,
     // @Default("No Role") String role,
     required List<String> ownerAt,
@@ -30,4 +32,6 @@ class PersonalInfo with _$PersonalInfo {
 
   factory PersonalInfo.fromJson(Map<String, dynamic> json) =>
       _$PersonalInfoFromJson(json);
+
+  // Map<String, dynamic> toJson(PersonalInfo personalInfo) => _$PersonalInfoToJson(personalInfo);
 }

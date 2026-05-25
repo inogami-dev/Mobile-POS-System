@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:pos_system/core/themes/theme_state/my_app_theme.dart';
-import 'package:pos_system/features/account/presentation/account_page.dart';
 import 'package:pos_system/features/authentication/presentation/logged_in_stream.dart';
+import 'package:pos_system/features/authentication/presentation/login_page.dart';
 import 'package:pos_system/firebase_options.dart';
 
 void main() async {
@@ -15,11 +15,11 @@ void main() async {
   runApp(ProviderScope(child: const MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GetMaterialApp(
       title: 'PointOfSaleSystem',
       debugShowCheckedModeBanner: false,
@@ -33,9 +33,9 @@ class MyApp extends StatelessWidget {
         top: false,
         // maintainBottomViewPadding: true,
         // child: MyRootScaffoldWithNavBar(),
-        // child: loggedInStream(),
+        child: LoggedInStream(),
         // child: LoginPage(),
-        child: AccountPage(),
+        // child: AccountPage(),
       ),
     );
   }

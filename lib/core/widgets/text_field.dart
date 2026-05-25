@@ -29,6 +29,7 @@ class MyCustTextfield extends StatefulWidget {
   final double topMargin;
   final double rightMargin;
   final double bottomMargin;
+  final TextInputType? textInputType;
 
   /// This will manage the data the textfield will accept
   final TextEditingController textController;
@@ -58,6 +59,7 @@ class MyCustTextfield extends StatefulWidget {
     this.topMargin = 0,
     this.rightMargin = 0,
     this.bottomMargin = 0,
+    this.textInputType,
   });
 
   @override
@@ -104,6 +106,8 @@ class _MyCustTextfieldState extends State<MyCustTextfield> {
       ),
       // color: Colors.purple.shade200,
       child: TextField(
+        // inputFormatters: TextInputType.numberWithOptions(),
+        keyboardType: widget.textInputType,
         controller: widget.textController,
         focusNode: widget.focusNode,
         readOnly: widget.isReadOnly,

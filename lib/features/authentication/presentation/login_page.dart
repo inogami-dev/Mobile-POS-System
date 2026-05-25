@@ -301,6 +301,7 @@ class _LoginPageState extends State<LoginPage> {
           prefixIcon: Icons.person_rounded,
           labelText: "Email",
           hintText: "inogami@gmail.com",
+          textInputType: TextInputType.emailAddress,
           focusNode: emailFocusNode,
           borderRadius: 10,
           // color: emailFieldColor,

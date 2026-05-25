@@ -31,8 +31,6 @@ class MyDropdownMenuButton extends StatefulWidget {
 }
 
 class _MyDropdownMenuButtonState extends State<MyDropdownMenuButton> {
-  // List<String> items = ["No Role", "Admin", "Social Service", "Home Life"];
-
   @override
   Widget build(BuildContext context) {
     final myColorSheme = Theme.of(context).colorScheme;
@@ -47,7 +45,7 @@ class _MyDropdownMenuButtonState extends State<MyDropdownMenuButton> {
         menuMaxHeight: MyDimensions.getHeight(context) * 0.55,
         padding: EdgeInsets.all(0),
         // dropdownColor: Colors.blue[50],
-        dropdownColor: myColorSheme.surfaceBright,
+        dropdownColor: myColorSheme.surfaceContainer,
         hint: (widget.hintText == null) ? null : Text(widget.hintText!),
         decoration: InputDecoration(
           icon: (widget.isLeadingIconVisible) ? widget.icon : null,

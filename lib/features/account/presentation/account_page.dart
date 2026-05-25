@@ -1,10 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/utilities/image_displayer.dart';
 import 'package:pos_system/core/utilities/image_picker.dart';
 import 'package:pos_system/core/widgets/appbar.dart';
 import 'package:pos_system/core/widgets/button.dart';
+import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/dropdown.dart';
+import 'package:pos_system/core/widgets/my_alert_dialog.dart';
 import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/core/widgets/progress_indicator_static.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
@@ -17,6 +20,7 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
+  List<String> storeRoles = ["Owner", "Staff", "Customer"];
   bool isLoggingOut = false;
   String? _profileImage;
 
@@ -78,20 +82,28 @@ class _AccountPageState extends State<AccountPage> {
             SizedBox(
               height: 50,
               child: MyDropdownMenuButton(
-                items: ["TINDAGAN 1", "TINDAHAN 2", "TINDAHAN 3"],
-                initialValue: "TINDAGAN 1",
+                items: storeRoles,
+                initialValue: storeRoles[0],
                 isLeadingIconVisible: false,
                 onChanged: (string) {},
                 widthPercentage: 0.7,
                 heightPercentage: 0.02,
               ),
             ),
-            MyText(
-              text: "Owner".toUpperCase(),
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 1.5,
-              color: myColorScheme.primaryFixed,
+
+            MyContainer(
+              width: MyDimensions.getWidth(context) * 0.68,
+              customBorderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+              ),
+              child: MyText(
+                text: "Owner".toUpperCase(),
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.5,
+                color: myColorScheme.primaryFixed,
+              ),
             ),
             SizedBox(height: 16),
 
@@ -101,25 +113,25 @@ class _AccountPageState extends State<AccountPage> {
                 : MyCustButton(
                     buttonText: "Logout",
                     onTap: () {
-                      // myAlertDialogue(
-                      //   context: context,
-                      //   alertTitle: "Logout",
-                      //   alertContent: "Are you sure you want to logout?",
-                      //   onApprovalPressed: () {
-                      //     setState(() => isLoggingOut = true);
-                      //     FirebaseAuth.instance.signOut();
-                      //     setState(() => isLoggingOut = false);
-                      //     Navigator.pop(context);
-                      //   },
-                      // );
-
-                      showMyAnimatedSnackBar(
+                      myAlertDialogue(
                         context: context,
-                        dataToDisplay: "Hello",
+                        alertTitle: "Logout",
+                        alertContent: "Are you sure you want to logout?",
+                        onApprovalPressed: () {
+                          setState(() => isLoggingOut = true);
+                          FirebaseAuth.instance.signOut();
+                          setState(() => isLoggingOut = false);
+                          Navigator.pop(context);
+                        },
                       );
+
+                      // showMyAnimatedSnackBar(
+                      //   context: context,
+                      //   dataToDisplay: "Hello",
+                      // );
                     },
                   ),
-            SizedBox(height: 16),
+            SizedBox(height: 76),
           ],
         ),
       ),

@@ -33,15 +33,15 @@ void showMyAnimatedSnackBar({
             return Transform.translate(offset: offset * 80, child: child);
           },
           child: Material(
-            // color: Colors.transparent,
-            color: Colors.white70,
+            color: Colors.transparent,
+            // color: Colors.white70,
             child: BackdropFilter(
               enabled: enabledBlurEffect,
               filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: bgColor,
+                  color: bgColor ?? myColorScheme.surfaceContainerLow,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: myColorScheme.inversePrimary),
                   boxShadow: [
