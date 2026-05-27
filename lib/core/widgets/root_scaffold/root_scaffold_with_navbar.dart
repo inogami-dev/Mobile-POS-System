@@ -2,6 +2,8 @@ import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hugeicons/hugeicons.dart';
+import 'package:pos_system/core/constants/app_layout.dart';
 import 'package:pos_system/core/widgets/root_scaffold/root_scaffold_state.dart';
 import 'package:pos_system/features/account/presentation/account_page.dart';
 import 'package:pos_system/features/cashier/presentation/cashier_page.dart';
@@ -25,34 +27,34 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
           ref.read(rootScaffoldStateProvider.notifier).changeIndex(index);
         },
         backgroundColor: Colors.transparent,
-        height: kBottomNavigationBarHeight,
+        height: MyAppLayout.bottomNavbarHeight,
         color: myColorScheme.secondaryContainer,
         buttonBackgroundColor: myColorScheme.primaryContainer,
         items: [
           CurvedNavigationBarItem(
-            child: Icon(Icons.home_outlined, color: labelAndIconColor),
             label: 'Home',
             labelStyle: TextStyle(color: labelAndIconColor),
+            child: HugeIcon(icon: HugeIcons.strokeRoundedHome01),
           ),
           CurvedNavigationBarItem(
-            child: Icon(Icons.search, color: labelAndIconColor),
             label: 'Cashier',
             labelStyle: TextStyle(color: labelAndIconColor),
+            child: HugeIcon(icon: HugeIcons.strokeRoundedCashier),
           ),
           CurvedNavigationBarItem(
-            child: Icon(Icons.chat_bubble_outline, color: labelAndIconColor),
             label: 'Inventory',
             labelStyle: TextStyle(color: labelAndIconColor),
+            child: HugeIcon(icon: HugeIcons.strokeRoundedGroupItems),
           ),
           CurvedNavigationBarItem(
-            child: Icon(Icons.newspaper, color: labelAndIconColor),
             label: 'Utang',
             labelStyle: TextStyle(color: labelAndIconColor),
+            child: HugeIcon(icon: HugeIcons.strokeRoundedReceiptText, size: 26),
           ),
           CurvedNavigationBarItem(
-            child: Icon(Icons.perm_identity, color: labelAndIconColor),
             label: 'Account',
             labelStyle: TextStyle(color: myColorScheme.secondary),
+            child: HugeIcon(icon: HugeIcons.strokeRoundedUserAccount, size: 26),
           ),
         ],
       ),
