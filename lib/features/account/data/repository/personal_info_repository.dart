@@ -1,8 +1,10 @@
+import 'package:pos_system/core/constants/app_collections.dart';
 import 'package:pos_system/core/models/personal_info/personal_info.dart';
 import 'package:pos_system/core/repository/repository.dart';
 
 class MyPersonalInfoRepository extends BaseRepository<PersonalInfo> {
-  MyPersonalInfoRepository() : super(collectionPath: 'Personal Info');
+  MyPersonalInfoRepository()
+    : super(collectionPath: MyAppCollections.personalInfo);
 
   @override
   PersonalInfo fromMap(Map<String, dynamic> map, String id) {
