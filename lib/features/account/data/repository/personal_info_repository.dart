@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/constants/app_collections.dart';
-import 'package:pos_system/core/models/personal_info/personal_info.dart';
-import 'package:pos_system/core/repository/repository.dart';
+import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
+import 'package:pos_system/features/account/data/repository/base_repository.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+part 'personal_info_repository.g.dart';
 
 class MyPersonalInfoRepository extends BaseRepository<PersonalInfo> {
   MyPersonalInfoRepository()
@@ -14,6 +18,21 @@ class MyPersonalInfoRepository extends BaseRepository<PersonalInfo> {
   @override
   Map<String, dynamic> toMap(PersonalInfo item) {
     return item.toJson();
+  }
+
+  Future<List<PersonalInfo>> getAllPersonalInfo() async {
+    try {
+      List<PersonalInfo> personalInfoList = [];
+      QuerySnapshot snapshot = await collection.get();
+      for (var doc in snapshot.docs) {
+        personalInfoList.add(
+          fromMap(doc.data() as Map<String, dynamic>, doc.id),
+        );
+      }
+      return personalInfoList;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   // Future<PersonalInfo?> getSpecificPersonalInfo({
@@ -59,4 +78,11 @@ class MyPersonalInfoRepository extends BaseRepository<PersonalInfo> {
   //     rethrow;
   //   }
   // }
+}
+
+@riverpod
+MyPersonalInfoRepository myPersonalInfoRepository(Ref ref) {
+  // This tells Riverpod: "When someone asks for this provider,
+  // create ONE instance of my repository and give it to them."
+  return MyPersonalInfoRepository();
 }

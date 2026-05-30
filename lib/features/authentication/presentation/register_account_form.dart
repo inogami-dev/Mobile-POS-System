@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pos_system/core/models/personal_info/personal_info.dart';
+import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
 import 'package:pos_system/core/utilities/date_formatter.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/utilities/error_logger.dart';

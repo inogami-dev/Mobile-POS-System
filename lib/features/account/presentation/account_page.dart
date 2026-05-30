@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pos_system/core/constants/app_layout.dart';
-import 'package:pos_system/core/models/personal_info/personal_info.dart';
+import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/utilities/image_displayer.dart';
 import 'package:pos_system/core/utilities/image_picker.dart';
@@ -10,10 +10,8 @@ import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/dropdown.dart';
 import 'package:pos_system/core/widgets/my_alert_dialog.dart';
-import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/core/widgets/progress_indicator_static.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
-import 'package:pos_system/features/account/domain/user_account_retriever.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
