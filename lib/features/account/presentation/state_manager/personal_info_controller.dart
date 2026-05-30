@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:pos_system/features/account/data/repository/personal_info_repo_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
 import 'package:pos_system/features/account/data/repository/personal_info_repository.dart';
@@ -11,7 +11,7 @@ class PersonalInfoController extends _$PersonalInfoController {
   // Riverpod knows this is an AsyncNotifier because it returns a Future!
   Future<List<PersonalInfo>> build() async {
     // 1. DEPENDENCY INJECTION: Grab the repository using ref.watch
-    final repository = ref.watch(myPersonalInfoRepositoryProvider);
+    final repository = ref.watch(myPersonalInfoRepoProvider);
 
     // 2. INITIAL FETCH: Riverpod will automatically await this
     // and show a loading state on your UI until it finishes.
@@ -27,7 +27,7 @@ class PersonalInfoController extends _$PersonalInfoController {
     state = const AsyncValue.loading();
 
     // Grab the repo (use read for actions, not watch)
-    final repository = ref.read(myPersonalInfoRepositoryProvider);
+    final repository = ref.read(myPersonalInfoRepoProvider);
 
     // AsyncValue.guard automatically handles try/catch and updates the state!
     // If it succeeds, state becomes AsyncData. If it fails, state becomes AsyncError.

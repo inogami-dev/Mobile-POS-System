@@ -8,8 +8,8 @@ import 'package:pos_system/core/widgets/no_role_page.dart';
 import 'package:pos_system/core/widgets/progress_indicator_static.dart';
 import 'package:pos_system/core/widgets/root_scaffold/root_scaffold_with_navbar.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
+import 'package:pos_system/features/account/data/repository/personal_info_repo_provider.dart';
 import 'package:pos_system/features/authentication/presentation/login_page.dart';
-import 'package:pos_system/features/authentication/presentation/personal_info_state.dart';
 
 class LoggedInStream extends ConsumerStatefulWidget {
   const LoggedInStream({super.key});
@@ -26,7 +26,7 @@ class _LoggedInStreamState extends ConsumerState<LoggedInStream> {
 
   @override
   Widget build(BuildContext context) {
-    final myPersonalInfoRepoRef = ref.read(personalInforRepoProvider);
+    final myPersonalInfoRepoRef = ref.read(myPersonalInfoRepoProvider);
 
     return StreamBuilder(
       // this it the StreamBuilder's source of data, a Stream with generic User type

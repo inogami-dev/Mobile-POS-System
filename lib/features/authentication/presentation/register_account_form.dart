@@ -11,8 +11,8 @@ import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/core/widgets/progress_indicator_static.dart';
 import 'package:pos_system/core/widgets/text_field.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
+import 'package:pos_system/features/account/data/repository/personal_info_repo_provider.dart';
 import 'package:pos_system/features/authentication/presentation/register_account.dart';
-import 'package:pos_system/features/authentication/presentation/personal_info_state.dart';
 
 class RegisterAccountForm extends ConsumerStatefulWidget {
   final BorderRadius? borderRadius;
@@ -250,7 +250,7 @@ class _RegisterAccountFormState extends ConsumerState<RegisterAccountForm> {
     //     ),
     //   ),
     // );
-    final personalInfoRepoRef = ref.read(personalInforRepoProvider);
+    final personalInfoRepoRef = ref.read(myPersonalInfoRepoProvider);
     PersonalInfo newPersonalInfo = PersonalInfo(
       id: userID,
       name: nameController.text.trim(),

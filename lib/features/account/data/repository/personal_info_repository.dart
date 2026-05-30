@@ -1,10 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/constants/app_collections.dart';
 import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
-import 'package:pos_system/features/account/data/repository/base_repository.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-part 'personal_info_repository.g.dart';
+import 'package:pos_system/features/account/domain/base_repository.dart';
 
 class MyPersonalInfoRepository extends BaseRepository<PersonalInfo> {
   MyPersonalInfoRepository()
@@ -80,9 +77,9 @@ class MyPersonalInfoRepository extends BaseRepository<PersonalInfo> {
   // }
 }
 
-@riverpod
-MyPersonalInfoRepository myPersonalInfoRepository(Ref ref) {
-  // This tells Riverpod: "When someone asks for this provider,
-  // create ONE instance of my repository and give it to them."
-  return MyPersonalInfoRepository();
-}
+// @riverpod
+// MyPersonalInfoRepository myPersonalInfoRepository(Ref ref) {
+//   // This tells Riverpod: "When someone asks for this provider,
+//   // create ONE instance of my repository and give it to them."
+//   return MyPersonalInfoRepository();
+// }
