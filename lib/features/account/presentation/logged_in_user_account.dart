@@ -4,18 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
-import 'package:pos_system/features/account/presentation/account_page.dart';
 import 'package:pos_system/features/account/presentation/state_management/personal_info_controller.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/core/utilities/image_displayer.dart';
 import 'package:pos_system/core/utilities/image_picker.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/dropdown.dart';
-import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
-import 'package:pos_system/features/account/presentation/state_management/personal_info_controller.dart';
 
 class LoggedInUserAccount extends ConsumerStatefulWidget {
-  const LoggedInUserAccount({super.key});
+  final AsyncValue<List<PersonalInfo>> userState;
+  const LoggedInUserAccount({super.key, required this.userState});
 
   @override
   ConsumerState<LoggedInUserAccount> createState() =>
@@ -28,6 +26,8 @@ class _LoggedInUserAccountState extends ConsumerState<LoggedInUserAccount> {
 
   List<String> storeRoles = ["Owner", "Staff", "Customer"];
   String? _profileImage;
+  List<PersonalInfo>? allUsers = [];
+  PersonalInfo? loggedInUserInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +35,13 @@ class _LoggedInUserAccountState extends ConsumerState<LoggedInUserAccount> {
     height = MyDimensions.getHeight(context);
     final myColorScheme = Theme.of(context).colorScheme;
 
-    var userState = ref.watch(personalInfoControllerProvider);
-    List<PersonalInfo>? allUsers = userState.value;
+    allUsers = widget.userState.value;
 
     if (allUsers != null) {
-      log(allUsers.length.toString());
+      loggedInUserInfo = allUsers!.firstWhere((user) {
+        if (_profileImage == null) setState(() => _profileImage = user.picture);
+        return user.id == user.id;
+      });
     }
 
     // userState.when(
@@ -74,7 +76,7 @@ class _LoggedInUserAccountState extends ConsumerState<LoggedInUserAccount> {
           onTap: () {},
           child: FittedBox(
             child: MyText(
-              text: "Lian Dyelo",
+              text: loggedInUserInfo?.name ?? "No Name",
               fontSize: 36,
               fontWeight: FontWeight.w700,
             ),

@@ -8,6 +8,7 @@ import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/my_alert_dialog.dart';
 import 'package:pos_system/core/widgets/progress_indicator_static.dart';
 import 'package:pos_system/features/account/presentation/logged_in_user_account.dart';
+import 'package:pos_system/features/account/presentation/state_management/personal_info_controller.dart';
 
 class AccountPage extends ConsumerStatefulWidget {
   const AccountPage({super.key});
@@ -32,6 +33,8 @@ class _AccountPageState extends ConsumerState<AccountPage> {
     height = MyDimensions.getHeight(context);
     final myColorScheme = Theme.of(context).colorScheme;
 
+    var userState = ref.watch(personalInfoControllerProvider);
+
     return Scaffold(
       backgroundColor: myColorScheme.surface,
       body: SingleChildScrollView(
@@ -45,7 +48,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
               MyAppBar(title: "Profile", enableBackButton: true),
               SizedBox(height: 32),
 
-              LoggedInUserAccount(),
+              LoggedInUserAccount(userState: userState),
 
               Spacer(),
               (isLoggingOut)
