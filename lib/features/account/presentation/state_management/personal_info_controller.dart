@@ -1,7 +1,6 @@
 import 'package:pos_system/features/account/data/repository/personal_info_repo_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
-import 'package:pos_system/features/account/data/repository/personal_info_repository.dart';
 
 part 'personal_info_controller.g.dart';
 

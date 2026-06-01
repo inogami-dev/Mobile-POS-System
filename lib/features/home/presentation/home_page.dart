@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pos_system/features/account/presentation/state_manager/personal_info_controller.dart';
+import 'package:pos_system/features/account/presentation/state_management/personal_info_controller.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
