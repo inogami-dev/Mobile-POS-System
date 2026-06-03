@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 class MyLogger {
+  MyLogger._(); // Private constructor to prevent instantiation
+
   static void logError({
     required String errorLabel,
     required Object errorMessage,

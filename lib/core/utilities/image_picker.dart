@@ -8,6 +8,8 @@ import 'package:image_picker/image_picker.dart';
 /// To pick image use the following method [MyImageProcessor.myImagePicker()]
 /// Accessable String data via [MyImageProcessor.base64Image]
 class MyImageProcessor {
+  MyImageProcessor._(); // Private constructor to prevent instantiation
+
   /// A String that holds the Base64 representation of the picked image.
   static String base64Image = "";
 

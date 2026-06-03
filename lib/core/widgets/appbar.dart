@@ -22,35 +22,33 @@ class My_AppBarState extends State<MyAppBar> {
   Widget build(BuildContext context) {
     final myColorScheme = Theme.of(context).colorScheme;
 
-    return SafeArea(
-      child: Container(
-        width: MyDimensions.getWidth(context),
-        height: 56,
-        color: myColorScheme.secondaryContainer,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            (widget.enableBackButton)
-                ? IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                  )
-                : SizedBox(width: 16),
+    return Container(
+      width: MyDimensions.getWidth(context),
+      height: kToolbarHeight,
+      color: myColorScheme.secondaryContainer,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          (widget.enableBackButton)
+              ? IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                )
+              : SizedBox(width: 16),
 
-            Expanded(
-              child: MyText(
-                text: widget.title,
-                fontSize: kDefaultFontSize + 6,
-                fontWeight: FontWeight.w600,
-              ),
+          Expanded(
+            child: MyText(
+              text: widget.title,
+              fontSize: kDefaultFontSize + 6,
+              fontWeight: FontWeight.w600,
             ),
-            SizedBox(width: 16),
+          ),
+          SizedBox(width: 16),
 
-            ...widget.actionsButtons ?? [],
+          ...widget.actionsButtons ?? [],
 
-            SizedBox(width: 16),
-          ],
-        ),
+          SizedBox(width: 16),
+        ],
       ),
     );
   }

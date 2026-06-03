@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MyTimeFormatter {
+  MyTimeFormatter._(); // Private constructor to prevent instantiation
+
   static TimeOfDay stringToTimeOfDay(String stringToTime) {
     // 1. Remove the "TimeOfDay(" prefix and ")" suffix
     // Format becomes: "14:30"
