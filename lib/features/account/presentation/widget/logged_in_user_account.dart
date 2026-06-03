@@ -1,16 +1,13 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
-import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/core/utilities/image_displayer.dart';
 import 'package:pos_system/core/utilities/image_picker.dart';
 import 'package:pos_system/features/account/presentation/widget/logged_in_account_details.dart';
 
 class LoggedInUserAccount extends ConsumerStatefulWidget {
-  final AsyncValue<List<PersonalInfo>> userState;
+  final PersonalInfo userState;
   const LoggedInUserAccount({super.key, required this.userState});
 
   @override
@@ -22,23 +19,15 @@ class _LoggedInUserAccountState extends ConsumerState<LoggedInUserAccount> {
   late double width;
   late double height;
   String? _profileImage;
-  List<PersonalInfo>? allUsers = [];
-  PersonalInfo? loggedInUserInfo;
+  late PersonalInfo loggedInUserInfo;
 
   @override
   Widget build(BuildContext context) {
     width = MyDimensions.getWidth(context);
     height = MyDimensions.getHeight(context);
     final myColorScheme = Theme.of(context).colorScheme;
-
-    allUsers = widget.userState.value;
-
-    if (allUsers != null) {
-      loggedInUserInfo = allUsers!.firstWhere((user) {
-        if (_profileImage == null) setState(() => _profileImage = user.picture);
-        return user.id == user.id;
-      });
-    }
+    loggedInUserInfo = widget.userState;
+    _profileImage = loggedInUserInfo.picture;
 
     return Container(
       width: width * 0.9,
@@ -69,14 +58,10 @@ class _LoggedInUserAccountState extends ConsumerState<LoggedInUserAccount> {
           ),
           SizedBox(height: 8),
 
-          (loggedInUserInfo != null)
-              ? GestureDetector(
-                  onTap: () {},
-                  child: LoggedInUserAccountDetails(
-                    personalInfo: loggedInUserInfo!,
-                  ),
-                )
-              : MyText(text: "No User", fontSize: kDefaultFontSize + 10),
+          GestureDetector(
+            onTap: () {},
+            child: LoggedInUserAccountDetails(personalInfo: loggedInUserInfo),
+          ),
           SizedBox(height: 12),
         ],
       ),

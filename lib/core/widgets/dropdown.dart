@@ -54,15 +54,16 @@ class _MyDropdownMenuButtonState extends State<MyDropdownMenuButton> {
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(
-              width: 2.5,
-              color: myColorSheme.primaryFixed,
+              width: 1.5,
+              color: myColorSheme.onSecondaryFixedVariant,
             ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(
-              width: 1.5,
-              color: myColorSheme.primaryFixed,
+              width: 1,
+              //  color: myColorSheme.primaryFixed,
+              color: myColorSheme.onSecondaryFixedVariant,
             ),
           ),
         ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pos_system/features/account/presentation/state_management/personal_info_controller.dart';
+import 'package:pos_system/features/account/presentation/state_management/all_users_controller.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -20,7 +20,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     // );
 
     /// Try ra ni
-    var userState = ref.watch(personalInfoControllerProvider);
+    var userState = ref.watch(allUsersControllerProvider);
     return Scaffold(
       body: Center(
         child: userState.when(

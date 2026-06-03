@@ -2,10 +2,10 @@ import 'package:pos_system/features/account/data/repository/personal_info_repo_p
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
 
-part 'personal_info_controller.g.dart';
+part 'all_users_controller.g.dart';
 
 @riverpod
-class PersonalInfoController extends _$PersonalInfoController {
+class AllUsersController extends _$AllUsersController {
   @override
   // Riverpod knows this is an AsyncNotifier because it returns a Future!
   Future<List<PersonalInfo>> build() async {

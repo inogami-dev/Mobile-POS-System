@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
+import 'package:pos_system/features/account/presentation/state_management/current_logged_in_info_expansible_ui_cotroller_.dart';
 
-class LoggedInUserAccountDetails extends StatefulWidget {
+class LoggedInUserAccountDetails extends ConsumerStatefulWidget {
   final PersonalInfo personalInfo;
   const LoggedInUserAccountDetails({super.key, required this.personalInfo});
 
   @override
-  State<LoggedInUserAccountDetails> createState() =>
+  ConsumerState<LoggedInUserAccountDetails> createState() =>
       _LoggedInUserAccountDetailsState();
 }
 
 class _LoggedInUserAccountDetailsState
-    extends State<LoggedInUserAccountDetails> {
-  ExpansibleController controller = ExpansibleController();
+    extends ConsumerState<LoggedInUserAccountDetails> {
+  late ExpansibleController controller;
 
   @override
   Widget build(BuildContext context) {
+    controller = ref.watch(expansibleControllerProvider);
+
     return Expansible(
       duration: Duration(milliseconds: 200),
-      curve: Curves.bounceInOut,
+      curve: Curves.easeInOut,
       headerBuilder: (context, animation) => headerBuilder(context, animation),
       bodyBuilder: (context, animation) => bodyBuilder(context, animation),
       controller: controller,
@@ -76,7 +80,7 @@ class _LoggedInUserAccountDetailsState
             bodyContentTile(
               text: widget.personalInfo.sex,
               icon: HugeIcon(
-                icon: (widget.personalInfo.sex == "Male")
+                icon: (widget.personalInfo.sex.toUpperCase() == "MALE")
                     ? HugeIcons.strokeRoundedMale02
                     : HugeIcons.strokeRoundedFemale02,
               ),

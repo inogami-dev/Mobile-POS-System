@@ -7,9 +7,10 @@ import 'package:pos_system/core/widgets/appbar.dart';
 import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/my_alert_dialog.dart';
 import 'package:pos_system/core/widgets/progress_indicator_static.dart';
-import 'package:pos_system/features/account/presentation/logged_in_user_account.dart';
-import 'package:pos_system/features/account/presentation/state_management/personal_info_controller.dart';
-import 'package:pos_system/features/account/presentation/widget/logged_in_store_details.dart';
+import 'package:pos_system/features/account/presentation/widget/logged_in_user_account.dart';
+import 'package:pos_system/features/account/presentation/state_management/all_users_controller.dart';
+import 'package:pos_system/features/account/presentation/state_management/current_logged_in_user_controller.dart';
+import 'package:pos_system/features/account/presentation/widget/logged_in_user_account_store_details.dart';
 
 class AccountPage extends ConsumerStatefulWidget {
   const AccountPage({super.key});
@@ -34,7 +35,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
     height = MyDimensions.getHeight(context);
     final myColorScheme = Theme.of(context).colorScheme;
 
-    var userState = ref.watch(personalInfoControllerProvider);
+    var userState = ref.watch(currentLoggedInUserControllerProvider);
 
     return Scaffold(
       backgroundColor: myColorScheme.surface,
@@ -51,14 +52,26 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                 MyAppBar(title: "Profile", enableBackButton: true),
                 SizedBox(height: 32),
 
-                LoggedInUserAccount(userState: userState),
-                LoggedInStoreDetails(),
+                (userState.isLoading)
+                    ? Center(child: MyProgressIndicator())
+                    : Expanded(
+                        child: Column(
+                          children: [
+                            LoggedInUserAccount(userState: userState.value!),
+                            LoggedInUserAccountStoreDetails(
+                              personalInfo: userState.value!,
+                            ),
 
-                Spacer(),
-                (isLoggingOut)
-                    ? const MyProgressIndicator()
-                    : loggoutButton(context),
-                SizedBox(height: MyAppLayout.bottomNavbarHeight + 16),
+                            Spacer(),
+                            (isLoggingOut)
+                                ? const MyProgressIndicator()
+                                : loggoutButton(context),
+                            SizedBox(
+                              height: MyAppLayout.bottomNavbarHeight + 16,
+                            ),
+                          ],
+                        ),
+                      ),
               ],
             ),
           ),
