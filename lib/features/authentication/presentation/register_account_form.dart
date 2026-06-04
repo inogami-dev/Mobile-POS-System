@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
 import 'package:pos_system/core/utilities/date_formatter.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
@@ -11,7 +12,7 @@ import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/core/widgets/progress_indicator_static.dart';
 import 'package:pos_system/core/widgets/text_field.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
-import 'package:pos_system/features/account/data/repository/personal_info_repo_provider.dart';
+import 'package:pos_system/features/account/presentation/state_management/personal_info_repo_provider.dart';
 import 'package:pos_system/features/authentication/presentation/register_account.dart';
 
 class RegisterAccountForm extends ConsumerStatefulWidget {
@@ -125,19 +126,21 @@ class _RegisterAccountFormState extends ConsumerState<RegisterAccountForm> {
           SizedBox(height: 30),
           // this textfield will only appear if the email is already in use
           if (isEmailAlreadyInUse)
-            MyCustTextfield(
+            MyTextfield(
               labelText: "Email",
               textInputType: TextInputType.emailAddress,
-              prefixIcon: Icons.person_rounded,
+              // prefixIcon: Icons.person_rounded,
+              prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedMail01),
               textController: emailController,
               focusNode: emailFocusNode,
               isPasswordField: false,
               borderRadius: 10,
             ),
           if (isEmailAlreadyInUse) SizedBox(height: 30),
-          MyCustTextfield(
+          MyTextfield(
             labelText: "Name",
-            prefixIcon: Icons.person_rounded,
+            // prefixIcon: Icons.person_rounded,
+            prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedUser02),
             textInputType: TextInputType.name,
             textController: nameController,
             isPasswordField: false,
@@ -155,12 +158,15 @@ class _RegisterAccountFormState extends ConsumerState<RegisterAccountForm> {
                   padding: EdgeInsets.only(
                     top: MyDimensions.getHeight(context) * 0.023,
                   ),
-                  child: MyCustTextfield(
+                  child: MyTextfield(
                     textInputType: TextInputType.number,
                     labelText: "Age",
                     widthPercentage: 0.3,
                     isUsingStaticDimension: false,
-                    prefixIcon: Icons.calendar_month_rounded,
+                    // prefixIcon: Icons.calendar_month_rounded,
+                    prefixIcon: HugeIcon(
+                      icon: HugeIcons.strokeRoundedCalendar01,
+                    ),
                     textController: ageController,
                     borderRadius: 10,
                   ),
@@ -171,17 +177,19 @@ class _RegisterAccountFormState extends ConsumerState<RegisterAccountForm> {
             ),
           ),
           SizedBox(height: 10),
-          MyCustTextfield(
+          MyTextfield(
             labelText: "Contact Number",
-            prefixIcon: Icons.call_rounded,
+            // prefixIcon: Icons.call_rounded,
+            prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedCall),
             textInputType: TextInputType.number,
             textController: contactNumberController,
             borderRadius: 10,
           ),
           SizedBox(height: 10),
-          MyCustTextfield(
+          MyTextfield(
             labelText: "Address",
-            prefixIcon: Icons.person_rounded,
+            // prefixIcon: Icons.person_rounded,
+            prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedLocation01),
             textInputType: TextInputType.streetAddress,
             textController: addressController,
             borderRadius: 10,

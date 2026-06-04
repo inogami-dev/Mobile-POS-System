@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
+import 'package:pos_system/core/utilities/image_displayer.dart';
+import 'package:pos_system/core/utilities/image_picker.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 
 class MyDropdownMenuButton extends StatefulWidget {
@@ -14,6 +16,12 @@ class MyDropdownMenuButton extends StatefulWidget {
   final double heightPercentage;
   final bool isLeadingIconVisible;
 
+  /// This is for the case when you want to display text with image in the dropdown item,
+  /// the key should be the text and the value should be the base64 string of the image
+  /// `"storeName:base64String"`
+  final bool isTextWithImage;
+  final Map<String, String>? itemWithImage;
+
   const MyDropdownMenuButton({
     super.key,
     required this.items,
@@ -24,6 +32,8 @@ class MyDropdownMenuButton extends StatefulWidget {
     this.widthPercentage = 0.8,
     this.heightPercentage = 0.07,
     this.isLeadingIconVisible = true,
+    this.isTextWithImage = false,
+    this.itemWithImage,
   });
 
   @override
@@ -34,6 +44,13 @@ class _MyDropdownMenuButtonState extends State<MyDropdownMenuButton> {
   @override
   Widget build(BuildContext context) {
     final myColorSheme = Theme.of(context).colorScheme;
+
+    // Constraint ni
+    if (widget.isTextWithImage && widget.itemWithImage == null) {
+      throw Exception(
+        "itemWithImage cannot be null when isTextWithImage is true",
+      );
+    }
 
     return SizedBox(
       width: MyDimensions.getWidth(context) * widget.widthPercentage,
@@ -71,24 +88,19 @@ class _MyDropdownMenuButtonState extends State<MyDropdownMenuButton> {
             .map(
               (item) => DropdownMenuItem<String>(
                 value: item,
-                // (deletable) old code
-                // child: Text(
-                //   item,
-                //   style: TextStyle(
-                //     // this ensures that the first item should means no value
-                //     fontStyle:
-                //         // (item == widget.initialValue && item == "No Role")
-                //         (item == widget.items[0])
-                //         ? FontStyle.italic
-                //         : FontStyle.normal,
-                //     color:
-                //         // (item == widget.initialValue && item == "No Role")
-                //         (item == widget.items[0])
-                //         ? Colors.blueGrey
-                //         : Colors.black,
-                //   ),
-                // ),
-                child: MyText(text: item),
+                child: (widget.isTextWithImage)
+                    ? Row(
+                        children: [
+                          MyImageDisplayer(
+                            base64ImageString:
+                                MyImageProcessor.decodeStringToUint8List(
+                                  widget.itemWithImage![item]!,
+                                ),
+                          ),
+                          MyText(text: item),
+                        ],
+                      )
+                    : MyText(text: item),
               ),
             )
             .toList(),

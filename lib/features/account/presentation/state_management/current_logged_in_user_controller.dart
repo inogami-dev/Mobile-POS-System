@@ -1,22 +1,55 @@
-import 'package:pos_system/core/constants/app_collections.dart';
+// import 'package:pos_system/core/constants/app_collections.dart';
+// import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
+// import 'package:pos_system/features/account/presentation/state_management/personal_info_repo_provider.dart';
+// import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+// part 'current_logged_in_user_controller.g.dart';
+
+// @riverpod
+// class CurrentLoggedInUserController extends _$CurrentLoggedInUserController {
+//   @override
+//   Future<PersonalInfo?> build() async {
+//     // return null;
+//     if (MyAppCollections.currentUserID == null) return null;
+
+//     final repository = ref.watch(myPersonalInfoRepoProvider);
+//     return repository.getByID(MyAppCollections.currentUserID!);
+//   }
+
+//   void setCurrentLoggedInUser(PersonalInfo? user) {
+//     state = AsyncValue.data(user);
+//   }
+// }
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
-import 'package:pos_system/features/account/data/repository/personal_info_repo_provider.dart';
+import 'package:pos_system/features/account/presentation/state_management/personal_info_repo_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'current_logged_in_user_controller.g.dart';
 
+// 1. We create a simple provider to watch the Firebase Auth Stream
+@riverpod
+Stream<User?> firebaseAuthStream(FirebaseAuthStreamRef ref) {
+  return FirebaseAuth.instance.authStateChanges();
+}
+
+// 2. Your Controller automatically reacts to the Auth Stream!
 @riverpod
 class CurrentLoggedInUserController extends _$CurrentLoggedInUserController {
   @override
   Future<PersonalInfo?> build() async {
-    // return null;
-    if (MyAppCollections.currentUserID == null) return null;
+    // Watch the auth stream. If it changes (login/logout), this whole build method re-runs!
+    final authUser = ref.watch(firebaseAuthStreamProvider).value;
 
+    // If there is no user logged into Firebase, return null immediately.
+    if (authUser == null) return null;
+
+    // If there is a user, fetch their data from Firestore.
     final repository = ref.watch(myPersonalInfoRepoProvider);
-    return repository.getByID(MyAppCollections.currentUserID!);
+    return await repository.getByID(authUser.uid);
   }
 
-  void setCurrentLoggedInUser(PersonalInfo user) {
-    state = AsyncValue.data(user);
-  }
+  // Notice I DELETED the setCurrentLoggedInUser method!
+  // You don't need it anymore. Riverpod handles the state automatically now.
 }

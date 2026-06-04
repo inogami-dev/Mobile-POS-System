@@ -1,6 +1,8 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/core/themes/theme_state/color_palette.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/button.dart';
@@ -8,17 +10,18 @@ import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/core/widgets/progress_indicator_static.dart';
 import 'package:pos_system/core/widgets/text_field.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
+import 'package:pos_system/features/account/presentation/state_management/current_logged_in_user_controller.dart';
 import 'package:pos_system/features/authentication/presentation/register_account.dart';
 import 'package:pos_system/features/authentication/presentation/widgets/layout_material.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   // mainly for login
   late TextEditingController emailController;
   late FocusNode emailFocusNode;
@@ -296,9 +299,10 @@ class _LoginPageState extends State<LoginPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 30),
-        MyCustTextfield(
+        MyTextfield(
           textController: emailController,
-          prefixIcon: Icons.person_rounded,
+          // prefixIcon: Icons.person_rounded,
+          prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedMail01),
           labelText: "Email",
           hintText: "inogami@gmail.com",
           textInputType: TextInputType.emailAddress,
@@ -324,9 +328,10 @@ class _LoginPageState extends State<LoginPage> {
         ),
         SizedBox(height: 10),
 
-        MyCustTextfield(
+        MyTextfield(
           textController: passwordController,
-          prefixIcon: Icons.key_rounded,
+          // prefixIcon: Icons.key_rounded,
+          prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedKey01),
           labelText: "Password",
           borderRadius: 10,
           focusNode: passwordFocusNode,
@@ -346,9 +351,10 @@ class _LoginPageState extends State<LoginPage> {
           height: animatedContainerHeight,
           margin: EdgeInsets.only(top: 10),
           duration: Duration(milliseconds: animationDuration),
-          child: MyCustTextfield(
+          child: MyTextfield(
             textController: confirmPasswordController,
-            prefixIcon: Icons.key_rounded,
+            // prefixIcon: Icons.key_rounded,
+            prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedKey01),
             prefixIconColor: (animatedContainerHeight == 50 && isGoingToSignUp)
                 ? myColorScheme.onSurfaceVariant
                 : Colors.transparent,

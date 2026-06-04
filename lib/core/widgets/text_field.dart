@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/authentication/presentation/widgets/eyecon.dart';
 
-class MyCustTextfield extends StatefulWidget {
+class MyTextfield extends StatefulWidget {
   /// The width is automatically adjusted base on the screensize, so the widthPercentage is the ratio of how much of the screen you want to occupy.
   final double widthPercentage;
 
@@ -13,7 +14,8 @@ class MyCustTextfield extends StatefulWidget {
   final bool isUsingStaticDimension;
   final String? hintText;
   final String labelText;
-  final IconData prefixIcon;
+  // final IconData prefixIcon;
+  final HugeIcon prefixIcon;
   final Color? prefixIconColor;
   final double borderRadius;
   final double borderWidth;
@@ -22,7 +24,8 @@ class MyCustTextfield extends StatefulWidget {
   final FocusNode? focusNode;
   final bool isPasswordField;
   // final Color color;
-  final IconData? suffixIcon;
+  // final IconData? suffixIcon;
+  final HugeIcon? suffixIcon;
   final Color? suffixIconColor;
   final bool isReadOnly;
   final double leftMargin;
@@ -35,7 +38,7 @@ class MyCustTextfield extends StatefulWidget {
   final TextEditingController textController;
 
   /// My customized textfield
-  const MyCustTextfield({
+  const MyTextfield({
     super.key,
     this.isUsingStaticDimension = true,
     this.widthPercentage = 1.0,
@@ -63,10 +66,10 @@ class MyCustTextfield extends StatefulWidget {
   });
 
   @override
-  State<MyCustTextfield> createState() => _MyCustTextfieldState();
+  State<MyTextfield> createState() => _MyTextfieldState();
 }
 
-class _MyCustTextfieldState extends State<MyCustTextfield> {
+class _MyTextfieldState extends State<MyTextfield> {
   bool _isObscurePassword = false;
 
   @override
@@ -135,7 +138,8 @@ class _MyCustTextfieldState extends State<MyCustTextfield> {
           contentPadding: const EdgeInsets.only(top: 3, right: 3, bottom: 5),
           prefixIcon: Padding(
             padding: const EdgeInsets.only(left: 10),
-            child: Icon(widget.prefixIcon),
+            // child: Icon(widget.prefixIcon),
+            child: widget.prefixIcon,
           ),
           prefixIconConstraints: BoxConstraints.tight(Size(50, 32)),
           prefixIconColor: prefixIconColor,
@@ -151,11 +155,12 @@ class _MyCustTextfieldState extends State<MyCustTextfield> {
                           isPasswordVisible: _isObscurePassword,
                           color: suffixIconColor,
                         )
-                      : Icon(
-                          widget.suffixIcon,
-                          color: suffixIconColor,
-                          blendMode: BlendMode.src,
-                        ),
+                      // : Icon(
+                      //     widget.suffixIcon,
+                      //     color: suffixIconColor,
+                      //     blendMode: BlendMode.src,
+                      //   ),
+                      : widget.suffixIcon!,
                 )
               : null,
           suffixIconColor: suffixIconColor,

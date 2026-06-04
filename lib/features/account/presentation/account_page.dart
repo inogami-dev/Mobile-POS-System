@@ -1,14 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pos_system/core/constants/app_collections.dart';
 import 'package:pos_system/core/constants/app_layout.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/appbar.dart';
 import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/my_alert_dialog.dart';
 import 'package:pos_system/core/widgets/progress_indicator_static.dart';
+import 'package:pos_system/core/widgets/root_scaffold/root_scaffold_state.dart';
 import 'package:pos_system/features/account/presentation/widget/logged_in_user_account.dart';
-import 'package:pos_system/features/account/presentation/state_management/all_users_controller.dart';
 import 'package:pos_system/features/account/presentation/state_management/current_logged_in_user_controller.dart';
 import 'package:pos_system/features/account/presentation/widget/logged_in_user_account_store_details.dart';
 
@@ -52,7 +53,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                 MyAppBar(title: "Profile", enableBackButton: true),
                 SizedBox(height: 32),
 
-                (userState.isLoading)
+                (userState.isLoading || userState.value == null)
                     ? Center(child: MyProgressIndicator())
                     : Expanded(
                         child: Column(
@@ -80,6 +81,36 @@ class _AccountPageState extends ConsumerState<AccountPage> {
     );
   }
 
+  // MyCustButton loggoutButton(BuildContext context) {
+  //   return MyCustButton(
+  //     buttonText: "Logout",
+  //     onTap: () {
+  //       myAlertDialogue(
+  //         context: context,
+  //         alertTitle: "Logout",
+  //         alertContent: "Are you sure you want to logout?",
+  //         onApprovalPressed: () {
+  //           setState(() => isLoggingOut = true);
+  //           FirebaseAuth.instance.signOut();
+  //           setState(() => isLoggingOut = false);
+  //           Navigator.pop(context);
+
+  //           ref
+  //               .read(currentLoggedInUserControllerProvider.notifier)
+  //               .setCurrentLoggedInUser(null);
+
+  //           ref.read(rootScaffoldStateProvider.notifier).changeIndex(0);
+  //         },
+  //       );
+
+  //       // showMyAnimatedSnackBar(
+  //       //   context: context,
+  //       //   dataToDisplay: "Hello",
+  //       // );
+  //     },
+  //   );
+  // }
+
   MyCustButton loggoutButton(BuildContext context) {
     return MyCustButton(
       buttonText: "Logout",
@@ -89,17 +120,21 @@ class _AccountPageState extends ConsumerState<AccountPage> {
           alertTitle: "Logout",
           alertContent: "Are you sure you want to logout?",
           onApprovalPressed: () {
-            setState(() => isLoggingOut = true);
+            // ALL YOU NEED TO DO IS THIS:
             FirebaseAuth.instance.signOut();
-            setState(() => isLoggingOut = false);
+
+            // Pop the dialog
             Navigator.pop(context);
+
+            // Optional: reset your nav bar index if needed
+            ref.read(rootScaffoldStateProvider.notifier).changeIndex(0);
+
+            // You DO NOT need to manually set the user to null anymore!
+            // When signOut() is called, firebaseAuthStreamProvider detects it,
+            // tells CurrentLoggedInUserController, which returns null,
+            // which instantly updates LoggedInStream to show the LoginPage!
           },
         );
-
-        // showMyAnimatedSnackBar(
-        //   context: context,
-        //   dataToDisplay: "Hello",
-        // );
       },
     );
   }
