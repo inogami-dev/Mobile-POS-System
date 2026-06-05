@@ -9,4 +9,5 @@ class MyAppCollections {
   // static const String transactionsCollection = 'transactions';
   // static const String utangCollection = 'utang';
   // static const String accountsCollection = 'accounts';
+  static const String store = 'Store';
 }

@@ -4,7 +4,7 @@ import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
 import 'package:pos_system/core/utilities/image_displayer.dart';
 import 'package:pos_system/core/utilities/image_picker.dart';
-import 'package:pos_system/features/account/presentation/widget/logged_in_account_details.dart';
+import 'package:pos_system/features/account/presentation/widget/logged_in_user_account_details.dart';
 
 class LoggedInUserAccount extends ConsumerStatefulWidget {
   final PersonalInfo userState;

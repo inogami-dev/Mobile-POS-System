@@ -3,14 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:pos_system/core/themes/theme_state/color_palette.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/core/widgets/progress_indicator_static.dart';
 import 'package:pos_system/core/widgets/text_field.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
-import 'package:pos_system/features/account/presentation/state_management/current_logged_in_user_controller.dart';
 import 'package:pos_system/features/authentication/presentation/register_account.dart';
 import 'package:pos_system/features/authentication/presentation/widgets/layout_material.dart';
 
@@ -102,7 +100,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       print("PASSWORDS DOES NOT MATCH!");
     } else {
       setState(() {
-        passwordFieldColor = MyColorPalette.borderColor;
+        // passwordFieldColor = MyColorPalette.borderColor;
+        passwordFieldColor = myColorScheme.primaryFixed;
         print("PASSWORDS MATCH!");
       });
     }
@@ -119,7 +118,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       print("PASSWORDS DOES NOT MATCH!");
     } else {
       setState(() {
-        passwordFieldColor = MyColorPalette.borderColor;
+        passwordFieldColor = myColorScheme.primaryFixed;
         print("PASSWORDS MATCH!");
       });
     }
@@ -410,7 +409,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Widget loginButton() {
     return (isLoggingIn)
         ? const MyProgressIndicator()
-        : MyCustButton(
+        : MyButton(
             onTap: () async {
               setState(() => isLoggingIn = true);
               await signInWithEmailAndPassword();
@@ -428,8 +427,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           );
   }
 
-  MyCustButton confirmSignUpButton() {
-    return MyCustButton(
+  MyButton confirmSignUpButton() {
+    return MyButton(
       onTap: () {
         // if Passwords does not match
         if (passwordController.text.trim() !=
@@ -466,8 +465,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  MyCustButton signUpButton() {
-    return MyCustButton(
+  MyButton signUpButton() {
+    return MyButton(
       onTap: () {
         setState(() {
           // if it is 0, move to 50
@@ -492,8 +491,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  MyCustButton cancelSignUpButton() {
-    return MyCustButton(
+  MyButton cancelSignUpButton() {
+    return MyButton(
       onTap: () {
         setState(() {
           // requestFocus() para mabalhin ang focus sa textfield before sya ma render out.

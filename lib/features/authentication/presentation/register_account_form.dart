@@ -197,7 +197,7 @@ class _RegisterAccountFormState extends ConsumerState<RegisterAccountForm> {
           SizedBox(height: 30),
           (isProcessing)
               ? const MyProgressIndicator()
-              : MyCustButton(
+              : MyButton(
                   buttonText: "CONFIRM REGISTRATION",
                   buttonTextSpacing: 1,
                   buttonWidth: 250,
@@ -491,8 +491,8 @@ class _RegisterAccountFormState extends ConsumerState<RegisterAccountForm> {
   // }
 
   // this is just literally a Cancel button
-  MyCustButton cancelButton() {
-    return MyCustButton(
+  MyButton cancelButton() {
+    return MyButton(
       onTap: () {
         setState(() {
           Navigator.pop(context);

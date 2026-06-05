@@ -81,8 +81,8 @@ class _AccountPageState extends ConsumerState<AccountPage> {
     );
   }
 
-  // MyCustButton loggoutButton(BuildContext context) {
-  //   return MyCustButton(
+  // MyButton loggoutButton(BuildContext context) {
+  //   return MyButton(
   //     buttonText: "Logout",
   //     onTap: () {
   //       myAlertDialogue(
@@ -111,14 +111,14 @@ class _AccountPageState extends ConsumerState<AccountPage> {
   //   );
   // }
 
-  MyCustButton loggoutButton(BuildContext context) {
-    return MyCustButton(
+  MyButton loggoutButton(BuildContext context) {
+    return MyButton(
       buttonText: "Logout",
       onTap: () {
         myAlertDialogue(
           context: context,
-          alertTitle: "Logout",
-          alertContent: "Are you sure you want to logout?",
+          alertTitle: "Log Out",
+          alertContent: "Are you sure you want to log out?",
           onApprovalPressed: () {
             // ALL YOU NEED TO DO IS THIS:
             FirebaseAuth.instance.signOut();

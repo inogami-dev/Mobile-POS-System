@@ -12,6 +12,7 @@ class MyContainer extends StatelessWidget {
   final BlurStyle shadowBlurStyle;
   final double blurRadius;
   final Alignment alignment;
+  final Clip clipBehavior;
   final Widget? child;
 
   const MyContainer({
@@ -27,6 +28,7 @@ class MyContainer extends StatelessWidget {
     this.shadowBlurStyle = BlurStyle.outer,
     this.blurRadius = 4,
     this.alignment = Alignment.center,
+    this.clipBehavior = Clip.none,
     this.child,
   });
 
@@ -38,6 +40,7 @@ class MyContainer extends StatelessWidget {
       width: width,
       height: height,
       alignment: alignment,
+      clipBehavior: clipBehavior,
       decoration: BoxDecoration(
         color: color ?? myColorScheme.surfaceContainer,
         borderRadius:

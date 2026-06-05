@@ -116,6 +116,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/widgets/no_role_page.dart';
 import 'package:pos_system/core/widgets/progress_indicator_static.dart';
 import 'package:pos_system/core/widgets/root_scaffold/root_scaffold_with_navbar.dart';
+import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/account/presentation/state_management/current_logged_in_user_controller.dart';
 import 'package:pos_system/features/authentication/presentation/login_page.dart';
 // ... your other imports ...
@@ -131,8 +132,9 @@ class LoggedInStream extends ConsumerWidget {
     // 2. Use Riverpod's built-in .when() to handle Loading, Error, and Data
     return userState.when(
       loading: () => const Scaffold(body: Center(child: MyProgressIndicator())),
-      error: (error, stack) =>
-          Scaffold(body: Center(child: Text("Error: $error"))),
+      error: (error, stack) => Scaffold(
+        body: Center(child: MyText(text: "Error: $error")),
+      ),
       data: (personalInfo) {
         // 3. Routing Logic
 

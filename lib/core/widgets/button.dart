@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pos_system/core/themes/theme_state/color_palette.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 
-class MyCustButton extends StatefulWidget {
+class MyButton extends StatefulWidget {
   final double widthPercentage;
   final double height;
   final Color? color;
@@ -23,10 +22,10 @@ class MyCustButton extends StatefulWidget {
   // To be implemented pa ni in the future haha
   // final bool isDecorated;
 
-  const MyCustButton({
+  const MyButton({
     super.key,
-    this.widthPercentage = 0.50,
-    this.height = 50,
+    this.widthPercentage = 0.35,
+    this.height = 40,
     this.color,
     required this.buttonText,
     this.buttonTextFontWeight = FontWeight.w400,
@@ -38,17 +37,17 @@ class MyCustButton extends StatefulWidget {
     this.buttonTextFontFamily = "Poppins",
     required this.onTap,
     this.enableShadow = true,
-    this.buttonShadowColor = Colors.blue,
+    this.buttonShadowColor,
     this.buttonTextFontSize = 14,
     this.buttonWidth,
     // this.isDecorated = true,
   });
 
   @override
-  State<MyCustButton> createState() => _MyCustButtonState();
+  State<MyButton> createState() => _MyCustButtonState();
 }
 
-class _MyCustButtonState extends State<MyCustButton> {
+class _MyCustButtonState extends State<MyButton> {
   late ColorScheme myColorScheme;
 
   @override
@@ -66,6 +65,7 @@ class _MyCustButtonState extends State<MyCustButton> {
           : MyDimensions.getWidth(context) * widget.widthPercentage,
       height: widget.height,
       decoration: BoxDecoration(
+        // color: widget.color ?? myColorScheme.primary,
         color: widget.color ?? myColorScheme.primary,
         border: BoxBorder.all(
           color: widget.borderColor,
@@ -79,7 +79,8 @@ class _MyCustButtonState extends State<MyCustButton> {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(widget.borderRadius),
-          splashColor: MyColorPalette.splashColor,
+          // splashColor: MyColorPalette.splashColor,
+          splashColor: myColorScheme.primary,
           onTap: () {
             widget.onTap();
           },

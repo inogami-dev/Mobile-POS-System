@@ -1,18 +1,27 @@
+import 'dart:developer';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
+import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/container.dart';
+import 'package:pos_system/core/widgets/my_alert_dialog.dart';
 import 'package:pos_system/core/widgets/text_field.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
+import 'package:pos_system/features/account/presentation/state_management/personal_info_repo_provider.dart';
+import 'package:pos_system/features/store/data/repository/store_info_repository.dart';
+import 'package:pos_system/features/store/presentation/widgets/store_form_save_logic.dart';
 
-class RegisterStoreForm extends StatefulWidget {
+class RegisterStoreForm extends ConsumerStatefulWidget {
   const RegisterStoreForm({super.key});
 
   @override
-  State<RegisterStoreForm> createState() => _RegisterStoreFormState();
+  ConsumerState<RegisterStoreForm> createState() => _RegisterStoreFormState();
 }
 
-class _RegisterStoreFormState extends State<RegisterStoreForm> {
+class _RegisterStoreFormState extends ConsumerState<RegisterStoreForm> {
   late double width;
   late double height;
 
@@ -26,29 +35,112 @@ class _RegisterStoreFormState extends State<RegisterStoreForm> {
     height = MyDimensions.getHeight(context);
     final myColorScheme = Theme.of(context).colorScheme;
 
-    return MyContainer(
-      width: width,
-      height: height * 0.56,
-      // color: myColorScheme.surface,
-      child: Column(
-        children: [
-          MyText(text: "Register Store Form"),
-          MyTextfield(
-            labelText: "Store Name",
-            prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedStore01),
-            textController: storeNameController,
-          ),
-          MyTextfield(
-            labelText: "Store Owner",
-            prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedUser02),
-            textController: storeOwnerController,
-          ),
-          MyTextfield(
-            labelText: "Picture",
-            prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedImage01),
-            textController: pictureController,
-          ),
-        ],
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
+      child: MyContainer(
+        width: width,
+        height: height * 0.56,
+        color: myColorScheme.surface.withAlpha(180),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          spacing: 8,
+          children: [
+            SizedBox(height: 16),
+            MyText(
+              text: "Register Store Form",
+              fontSize: kDefaultFontSize + 8,
+              fontWeight: FontWeight.w800,
+            ),
+            SizedBox(height: 16),
+
+            MyTextfield(
+              labelText: "Store Name",
+              prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedStore01),
+              textController: storeNameController,
+              borderColor: myColorScheme.onSurfaceVariant,
+              focusBorderWidth: .8,
+              borderRadius: 8,
+            ),
+            MyTextfield(
+              labelText: "Store Owner",
+              prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedUser02),
+              textController: storeOwnerController,
+              focusBorderWidth: .8,
+              borderColor: myColorScheme.onSurfaceVariant,
+              borderRadius: 8,
+            ),
+            MyTextfield(
+              labelText: "Picture",
+              prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedImage01),
+              textController: pictureController,
+              focusBorderWidth: .8,
+              borderColor: myColorScheme.onSurfaceVariant,
+              borderRadius: 8,
+            ),
+            SizedBox(height: 24),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 8,
+              children: [
+                MyButton(
+                  buttonText: "Clear",
+                  buttonTextColor: myColorScheme.inverseSurface,
+                  color: myColorScheme.surfaceContainer,
+                  borderColor: myColorScheme.surfaceContainer,
+                  enableShadow: false,
+                  widthPercentage: .3,
+                  onTap: () {
+                    myAlertDialogue(
+                      context: context,
+                      alertTitle: "Comfirm to clear the fields?",
+                      alertContent:
+                          "This will remove all the text you have inputted.",
+                      onApprovalPressed: () {
+                        storeNameController.clear();
+                        storeOwnerController.clear();
+                        pictureController.clear();
+                        Navigator.pop(context);
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
+                    );
+                  },
+                ),
+                MyButton(
+                  buttonText: "Save",
+                  buttonShadowColor: myColorScheme.primary,
+                  widthPercentage: .4,
+                  onTap: () {
+                    myAlertDialogue(
+                      context: context,
+                      alertTitle: "Confirm to save?",
+                      alertContent:
+                          "Confirming will save the data to the database.",
+                      onApprovalButtonText: "Confirm Save",
+                      onApprovalPressed: () {
+                        log(storeNameController.text);
+                        log(storeOwnerController.text);
+                        log(pictureController.text);
+
+                        saveToFirebase(
+                          personalInfoRepo: ref.read(
+                            myPersonalInfoRepoProvider,
+                          ),
+                          storeName: storeNameController.text,
+                          storeOwner: storeOwnerController.text,
+                          picture: pictureController.text,
+                        );
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

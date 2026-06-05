@@ -19,6 +19,7 @@ class MyTextfield extends StatefulWidget {
   final Color? prefixIconColor;
   final double borderRadius;
   final double borderWidth;
+  final double focusBorderWidth;
   final Color? borderColor;
   final Color? activeBorderColor;
   final FocusNode? focusNode;
@@ -51,6 +52,7 @@ class MyTextfield extends StatefulWidget {
     required this.textController,
     this.borderRadius = 30,
     this.borderWidth = 1,
+    this.focusBorderWidth = 1.5,
     this.borderColor,
     this.activeBorderColor,
     this.focusNode,
@@ -175,7 +177,7 @@ class _MyTextfieldState extends State<MyTextfield> {
             borderRadius: BorderRadius.circular(widget.borderRadius),
             borderSide: BorderSide(
               color: activeBorderColor,
-              width: widget.borderWidth + 1.5,
+              width: widget.borderWidth + widget.focusBorderWidth,
             ),
           ),
         ),
