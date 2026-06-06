@@ -133,7 +133,9 @@ class LoggedInStream extends ConsumerWidget {
     return userState.when(
       loading: () => const Scaffold(body: Center(child: MyProgressIndicator())),
       error: (error, stack) => Scaffold(
-        body: Center(child: MyText(text: "Error: $error")),
+        body: Center(
+          child: MyText(text: "Error: $error, \nStack: $stack", maxLines: 20),
+        ),
       ),
       data: (personalInfo) {
         // 3. Routing Logic

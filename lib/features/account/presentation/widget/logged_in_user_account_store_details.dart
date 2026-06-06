@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/bottom_sheet.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/dropdown.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
+import 'package:pos_system/features/account/presentation/state_management/personal_info_repo_provider.dart';
+import 'package:pos_system/features/store/data/model/store_info.dart';
+import 'package:pos_system/features/store/presentation/state_management/store_info_controller.dart';
 import 'package:pos_system/features/store/presentation/widgets/register_store_form.dart';
 
-class LoggedInUserAccountStoreDetails extends StatefulWidget {
+class LoggedInUserAccountStoreDetails extends ConsumerStatefulWidget {
   final PersonalInfo personalInfo; // to be implemented later
   const LoggedInUserAccountStoreDetails({
     super.key,
@@ -15,17 +19,18 @@ class LoggedInUserAccountStoreDetails extends StatefulWidget {
   });
 
   @override
-  State<LoggedInUserAccountStoreDetails> createState() =>
+  ConsumerState<LoggedInUserAccountStoreDetails> createState() =>
       _LoggedInUserAccountStoreDetailsState();
 }
 
 class _LoggedInUserAccountStoreDetailsState
-    extends State<LoggedInUserAccountStoreDetails> {
+    extends ConsumerState<LoggedInUserAccountStoreDetails> {
   String? selectedStore;
 
   @override
   Widget build(BuildContext context) {
     double width = MyDimensions.getWidth(context);
+    StoreInfo store = ref.watch(storeInfoRepoControllerProvider);
 
     List<String> storeNames = widget.personalInfo.ownerAt
         .map((store) => store)
@@ -40,14 +45,26 @@ class _LoggedInUserAccountStoreDetailsState
           height: 50,
           child: MyDropdownMenuButton(
             items: storeNames,
-            initialValue: storeNames[0],
+            initialValue: widget.personalInfo.currentStoreInView,
             // isTextWithImage: true,
             isLeadingIconVisible: false,
             onChanged: (value) {
               setState(() => selectedStore = value);
+
               if (selectedStore == storeNames.last) {
                 // setState(() => selectedStore = storeNames[0]);
                 showMyBottomSheet(context: context, child: RegisterStoreForm());
+              } else {
+                ref
+                    .read(storeInfoRepoControllerProvider.notifier)
+                    .setCurrentStore(value!);
+                // Update the currentStoreInView field in the PersonalInfo, so that next time the app open this specific store first
+                ref
+                    .read(myPersonalInfoRepoProvider)
+                    .update(
+                      widget.personalInfo.id!,
+                      widget.personalInfo.copyWith(currentStoreInView: value),
+                    );
               }
             },
             widthPercentage: 0.7,
@@ -63,7 +80,7 @@ class _LoggedInUserAccountStoreDetailsState
           ),
           borderColor: myColorScheme.onSecondaryFixed,
           child: MyText(
-            text: "Owner".toUpperCase(),
+            text: storeRoleIdentifyer(selectedStore ?? "None").toUpperCase(),
             fontSize: 16,
             fontWeight: FontWeight.w600,
             letterSpacing: 1.5,
@@ -75,5 +92,17 @@ class _LoggedInUserAccountStoreDetailsState
         MyText(text: "Selected Store: ${selectedStore ?? "None"}"),
       ],
     );
+  }
+
+  String storeRoleIdentifyer(String storeID) {
+    if (widget.personalInfo.ownerAt.contains(storeID)) {
+      return "Owner";
+    } else if (widget.personalInfo.staffAt.contains(storeID)) {
+      return "Staff";
+    } else if (widget.personalInfo.customerAt.contains(storeID)) {
+      return "Customer";
+    } else {
+      return "Please select a store";
+    }
   }
 }

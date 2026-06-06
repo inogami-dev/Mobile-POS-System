@@ -276,6 +276,8 @@ class _RegisterAccountFormState extends ConsumerState<RegisterAccountForm> {
       registeredOn: MyDateFormatter.formatDate(
         dateTimeInString: DateTime.now(),
       ),
+      currentStoreInView:
+          "", // to be updated later when user is assigned a store
     );
     personalInfoRepoRef.add(newPersonalInfo);
     setState(() => isProcessing = false);

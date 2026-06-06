@@ -11,7 +11,6 @@ import 'package:pos_system/core/widgets/my_alert_dialog.dart';
 import 'package:pos_system/core/widgets/text_field.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/account/presentation/state_management/personal_info_repo_provider.dart';
-import 'package:pos_system/features/store/data/repository/store_info_repository.dart';
 import 'package:pos_system/features/store/presentation/widgets/store_form_save_logic.dart';
 
 class RegisterStoreForm extends ConsumerStatefulWidget {
@@ -84,13 +83,19 @@ class _RegisterStoreFormState extends ConsumerState<RegisterStoreForm> {
               spacing: 8,
               children: [
                 MyButton(
-                  buttonText: "Clear",
+                  buttonText: (!isAnyOfTheFieldsFilled()) ? "Cancel" : "Clear",
                   buttonTextColor: myColorScheme.inverseSurface,
                   color: myColorScheme.surfaceContainer,
                   borderColor: myColorScheme.surfaceContainer,
                   enableShadow: false,
                   widthPercentage: .3,
                   onTap: () {
+                    // if any of the fields does not have been inputted, just cancel everything
+                    if (!isAnyOfTheFieldsFilled()) {
+                      Navigator.pop(context);
+                      return;
+                    }
+
                     myAlertDialogue(
                       context: context,
                       alertTitle: "Comfirm to clear the fields?",
@@ -123,6 +128,7 @@ class _RegisterStoreFormState extends ConsumerState<RegisterStoreForm> {
                         log(pictureController.text);
 
                         saveToFirebase(
+                          ref: ref,
                           personalInfoRepo: ref.read(
                             myPersonalInfoRepoProvider,
                           ),
@@ -143,5 +149,17 @@ class _RegisterStoreFormState extends ConsumerState<RegisterStoreForm> {
         ),
       ),
     );
+  }
+
+  bool isAnyOfTheFieldsFilled() {
+    if (storeNameController.text != "" ||
+        storeOwnerController.text != "" ||
+        pictureController.text != "") {
+      log("empty string ra: true");
+      return true;
+    } else {
+      log("empty string ra: false");
+      return false;
+    }
   }
 }

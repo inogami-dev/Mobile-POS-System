@@ -94,15 +94,15 @@ class _AccountPageState extends ConsumerState<AccountPage> {
   //           FirebaseAuth.instance.signOut();
   //           setState(() => isLoggingOut = false);
   //           Navigator.pop(context);
-
+  //
   //           ref
   //               .read(currentLoggedInUserControllerProvider.notifier)
   //               .setCurrentLoggedInUser(null);
-
+  //
   //           ref.read(rootScaffoldStateProvider.notifier).changeIndex(0);
   //         },
   //       );
-
+  //
   //       // showMyAnimatedSnackBar(
   //       //   context: context,
   //       //   dataToDisplay: "Hello",

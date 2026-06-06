@@ -24,6 +24,8 @@ class PersonalInfo with _$PersonalInfo implements BaseEntity {
     required String sex,
     required String age,
     required String contactNumber,
+    required String currentStoreInView, // (deletable)
+    // @Default("") String currentStoreInView,
 
     /// For customer role only
     @Default(0.0) double creditBalance,
