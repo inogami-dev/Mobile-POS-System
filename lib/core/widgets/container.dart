@@ -5,6 +5,7 @@ class MyContainer extends StatelessWidget {
   final double? height;
   final Color? color;
   final double? borderRadius;
+  final EdgeInsets? padding;
   final BorderRadius? customBorderRadius;
   final Border? border;
   final Color? borderColor;
@@ -24,6 +25,7 @@ class MyContainer extends StatelessWidget {
     this.customBorderRadius,
     this.border,
     this.borderColor,
+    this.padding,
     this.enableShadow = true,
     this.shadowBlurStyle = BlurStyle.outer,
     this.blurRadius = 4,
@@ -40,6 +42,7 @@ class MyContainer extends StatelessWidget {
       width: width,
       height: height,
       alignment: alignment,
+      padding: padding ?? EdgeInsets.all(10),
       clipBehavior: clipBehavior,
       decoration: BoxDecoration(
         color: color ?? myColorScheme.surfaceContainer,
