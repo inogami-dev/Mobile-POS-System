@@ -31,6 +31,7 @@ class _LoggedInUserAccountStoreDetailsState
     final currentlyLoggedInUserData = ref.watch(
       currentLoggedInUserControllerProvider,
     );
+    // This
     StoreInfo store = ref.watch(storeInfoRepoControllerProvider);
 
     personalInfo = currentlyLoggedInUserData.value;
