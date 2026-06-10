@@ -24,6 +24,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
 import 'package:pos_system/features/account/presentation/state_management/personal_info_repo_provider.dart';
+import 'package:pos_system/features/store/presentation/state_management/store_info_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'current_logged_in_user_controller.g.dart';
@@ -48,6 +49,25 @@ class CurrentLoggedInUserController extends _$CurrentLoggedInUserController {
     // If there is a user, fetch their data from Firestore.
     final repository = ref.watch(myPersonalInfoRepoProvider);
     return await repository.getByID(authUser.uid);
+  }
+
+  // Inside CurrentLoggedInUserController
+  Future<void> changeCurrentStore(String newStoreId) async {
+    final currentUser = state.value;
+    if (currentUser == null) return;
+
+    // 1. Tell Firebase to update
+    final repo = ref.read(myPersonalInfoRepoProvider);
+    final updatedUser = currentUser.copyWith(currentStoreInView: newStoreId);
+    await repo.update(updatedUser.id!, updatedUser);
+
+    // 2. Update the local state
+    state = AsyncValue.data(updatedUser);
+
+    // 3. Tell the Store controller to change
+    ref
+        .read(storeInfoRepoControllerProvider.notifier)
+        .setCurrentStore(newStoreId);
   }
 
   // Notice I DELETED the setCurrentLoggedInUser method!

@@ -44,25 +44,6 @@ class StoreInfoRepoController extends _$StoreInfoRepoController {
     ;
   }
 
-  // Inside CurrentLoggedInUserController
-  Future<void> changeCurrentStore(String newStoreId) async {
-    final currentUser = state.value;
-    if (currentUser == null) return;
-
-    // 1. Tell Firebase to update
-    final repo = ref.read(myPersonalInfoRepoProvider);
-    final updatedUser = currentUser.copyWith(currentStoreInView: newStoreId);
-    await repo.update(updatedUser.id!, updatedUser);
-
-    // 2. Update the local state
-    state = AsyncValue.data(updatedUser).value;
-
-    // 3. Tell the Store controller to change
-    ref
-        .read(storeInfoRepoControllerProvider.notifier)
-        .setCurrentStore(newStoreId);
-  }
-
   Future<List<StoreInfo>> userStores() async {
     // 1. Wait for the user to be fully loaded
     final user = await ref.watch(currentLoggedInUserControllerProvider.future);
