@@ -11,8 +11,10 @@ import 'package:pos_system/core/widgets/my_alert_dialog.dart';
 import 'package:pos_system/core/widgets/text_field.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
+import 'package:pos_system/features/account/data/repository/personal_info_repository.dart';
 import 'package:pos_system/features/account/presentation/state_management/current_logged_in_user_controller.dart';
 import 'package:pos_system/features/account/presentation/state_management/personal_info_repo_provider.dart';
+import 'package:pos_system/features/store/presentation/state_management/store_info_controller.dart';
 import 'package:pos_system/features/store/presentation/widgets/store_form_save_logic.dart';
 
 class RegisterStoreForm extends ConsumerStatefulWidget {
@@ -48,15 +50,6 @@ class _RegisterStoreFormState extends ConsumerState<RegisterStoreForm> {
     storeOwnerController.text = currentLoggedInUser.value!.id!;
 
     final personalInfoRepo = ref.read(myPersonalInfoRepoProvider);
-    final ownedStores = currentLoggedInUser.value!.ownerAt;
-    ownedStores.add(storeOwnerController.text);
-    PersonalInfo updatedUserOwnedStores = currentLoggedInUser.value!.copyWith(
-      ownerAt: ownedStores,
-    );
-    personalInfoRepo.update(
-      currentLoggedInUser.value!.id!,
-      updatedUserOwnedStores,
-    );
 
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
@@ -140,37 +133,7 @@ class _RegisterStoreFormState extends ConsumerState<RegisterStoreForm> {
                   buttonShadowColor: myColorScheme.primary,
                   widthPercentage: .4,
                   onTap: () {
-                    myAlertDialogue(
-                      context: context,
-                      alertTitle: "Confirm to save?",
-                      alertContent:
-                          "Confirming will save the data to the database.",
-                      onApprovalButtonText: "Confirm Save",
-                      onApprovalPressed: () async {
-                        if (await ref
-                            .read(myPersonalInfoRepoProvider)
-                            .doesThisUserExist(
-                              userID: storeOwnerController.text,
-                            )) {
-                          log(storeNameController.text);
-                          log(storeOwnerController.text);
-                          log(pictureController.text);
-
-                          saveToFirebase(
-                            ref: ref,
-                            personalInfoRepo: ref.read(
-                              myPersonalInfoRepoProvider,
-                            ),
-                            storeName: storeNameController.text,
-                            storeOwner: storeOwnerController.text,
-                            picture: pictureController.text,
-                          );
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          FocusManager.instance.primaryFocus?.unfocus();
-                        }
-                      },
-                    );
+                    saveLogic(context, currentLoggedInUser, personalInfoRepo);
                   },
                 ),
               ],
@@ -178,6 +141,62 @@ class _RegisterStoreFormState extends ConsumerState<RegisterStoreForm> {
           ],
         ),
       ),
+    );
+  }
+
+  void saveLogic(
+    BuildContext context,
+    AsyncValue<PersonalInfo?> currentLoggedInUser,
+    MyPersonalInfoRepository personalInfoRepo,
+  ) {
+    return myAlertDialogue(
+      context: context,
+      alertTitle: "Confirm to save?",
+      alertContent: "Confirming will save the data to the database.",
+      onApprovalButtonText: "Confirm Save",
+      onApprovalPressed: () async {
+        if (await ref
+            .read(myPersonalInfoRepoProvider)
+            .doesThisUserExist(userID: storeOwnerController.text)) {
+          log(storeNameController.text);
+          log(storeOwnerController.text);
+          log(pictureController.text);
+
+          // Save store info
+          saveToFirebase(
+            ref: ref,
+            personalInfoRepo: ref.read(myPersonalInfoRepoProvider),
+            storeName: storeNameController.text,
+            storeOwner: storeOwnerController.text,
+            picture: pictureController.text,
+          );
+
+          // Update user info
+          List<String> ownedStores = [...currentLoggedInUser.value!.ownerAt];
+
+          final newlyRegisteredStore = await ref
+              .read(storeInfoRepoRefProvider)
+              .getByQuery(field: "storeName", value: storeNameController.text);
+          ownedStores.add(newlyRegisteredStore.last.id!);
+          log("ownedStores: $ownedStores");
+
+          PersonalInfo updatedUserOwnedStores = currentLoggedInUser.value!
+              .copyWith(ownerAt: ownedStores);
+          log("updatedUserOwnedStores: ${updatedUserOwnedStores.ownerAt}");
+
+          personalInfoRepo.update(
+            currentLoggedInUser.value!.id!,
+            updatedUserOwnedStores,
+          );
+
+          // Refresh the current user data
+          ref.invalidate(currentLoggedInUserControllerProvider);
+
+          Navigator.pop(context);
+          Navigator.pop(context);
+          FocusManager.instance.primaryFocus?.unfocus();
+        }
+      },
     );
   }
 
