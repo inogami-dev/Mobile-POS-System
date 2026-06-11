@@ -66,6 +66,10 @@ class _LoggedInUserAccountDetailsState
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             bodyContentTile(
+              text: widget.personalInfo.id ?? "Something went wrong..",
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedId),
+            ),
+            bodyContentTile(
               text: widget.personalInfo.email,
               icon: HugeIcon(icon: HugeIcons.strokeRoundedMail01),
             ),

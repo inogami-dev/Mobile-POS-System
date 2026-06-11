@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/features/account/presentation/state_management/current_logged_in_user_controller.dart';
-import 'package:pos_system/features/account/presentation/state_management/personal_info_repo_provider.dart';
 import 'package:pos_system/features/store/data/model/store_info.dart';
 import 'package:pos_system/features/store/data/repository/store_info_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

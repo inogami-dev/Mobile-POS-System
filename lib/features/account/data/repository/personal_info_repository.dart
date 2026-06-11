@@ -32,6 +32,14 @@ class MyPersonalInfoRepository extends BaseRepository<PersonalInfo> {
     }
   }
 
+  Future<bool> doesThisUserExist({required String userID}) async {
+    // final doc = await collection.where('id', isEqualTo: userID).limit(1);
+
+    final doc = await collection.doc(userID).get();
+
+    return doc.exists;
+  }
+
   // Future<PersonalInfo?> getSpecificPersonalInfo({
   //   required String userID,
   // }) async {

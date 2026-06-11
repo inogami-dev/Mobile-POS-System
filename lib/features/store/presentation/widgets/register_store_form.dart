@@ -10,6 +10,8 @@ import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/my_alert_dialog.dart';
 import 'package:pos_system/core/widgets/text_field.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
+import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
+import 'package:pos_system/features/account/presentation/state_management/current_logged_in_user_controller.dart';
 import 'package:pos_system/features/account/presentation/state_management/personal_info_repo_provider.dart';
 import 'package:pos_system/features/store/presentation/widgets/store_form_save_logic.dart';
 
@@ -29,10 +31,32 @@ class _RegisterStoreFormState extends ConsumerState<RegisterStoreForm> {
   TextEditingController pictureController = TextEditingController();
 
   @override
+  void dispose() {
+    storeNameController.dispose();
+    storeOwnerController.dispose();
+    pictureController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     width = MyDimensions.getWidth(context);
     height = MyDimensions.getHeight(context);
     final myColorScheme = Theme.of(context).colorScheme;
+
+    final currentLoggedInUser = ref.read(currentLoggedInUserControllerProvider);
+    storeOwnerController.text = currentLoggedInUser.value!.id!;
+
+    final personalInfoRepo = ref.read(myPersonalInfoRepoProvider);
+    final ownedStores = currentLoggedInUser.value!.ownerAt;
+    ownedStores.add(storeOwnerController.text);
+    PersonalInfo updatedUserOwnedStores = currentLoggedInUser.value!.copyWith(
+      ownerAt: ownedStores,
+    );
+    personalInfoRepo.update(
+      currentLoggedInUser.value!.id!,
+      updatedUserOwnedStores,
+    );
 
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
@@ -122,23 +146,29 @@ class _RegisterStoreFormState extends ConsumerState<RegisterStoreForm> {
                       alertContent:
                           "Confirming will save the data to the database.",
                       onApprovalButtonText: "Confirm Save",
-                      onApprovalPressed: () {
-                        log(storeNameController.text);
-                        log(storeOwnerController.text);
-                        log(pictureController.text);
+                      onApprovalPressed: () async {
+                        if (await ref
+                            .read(myPersonalInfoRepoProvider)
+                            .doesThisUserExist(
+                              userID: storeOwnerController.text,
+                            )) {
+                          log(storeNameController.text);
+                          log(storeOwnerController.text);
+                          log(pictureController.text);
 
-                        saveToFirebase(
-                          ref: ref,
-                          personalInfoRepo: ref.read(
-                            myPersonalInfoRepoProvider,
-                          ),
-                          storeName: storeNameController.text,
-                          storeOwner: storeOwnerController.text,
-                          picture: pictureController.text,
-                        );
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                        FocusManager.instance.primaryFocus?.unfocus();
+                          saveToFirebase(
+                            ref: ref,
+                            personalInfoRepo: ref.read(
+                              myPersonalInfoRepoProvider,
+                            ),
+                            storeName: storeNameController.text,
+                            storeOwner: storeOwnerController.text,
+                            picture: pictureController.text,
+                          );
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        }
                       },
                     );
                   },
