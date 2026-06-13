@@ -15,7 +15,7 @@ import 'package:pos_system/features/account/data/repository/personal_info_reposi
 import 'package:pos_system/features/account/presentation/state_management/current_logged_in_user_controller.dart';
 import 'package:pos_system/features/account/presentation/state_management/personal_info_repo_provider.dart';
 import 'package:pos_system/features/store/presentation/state_management/store_info_controller.dart';
-import 'package:pos_system/features/store/presentation/widgets/store_form_save_logic.dart';
+import 'package:pos_system/features/store/presentation/widgets/save_to_firebase_logic.dart';
 
 class RegisterStoreForm extends ConsumerStatefulWidget {
   const RegisterStoreForm({super.key});
@@ -30,6 +30,7 @@ class _RegisterStoreFormState extends ConsumerState<RegisterStoreForm> {
 
   TextEditingController storeNameController = TextEditingController();
   TextEditingController storeOwnerController = TextEditingController();
+  late var currentLoggedInUser;
   TextEditingController pictureController = TextEditingController();
 
   @override
@@ -46,8 +47,11 @@ class _RegisterStoreFormState extends ConsumerState<RegisterStoreForm> {
     height = MyDimensions.getHeight(context);
     final myColorScheme = Theme.of(context).colorScheme;
 
-    final currentLoggedInUser = ref.read(currentLoggedInUserControllerProvider);
-    storeOwnerController.text = currentLoggedInUser.value!.id!;
+    currentLoggedInUser = ref.read(currentLoggedInUserControllerProvider);
+    // Only set the default value of storeOwnerController is it is empty to prevent overwriting.
+    if (storeOwnerController.text == "") {
+      storeOwnerController.text = currentLoggedInUser.value!.id!;
+    }
 
     final personalInfoRepo = ref.read(myPersonalInfoRepoProvider);
 
@@ -181,7 +185,10 @@ class _RegisterStoreFormState extends ConsumerState<RegisterStoreForm> {
           log("ownedStores: $ownedStores");
 
           PersonalInfo updatedUserOwnedStores = currentLoggedInUser.value!
-              .copyWith(ownerAt: ownedStores);
+              .copyWith(
+                ownerAt: ownedStores,
+                currentStoreInView: newlyRegisteredStore.last.id!,
+              );
           log("updatedUserOwnedStores: ${updatedUserOwnedStores.ownerAt}");
 
           personalInfoRepo.update(
@@ -201,9 +208,18 @@ class _RegisterStoreFormState extends ConsumerState<RegisterStoreForm> {
   }
 
   bool isAnyOfTheFieldsFilled() {
-    if (storeNameController.text != "" ||
-        storeOwnerController.text != "" ||
-        pictureController.text != "") {
+    bool isNameControllerNotEmpty = storeNameController.text != ""; // nay sulod
+    bool isStoreOwnerControllerNotEmptyNorUsingDefaultValue =
+        (storeOwnerController.text != "" &&
+        storeOwnerController.text != currentLoggedInUser.value!.id);
+    bool isPictureControllerNotEmpty = pictureController.text != "";
+
+    if (isNameControllerNotEmpty ||
+        isStoreOwnerControllerNotEmptyNorUsingDefaultValue ||
+        isPictureControllerNotEmpty) {
+      log(
+        "isStoreOwnerControllerNotEmptyNorUsingDefaultValue: $isStoreOwnerControllerNotEmptyNorUsingDefaultValue",
+      );
       log("empty string ra: true");
       return true;
     } else {

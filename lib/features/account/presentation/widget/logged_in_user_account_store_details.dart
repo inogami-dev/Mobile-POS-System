@@ -111,6 +111,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/bottom_sheet.dart';
+import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/dropdown.dart';
 import 'package:pos_system/core/widgets/empty_ui.dart';
@@ -120,6 +121,7 @@ import 'package:pos_system/features/account/data/model/personal_info_model/perso
 import 'package:pos_system/features/account/presentation/state_management/current_logged_in_user_controller.dart';
 import 'package:pos_system/features/store/data/model/store_info.dart';
 import 'package:pos_system/features/store/presentation/state_management/user_stores_controller.dart';
+import 'package:pos_system/features/store/presentation/widgets/mini_widgets/no_store_yet.dart';
 import 'package:pos_system/features/store/presentation/widgets/register_store_form.dart';
 
 class LoggedInUserAccountStoreDetails extends ConsumerWidget {
@@ -149,14 +151,17 @@ class LoggedInUserAccountStoreDetails extends ConsumerWidget {
     List<String> storeNames = storesList
         .map((store) => store.storeName)
         .toList();
-    if (storeNames.isEmpty) return const MyEmptyUI();
+    if (storeNames.isEmpty) {
+      return NoStoreYet();
+    }
+    ;
     storeNames.add("Register New Store?");
 
     // Find the NAME of the currently active store to show in the dropdown
     String? currentStoreName;
     try {
       currentStoreName = storesList
-          .firstWhere((s) => s.id == personalInfo.currentStoreInView)
+          .firstWhere((store) => store.id == personalInfo.currentStoreInView)
           .storeName;
     } catch (e) {
       currentStoreName = null;
