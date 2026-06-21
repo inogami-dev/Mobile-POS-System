@@ -18,6 +18,7 @@ class MyButton extends StatefulWidget {
   final Color? buttonShadowColor;
   final double buttonTextFontSize;
   final double? buttonWidth;
+  final bool isUsedAsAbortButton;
 
   // To be implemented pa ni in the future haha
   // final bool isDecorated;
@@ -40,6 +41,7 @@ class MyButton extends StatefulWidget {
     this.buttonShadowColor,
     this.buttonTextFontSize = 14,
     this.buttonWidth,
+    this.isUsedAsAbortButton = false,
     // this.isDecorated = true,
   });
 
@@ -49,6 +51,12 @@ class MyButton extends StatefulWidget {
 
 class _MyCustButtonState extends State<MyButton> {
   late ColorScheme myColorScheme;
+  late String _buttonText;
+  late double? _buttonWidth;
+  late double _buttonWidthPercentage;
+  late Color? _buttonColor;
+  late Color _buttonBorderColor;
+  late bool _isShadowEnabled;
 
   @override
   void dispose() {
@@ -58,17 +66,33 @@ class _MyCustButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
     myColorScheme = Theme.of(context).colorScheme;
+    _buttonText = widget.buttonText;
+    _buttonWidth = widget.buttonWidth;
+    _buttonWidthPercentage = widget.widthPercentage;
+    _buttonColor = widget.color;
+    _buttonBorderColor = widget.borderColor;
+    _isShadowEnabled = widget.enableShadow;
+
+    // Presets of a default cancel button
+    if (widget.isUsedAsAbortButton) {
+      _buttonText = "Cancel";
+      _buttonWidth = null;
+      _buttonWidthPercentage = 0.35;
+      _buttonColor = myColorScheme.surfaceContainer;
+      _buttonBorderColor = Colors.transparent;
+      _isShadowEnabled = false;
+    }
 
     return Container(
-      width: (widget.buttonWidth != null)
-          ? widget.buttonWidth!
-          : MyDimensions.getWidth(context) * widget.widthPercentage,
+      width: (_buttonWidth != null)
+          ? _buttonWidth
+          : MyDimensions.getWidth(context) * _buttonWidthPercentage,
       height: widget.height,
       decoration: BoxDecoration(
         // color: widget.color ?? myColorScheme.primary,
-        color: widget.color ?? myColorScheme.primary,
+        color: _buttonColor ?? myColorScheme.primary,
         border: BoxBorder.all(
-          color: widget.borderColor,
+          color: _buttonBorderColor,
           width: widget.borderWidth,
         ),
         borderRadius: BorderRadius.circular(widget.borderRadius),
@@ -86,7 +110,7 @@ class _MyCustButtonState extends State<MyButton> {
           },
           child: Center(
             child: Text(
-              widget.buttonText,
+              _buttonText,
               style: TextStyle(
                 fontWeight: widget.buttonTextFontWeight,
                 color: widget.buttonTextColor ?? myColorScheme.onPrimary,
@@ -104,7 +128,7 @@ class _MyCustButtonState extends State<MyButton> {
   BoxShadow boxShadow(Offset offset) {
     return BoxShadow(
       // color: const Color.fromARGB(50, 33, 149, 243),
-      color: (widget.enableShadow)
+      color: (_isShadowEnabled)
           ? widget.buttonShadowColor?.withAlpha(50) ?? myColorScheme.shadow
           : Colors.transparent,
       offset: offset,

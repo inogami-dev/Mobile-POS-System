@@ -77,6 +77,7 @@ abstract class BaseRepository<T extends BaseEntity> {
   }
 
   Future<void> update(String id, T item) async {
+    log("SUCCESSFUL UPDATE");
     await collection.doc(id).update(toMap(item));
   }
 

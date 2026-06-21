@@ -1,14 +1,17 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
 import 'package:pos_system/core/utilities/image_displayer.dart';
 import 'package:pos_system/core/utilities/image_picker.dart';
+import 'package:pos_system/features/account/presentation/state_management/current_logged_in_user_controller.dart';
+import 'package:pos_system/features/account/presentation/widget/edit_profile_pricture_modal.dart';
 import 'package:pos_system/features/account/presentation/widget/logged_in_user_account_details.dart';
 
 class LoggedInUserAccount extends ConsumerStatefulWidget {
-  final PersonalInfo userState;
-  const LoggedInUserAccount({super.key, required this.userState});
+  const LoggedInUserAccount({super.key});
 
   @override
   ConsumerState<LoggedInUserAccount> createState() =>
@@ -18,16 +21,15 @@ class LoggedInUserAccount extends ConsumerStatefulWidget {
 class _LoggedInUserAccountState extends ConsumerState<LoggedInUserAccount> {
   late double width;
   late double height;
-  String? _profileImage;
   late PersonalInfo loggedInUserInfo;
+  late ColorScheme myColorScheme;
 
   @override
   Widget build(BuildContext context) {
     width = MyDimensions.getWidth(context);
     height = MyDimensions.getHeight(context);
-    final myColorScheme = Theme.of(context).colorScheme;
-    loggedInUserInfo = widget.userState;
-    _profileImage = loggedInUserInfo.picture;
+    myColorScheme = Theme.of(context).colorScheme;
+    loggedInUserInfo = ref.watch(currentLoggedInUserControllerProvider).value!;
 
     return Container(
       width: width * 0.9,
@@ -44,14 +46,23 @@ class _LoggedInUserAccountState extends ConsumerState<LoggedInUserAccount> {
             ),
             child: GestureDetector(
               onTap: () async {
-                String pickedImageBase64 =
-                    await MyImageProcessor.myImagePicker();
-                setState(() => _profileImage = pickedImageBase64);
+                // String pickedImageBase64 =
+                //     await MyImageProcessor.myImagePicker();
+                // log("selected image: $pickedImageBase64");
+                // setState(() => _profileImage = pickedImageBase64);
+
+                editProfilePicture(
+                  context: context,
+                  ref: ref,
+                  myColorScheme: myColorScheme,
+                  loggedInUserInfo: loggedInUserInfo,
+                  width: width,
+                );
               },
               child: MyImageDisplayer(
                 profileImageSize: width * 0.3,
                 base64ImageString: MyImageProcessor.decodeStringToUint8List(
-                  _profileImage ?? "",
+                  loggedInUserInfo.picture,
                 ),
               ),
             ),

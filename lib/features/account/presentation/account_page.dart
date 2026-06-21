@@ -58,7 +58,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                     : Expanded(
                         child: Column(
                           children: [
-                            LoggedInUserAccount(userState: userState.value!),
+                            LoggedInUserAccount(),
                             LoggedInUserAccountStoreDetails(),
 
                             Spacer(),
