@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
@@ -46,11 +44,6 @@ class _LoggedInUserAccountState extends ConsumerState<LoggedInUserAccount> {
             ),
             child: GestureDetector(
               onTap: () async {
-                // String pickedImageBase64 =
-                //     await MyImageProcessor.myImagePicker();
-                // log("selected image: $pickedImageBase64");
-                // setState(() => _profileImage = pickedImageBase64);
-
                 editProfilePicture(
                   context: context,
                   ref: ref,

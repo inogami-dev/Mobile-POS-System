@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pos_system/core/constants/app_collections.dart';
 import 'package:pos_system/core/constants/app_layout.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/appbar.dart';
@@ -9,7 +8,7 @@ import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/my_alert_dialog.dart';
 import 'package:pos_system/core/widgets/progress_indicator_static.dart';
 import 'package:pos_system/core/widgets/root_scaffold/root_scaffold_state.dart';
-import 'package:pos_system/features/account/presentation/widget/logged_in_user_account.dart';
+import 'package:pos_system/features/account/presentation/logged_in_user_account.dart';
 import 'package:pos_system/features/account/presentation/state_management/current_logged_in_user_controller.dart';
 import 'package:pos_system/features/account/presentation/widget/logged_in_user_account_store_details.dart';
 

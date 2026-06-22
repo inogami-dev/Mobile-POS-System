@@ -28,8 +28,8 @@ void editProfilePicture({
   showMyBottomSheet(
     context: context,
     child: StatefulBuilder(
-      builder: (context, StateSetter setState) {
-        setState(() => spacing = (_selectedNewPicture == null) ? 40 : 8);
+      builder: (context, StateSetter setModalState) {
+        setModalState(() => spacing = (_selectedNewPicture == null) ? 40 : 8);
         return MyContainer(
           height: MyDimensions.getHeight(context) * 0.3,
           child: Column(
@@ -44,7 +44,7 @@ void editProfilePicture({
                   // 2. Prevent updating if the user cancelled the picker
                   if (pickedImageBase64.isNotEmpty) {
                     // 3. Use setModalState to rebuild ONLY the bottom sheet
-                    setState(() {
+                    setModalState(() {
                       _selectedNewPicture = pickedImageBase64;
                     });
                   }
