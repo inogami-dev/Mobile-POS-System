@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pos_system/core/widgets/bottom_sheet.dart';
 import 'package:pos_system/core/widgets/button.dart';
+import 'package:pos_system/features/products/presentation/widgets/add_product_sheet.dart';
 
 class InventoryPage extends StatefulWidget {
   const InventoryPage({super.key});
@@ -15,13 +17,23 @@ class _InventoryPageState extends State<InventoryPage> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: Container(
-        width: width,
-        height: height,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [MyButton(buttonText: "Add Product", onTap: () {})],
+      body: SingleChildScrollView(
+        child: Container(
+          width: width,
+          height: height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              MyButton(
+                widthPercentage: 0.45,
+                buttonText: "Add Product",
+                onTap: () {
+                  showMyBottomSheet(context: context, child: AddProductSheet());
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
