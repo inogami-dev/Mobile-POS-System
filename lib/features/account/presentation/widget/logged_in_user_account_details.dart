@@ -83,6 +83,7 @@ class _LoggedInUserAccountDetailsState
         controller: scrollController,
         padding: EdgeInsets.only(right: 0),
         child: SingleChildScrollView(
+          controller: scrollController,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

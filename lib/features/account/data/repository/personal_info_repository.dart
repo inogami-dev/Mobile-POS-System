@@ -17,28 +17,28 @@ class MyPersonalInfoRepository extends BaseRepository<PersonalInfo> {
     return item.toJson();
   }
 
-  Future<List<PersonalInfo>> getAllPersonalInfo() async {
-    try {
-      List<PersonalInfo> personalInfoList = [];
-      QuerySnapshot snapshot = await collection.get();
-      for (var doc in snapshot.docs) {
-        personalInfoList.add(
-          fromMap(doc.data() as Map<String, dynamic>, doc.id),
-        );
-      }
-      return personalInfoList;
-    } catch (e) {
-      rethrow;
-    }
-  }
+  //// @Deprecated Moved to base repository
+  // Future<List<PersonalInfo>> getAllPersonalInfo() async {
+  //   try {
+  //     List<PersonalInfo> personalInfoList = [];
+  //     QuerySnapshot snapshot = await collection.get();
+  //     for (var doc in snapshot.docs) {
+  //       personalInfoList.add(
+  //         fromMap(doc.data() as Map<String, dynamic>, doc.id),
+  //       );
+  //     }
+  //     return personalInfoList;
+  //   } catch (e) {
+  //     rethrow;
+  //   }
+  // }
 
-  Future<bool> doesThisUserExist({required String userID}) async {
-    // final doc = await collection.where('id', isEqualTo: userID).limit(1);
-
-    final doc = await collection.doc(userID).get();
-
-    return doc.exists;
-  }
+  //// @Deprecated Moved to base repository
+  // Future<bool> doesThisUserExist({required String userID}) async {
+  //   // final doc = await collection.where('id', isEqualTo: userID).limit(1);
+  //   final doc = await collection.doc(userID).get();
+  //   return doc.exists;
+  // }
 
   // Future<PersonalInfo?> getSpecificPersonalInfo({
   //   required String userID,

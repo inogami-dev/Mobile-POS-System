@@ -21,7 +21,7 @@ abstract class BaseRepository<T extends BaseEntity> {
   T fromMap(Map<String, dynamic> map, String id);
 
   //------------------------ CRUD Operations Para di libog ------------------
-
+  // Create -------------------------------------------------
   Future<void> add(T item) async {
     try {
       DocumentReference docRef = _generateDocID(item.id);
@@ -35,6 +35,8 @@ abstract class BaseRepository<T extends BaseEntity> {
       rethrow;
     }
   }
+
+  // Read -------------------------------------------------
 
   // RESPONSIBILITY 1: Get a single document by its exact ID
   Future<T?> getByID(String id) async {
@@ -76,11 +78,34 @@ abstract class BaseRepository<T extends BaseEntity> {
     }
   }
 
+  Future<List<T>> getAllRecords() async {
+    try {
+      List<T> records = [];
+      QuerySnapshot snapshot = await collection.get();
+      for (var doc in snapshot.docs) {
+        records.add(fromMap(doc.data() as Map<String, dynamic>, doc.id));
+      }
+      return records;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> doesThisRecordExist({required String recordID}) async {
+    // final doc = await collection.where('id', isEqualTo: userID).limit(1);
+
+    final doc = await collection.doc(recordID).get();
+
+    return doc.exists;
+  }
+
+  // Update -------------------------------------------------
   Future<void> update(String id, T item) async {
     log("SUCCESSFUL UPDATE");
     await collection.doc(id).update(toMap(item));
   }
 
+  // Delete --------------------------------------------------
   Future<void> delete(String id) async {
     await collection.doc(id).delete();
   }

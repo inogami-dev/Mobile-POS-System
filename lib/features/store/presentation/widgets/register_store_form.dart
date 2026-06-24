@@ -161,7 +161,7 @@ class _RegisterStoreFormState extends ConsumerState<RegisterStoreForm> {
       onApprovalPressed: () async {
         if (await ref
             .read(myPersonalInfoRepoProvider)
-            .doesThisUserExist(userID: storeOwnerController.text)) {
+            .doesThisRecordExist(recordID: storeOwnerController.text)) {
           log(storeNameController.text);
           log(storeOwnerController.text);
           log(pictureController.text);
