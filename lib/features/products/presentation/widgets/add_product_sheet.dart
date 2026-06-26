@@ -22,9 +22,19 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
 
     return MyDecoratedBottomSheet(
       width: width,
-      height: height * 0.56,
+      // height: height * 0.56,
       child: Column(
+        spacing: 8,
         children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0, bottom: 16),
+            child: MyText(
+              text: "Add a Product",
+              fontSize: kDefaultFontSize + 8,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+
           MyTextfield(
             labelText: "Product Name",
             prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedPackage),
@@ -55,6 +65,7 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
             prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedCalendar05),
             textController: TextEditingController(),
           ),
+          SizedBox(height: 8),
         ],
       ),
     );
