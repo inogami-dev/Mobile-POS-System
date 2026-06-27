@@ -59,10 +59,10 @@ void showMyAnimatedSnackBar({
                         Icon(
                           Icons.info_outline_rounded,
                           color: myColorScheme.outline,
-                          size: 26,
+                          size: 32,
                         ),
-                    SizedBox(width: 5),
-                    Text(dataToDisplay),
+                    SizedBox(width: 8),
+                    Expanded(child: Text(dataToDisplay, softWrap: true)),
                   ],
                 ),
               ),

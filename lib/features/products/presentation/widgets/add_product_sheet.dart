@@ -8,6 +8,7 @@ import 'package:pos_system/core/widgets/bottom_sheet_decorated.dart';
 import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/date_picker.dart';
+import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/core/widgets/text_field.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 
@@ -92,6 +93,36 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
               //   prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedCalendar05),
               //   textController: TextEditingController(),
               // ),
+              SizedBox(height: 16),
+              Container(
+                width: width * 0.8,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 8,
+                  children: [
+                    MyButton(
+                      buttonText: "Cancel",
+                      isUsedAsAbortButton: true,
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    Expanded(
+                      child: MyButton(
+                        buttonText: "Save Product",
+                        onTap: () {
+                          showMyAnimatedSnackBar(
+                            context: context,
+                            dataToDisplay:
+                                "Name: ${productNameController.text} \nDescription: ${productDescriptionController.text} \nPrice: ${productRriceController.text} \nExpiration Date: ${expirationDate.toString()}",
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
               SizedBox(height: 8),
             ],
           ),
