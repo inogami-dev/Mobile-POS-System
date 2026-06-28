@@ -9,8 +9,10 @@ import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/date_picker.dart';
 import 'package:pos_system/core/widgets/my_snackbar.dart';
+import 'package:pos_system/core/widgets/page_navigator.dart';
 import 'package:pos_system/core/widgets/text_field.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
+import 'package:pos_system/features/products/presentation/widgets/scanner.dart';
 
 class AddProductSheet extends ConsumerStatefulWidget {
   const AddProductSheet({super.key});
@@ -25,6 +27,7 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
   TextEditingController productDescriptionController = TextEditingController();
   TextEditingController productRriceController = TextEditingController();
   DateTime? expirationDate;
+  String? barcode;
 
   // Layout Fields
   late ColorScheme myColorScheme;
@@ -77,11 +80,34 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
                 prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedMoney04),
                 textController: productRriceController,
               ),
-              MyTextfield(
-                labelText: "Get Barcode (Button ni dapat)",
-                prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedText),
-                textController: TextEditingController(),
+              GestureDetector(
+                onTap: () {
+                  MyNavigator.goTo(context, MyScanner());
+                },
+                child: MyContainer(
+                  width: width * 0.8,
+                  height: 50,
+                  padding: EdgeInsets.only(left: 16),
+                  borderRadius: 50,
+                  color: myColorScheme.surfaceContainerHighest,
+                  borderColor: myColorScheme.primaryFixed,
+                  child: Row(
+                    children: [
+                      HugeIcon(
+                        icon: HugeIcons.strokeRoundedBarCode01,
+                        size: 32,
+                      ),
+                      SizedBox(width: 8),
+                      MyText(text: "Scan Barcode"),
+                    ],
+                  ),
+                ),
               ),
+              // MyTextfield(
+              //   labelText: "Get Barcode (Button ni dapat)",
+              //   prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedText),
+              //   textController: TextEditingController(),
+              // ),
               MyTextfield(
                 labelText: "Picture (Button ni dapat)",
                 prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedText),
