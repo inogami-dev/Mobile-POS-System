@@ -99,6 +99,7 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
                       HugeIcon(
                         icon: HugeIcons.strokeRoundedBarCode01,
                         size: 32,
+                        color: myColorScheme.onSurfaceVariant,
                       ),
                       SizedBox(width: 8),
                       MyText(
