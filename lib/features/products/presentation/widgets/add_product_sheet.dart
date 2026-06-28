@@ -12,6 +12,7 @@ import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/core/widgets/page_navigator.dart';
 import 'package:pos_system/core/widgets/text_field.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
+import 'package:pos_system/features/products/presentation/state_management/single_scan_value.dart';
 import 'package:pos_system/features/products/presentation/widgets/scanner.dart';
 
 class AddProductSheet extends ConsumerStatefulWidget {
@@ -27,7 +28,7 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
   TextEditingController productDescriptionController = TextEditingController();
   TextEditingController productRriceController = TextEditingController();
   DateTime? expirationDate;
-  String? barcode;
+  late String scannedBarcode;
 
   // Layout Fields
   late ColorScheme myColorScheme;
@@ -47,6 +48,8 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     myColorScheme = Theme.of(context).colorScheme;
+    scannedBarcode = ref.watch<String>(singleScanValueProvider);
+    bool isBarcodeScanned = scannedBarcode.isNotEmpty;
 
     return StatefulBuilder(
       builder: (context, StateSetter setModalState) {
@@ -98,7 +101,11 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
                         size: 32,
                       ),
                       SizedBox(width: 8),
-                      MyText(text: "Scan Barcode"),
+                      MyText(
+                        text: (isBarcodeScanned)
+                            ? scannedBarcode
+                            : "Scan Barcode",
+                      ),
                     ],
                   ),
                 ),
