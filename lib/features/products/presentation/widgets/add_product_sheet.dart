@@ -10,6 +10,7 @@ import 'package:pos_system/core/widgets/bottom_sheet_decorated.dart';
 import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/date_picker.dart';
+import 'package:pos_system/core/widgets/my_alert_dialog.dart';
 import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/core/widgets/page_navigator.dart';
 import 'package:pos_system/core/widgets/text_field.dart';
@@ -172,10 +173,18 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
                       child: MyButton(
                         buttonText: "Save Product",
                         onTap: () {
-                          showMyAnimatedSnackBar(
+                          myAlertDialogue(
                             context: context,
-                            dataToDisplay:
-                                "Name: ${productNameController.text} \nDescription: ${productDescriptionController.text} \nPrice: ${productRriceController.text} \nExpiration Date: ${expirationDate.toString()}",
+                            alertTitle: "Confirmation to Save Product?",
+                            alertContent:
+                                "You are about to save this product, only proceed if you have fill out all the details in the form.",
+                            onApprovalPressed: () {
+                              showMyAnimatedSnackBar(
+                                context: context,
+                                dataToDisplay:
+                                    "Name: ${productNameController.text} \nDescription: ${productDescriptionController.text} \nPrice: ${productRriceController.text} \nExpiration Date: ${expirationDate.toString()}",
+                              );
+                            },
                           );
                         },
                       ),

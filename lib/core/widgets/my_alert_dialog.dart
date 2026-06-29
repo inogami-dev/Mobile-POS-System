@@ -23,11 +23,8 @@ void myAlertDialogue({
     barrierDismissible: isDismissible,
     builder: (context) {
       return CupertinoAlertDialog(
-        title: Text(alertTitle),
-        content: Text(
-          alertContent,
-          // style: TextStyle(fontSize: kDefaultFontSize),
-        ),
+        title: Text(alertTitle, style: TextStyle(fontFamily: "Quicksand")),
+        content: Text(alertContent, style: TextStyle(fontFamily: "Quicksand")),
 
         actions: [
           CupertinoDialogAction(
