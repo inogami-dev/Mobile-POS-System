@@ -54,7 +54,7 @@ class _LoggedInUserAccountState extends ConsumerState<LoggedInUserAccount> {
               },
               child: MyImageDisplayer(
                 displaySize: width * 0.3,
-                base64ImageString: MyImageProcessor.decodeStringToUint8List(
+                imageInBase64Format: MyImageProcessor.decodeStringToUint8List(
                   loggedInUserInfo.picture,
                 ),
               ),

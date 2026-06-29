@@ -138,7 +138,7 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
                             )
                           : MyImageDisplayer(
                               displaySize: 32,
-                              base64ImageString:
+                              imageInBase64Format:
                                   MyImageProcessor.decodeStringToUint8List(
                                     pickedProductImage,
                                   ),
@@ -146,24 +146,14 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
                       SizedBox(width: 8),
                       MyText(
                         text: (pickedProductImage.isEmpty)
-                            ? "Select Image"
+                            ? "Select an Image"
                             : "Selected Product Image",
                       ),
                     ],
                   ),
                 ),
               ),
-              // MyTextfield(
-              //   labelText: "Picture (Button ni dapat)",
-              //   prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedText),
-              //   textController: TextEditingController(),
-              // ),
               expirationDateButton(context, setModalState),
-              // MyTextfield(
-              //   labelText: "Expiration Date",
-              //   prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedCalendar05),
-              //   textController: TextEditingController(),
-              // ),
               SizedBox(height: 16),
               Container(
                 width: width * 0.8,

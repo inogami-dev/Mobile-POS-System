@@ -92,7 +92,7 @@ class _MyDropdownMenuButtonState extends State<MyDropdownMenuButton> {
                     ? Row(
                         children: [
                           MyImageDisplayer(
-                            base64ImageString:
+                            imageInBase64Format:
                                 MyImageProcessor.decodeStringToUint8List(
                                   widget.itemWithImage![item]!,
                                 ),

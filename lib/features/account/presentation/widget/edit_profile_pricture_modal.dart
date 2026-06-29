@@ -65,7 +65,7 @@ void editProfilePicture({
                       ? MyText(text: "Select an image.")
                       : MyImageDisplayer(
                           displaySize: width * 0.3,
-                          base64ImageString:
+                          imageInBase64Format:
                               MyImageProcessor.decodeStringToUint8List(
                                 _selectedNewPicture ?? "",
                               ),

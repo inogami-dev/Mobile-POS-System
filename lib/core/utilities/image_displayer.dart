@@ -14,8 +14,8 @@ class MyImageDisplayer extends StatefulWidget {
 
   /// NOTE: If the base64 is in String format, use
   /// ### MyImageProcessor.decodeStringToUint8List(base64String)
-  /// then pass this base64ImageString as an argument to base64String parameter.
-  final Uint8List? base64ImageString;
+  /// then pass this imageInBase64Format as an argument to base64String parameter.
+  final Uint8List? imageInBase64Format;
 
   /// Returns an Oval shaped picture. Otherwise, the original dimension of the picture
   final bool isOval;
@@ -24,19 +24,13 @@ class MyImageDisplayer extends StatefulWidget {
     super.key,
     this.displaySize = 150,
     this.userID,
-    this.base64ImageString,
+    this.imageInBase64Format,
     this.isOval = true,
   });
 
   @override
   State<MyImageDisplayer> createState() => MyImageDisplayerState();
 }
-
-// local loader from image picker, for testing purposes only
-// Future<String> _imageLoader() async {
-//   await Future.delayed(const Duration(milliseconds: 400));
-//   return MyImageProcessor.base64Image;
-// }
 
 class MyImageDisplayerState extends State<MyImageDisplayer> {
   late ColorScheme myColorScheme;
@@ -45,12 +39,11 @@ class MyImageDisplayerState extends State<MyImageDisplayer> {
   Widget build(BuildContext context) {
     myColorScheme = Theme.of(context).colorScheme;
 
-    if (widget.base64ImageString != null) {
+    if (widget.imageInBase64Format != null) {
       if (widget.isOval) {
         return ClipOval(
           child: Image.memory(
-            // base64Decode(widget.base64ImageString ?? snapshot.data!),
-            widget.base64ImageString!,
+            widget.imageInBase64Format!,
             width: widget.displaySize,
             height: widget.displaySize,
             fit: BoxFit.cover,
@@ -62,8 +55,7 @@ class MyImageDisplayerState extends State<MyImageDisplayer> {
         );
       } else {
         return Image.memory(
-          // base64Decode(widget.base64ImageString ?? snapshot.data!),
-          widget.base64ImageString!,
+          widget.imageInBase64Format!,
           width: widget.displaySize,
           height: widget.displaySize,
           fit: BoxFit.cover,

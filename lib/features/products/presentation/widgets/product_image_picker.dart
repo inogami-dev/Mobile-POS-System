@@ -56,7 +56,7 @@ class _MyProductImagePickerState extends ConsumerState<MyProductImagePicker> {
                       borderRadius: 100,
                       child: MyImageDisplayer(
                         displaySize: width * 0.56,
-                        base64ImageString:
+                        imageInBase64Format:
                             MyImageProcessor.decodeStringToUint8List(
                               pickedImage,
                             ),
@@ -107,6 +107,9 @@ class _MyProductImagePickerState extends ConsumerState<MyProductImagePicker> {
                     isUsedAsAbortButton: true,
                     buttonText: "Cancel",
                     onTap: () {
+                      ref
+                          .read(pickedImageValueProvider.notifier)
+                          .removeCachedImage();
                       Navigator.pop(context);
                     },
                   ),
