@@ -1,12 +1,13 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 /// This automatcally process the Image from the database and display it.
 class MyImageDisplayer extends StatefulWidget {
   /// Size of the profile image to be displayed.
   /// NOTE: If MyImageDisplayer is placed inside a CircleAvatar, this property will be ignored.
-  final double profileImageSize;
+  final double displaySize;
 
   /// If userID is not  provided, the current logged in user's ID will be used.
   final String? userID;
@@ -21,7 +22,7 @@ class MyImageDisplayer extends StatefulWidget {
 
   const MyImageDisplayer({
     super.key,
-    this.profileImageSize = 150,
+    this.displaySize = 150,
     this.userID,
     this.base64ImageString,
     this.isOval = true,
@@ -38,37 +39,24 @@ class MyImageDisplayer extends StatefulWidget {
 // }
 
 class MyImageDisplayerState extends State<MyImageDisplayer> {
+  late ColorScheme myColorScheme;
+
   @override
   Widget build(BuildContext context) {
-    // return FutureBuilder(
-    //   // future: _imageLoader(),
-    //   future: _imageLoaderFromFireBase(),
-    //   builder: (context, snapshot) {
-    //     if (snapshot.connectionState == ConnectionState.done) {
-    //       // != ""  kay naka set sya "" sa imagePicker if walay gi pick
-    //       if (snapshot.hasData || snapshot.data != "") {
-    //         print(
-    //           "Snapshot Dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: ${snapshot.data!.length}",
-    //         );
+    myColorScheme = Theme.of(context).colorScheme;
+
     if (widget.base64ImageString != null) {
-      //         print(
-      //           "Snapshot Dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: ${snapshot.data!.length}",
-      //         );
       if (widget.isOval) {
         return ClipOval(
           child: Image.memory(
             // base64Decode(widget.base64ImageString ?? snapshot.data!),
             widget.base64ImageString!,
-            width: widget.profileImageSize,
-            height: widget.profileImageSize,
+            width: widget.displaySize,
+            height: widget.displaySize,
             fit: BoxFit.cover,
             // Error Builder: Shows an icon if the string is broken
             errorBuilder: (context, error, stackTrace) {
-              return Icon(
-                Icons.person_rounded,
-                size: widget.profileImageSize,
-                color: Colors.grey,
-              );
+              return errorDisplayDelegate();
             },
           ),
         );
@@ -76,71 +64,36 @@ class MyImageDisplayerState extends State<MyImageDisplayer> {
         return Image.memory(
           // base64Decode(widget.base64ImageString ?? snapshot.data!),
           widget.base64ImageString!,
-          width: widget.profileImageSize,
-          height: widget.profileImageSize,
+          width: widget.displaySize,
+          height: widget.displaySize,
           fit: BoxFit.cover,
           // Error Builder: Shows an icon if the string is broken
           errorBuilder: (context, error, stackTrace) {
-            return Icon(
-              Icons.person_rounded,
-              size: widget.profileImageSize,
-              color: Colors.grey,
-            );
+            return errorDisplayDelegate();
           },
         );
       }
-      // } else {
-      //   return Icon(
-      //     Icons.person_rounded,
-      //     size: widget.profileImageSize,
-      //     color: Colors.grey,
-      //   );
-      // }
     } else {
       return ClipOval(
         child: SizedBox(
-          width: widget.profileImageSize,
-          height: widget.profileImageSize,
+          width: widget.displaySize,
+          height: widget.displaySize,
           child: CircularProgressIndicator(),
         ),
       );
     }
-    // },
-    // );
   }
 
-  // // loads image from firebase
-  // Future<String> _imageLoaderFromFireBase() async {
-  //   PersonalInfo personalInfo =
-  //       await MyPersonalInfoRepository.getSpecificPersonalInfo(
-  //         // if userID is null, get the current logged in user's ID
-  //         userID: widget.userID ?? FirebaseAuth.instance.currentUser!.uid,
-  //       );
-  //   // MyImageProcessor.base64Image = personalInfo.picture;
-
-  //   // print("USERRRRRRRRRRRRRRRRRRRRRRRRRRRRRR: ${personalInfo.name}");
-  //   // print(
-  //   //   "BASE64 IMAGE STRING LENGTH FROM DATABASE: ${personalInfo.picture.length}",
-  //   // );
-  //   // print(
-  //   //   "Loaded Image from Databaseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: ${personalInfo.picture}",
-  //   // );
-
-  //   // 1. CLEANUP STEP: Fix the string before touching it
-  //   String safeString = personalInfo.picture;
-
-  //   // Remove any hidden newlines (common DB artifact)
-  //   safeString = safeString.replaceAll('\n', '').replaceAll('\r', '');
-
-  //   // Restore missing padding '=' until length is divisible by 4
-  //   while (safeString.length % 4 != 0) {
-  //     safeString += '=';
-  //   }
-
-  //   // print(
-  //   //   "SAFE STRING LENGTHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH: ${safeString.length}",
-  //   // );
-
-  //   return safeString;
-  // }
+  Container errorDisplayDelegate() {
+    return Container(
+      width: widget.displaySize,
+      height: widget.displaySize,
+      padding: EdgeInsets.all(widget.displaySize / 7),
+      child: HugeIcon(
+        icon: HugeIcons.strokeRoundedFolderAttachment,
+        // size: widget.displaySize / 1.5,
+        color: myColorScheme.surfaceBright,
+      ),
+    );
+  }
 }

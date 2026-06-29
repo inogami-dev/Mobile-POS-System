@@ -34,7 +34,7 @@ class MyButton extends StatefulWidget {
     this.borderWidth = 1.5,
     this.borderColor = const Color.fromARGB(254, 209, 232, 253),
     this.buttonTextColor,
-    this.buttonTextSpacing = 2.5,
+    this.buttonTextSpacing = 1.7,
     this.buttonTextFontFamily = "Poppins",
     required this.onTap,
     this.enableShadow = true,
@@ -77,7 +77,7 @@ class _MyCustButtonState extends State<MyButton> {
     if (widget.isUsedAsAbortButton) {
       _buttonText = "Cancel";
       _buttonWidth = null;
-      _buttonWidthPercentage = 0.35;
+      _buttonWidthPercentage = 0.3;
       _buttonColor = myColorScheme.surfaceContainer;
       _buttonBorderColor = Colors.transparent;
       _isShadowEnabled = false;

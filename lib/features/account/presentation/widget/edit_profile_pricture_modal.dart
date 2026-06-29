@@ -1,6 +1,7 @@
 // a separate section for editing user profile picture
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/utilities/image_displayer.dart';
 import 'package:pos_system/core/utilities/image_picker.dart';
@@ -39,7 +40,7 @@ void editProfilePicture({
               GestureDetector(
                 onTap: () async {
                   String pickedImageBase64 =
-                      await MyImageProcessor.myImagePicker();
+                      await MyImageProcessor.myImagePicker(ImageSource.gallery);
 
                   // 2. Prevent updating if the user cancelled the picker
                   if (pickedImageBase64.isNotEmpty) {
@@ -63,7 +64,7 @@ void editProfilePicture({
                   child: (_selectedNewPicture == null)
                       ? MyText(text: "Select an image.")
                       : MyImageDisplayer(
-                          profileImageSize: width * 0.3,
+                          displaySize: width * 0.3,
                           base64ImageString:
                               MyImageProcessor.decodeStringToUint8List(
                                 _selectedNewPicture ?? "",

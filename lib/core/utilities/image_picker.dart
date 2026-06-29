@@ -15,12 +15,13 @@ class MyImageProcessor {
 
   /// a Widget
   /// Picks an image from the gallery, compresses it, and returns its Base64 string representation.
-  static Future<String> myImagePicker() async {
+
+  static Future<String> myImagePicker(ImageSource source) async {
     final ImagePicker imagePicker = await ImagePicker();
 
     // Pick the image AND compress it immediately
     final pickedFile = await imagePicker.pickImage(
-      source: ImageSource.gallery,
+      source: source,
       imageQuality: 50, // Compress to 50% quality
       maxWidth: 800, // Resize to max 800px width
     );

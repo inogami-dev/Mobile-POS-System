@@ -53,7 +53,7 @@ class _LoggedInUserAccountState extends ConsumerState<LoggedInUserAccount> {
                 );
               },
               child: MyImageDisplayer(
-                profileImageSize: width * 0.3,
+                displaySize: width * 0.3,
                 base64ImageString: MyImageProcessor.decodeStringToUint8List(
                   loggedInUserInfo.picture,
                 ),

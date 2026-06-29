@@ -30,6 +30,14 @@ class _InventoryPageState extends State<InventoryPage> {
                 buttonText: "Add Product",
                 onTap: () {
                   showMyBottomSheet(context: context, child: AddProductSheet());
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) =>
+                  //         const AddProductSheet(), // Change your sheet to a normal Scaffold page
+                  //     fullscreenDialog: true, // THIS IS THE MAGIC PROPERTY
+                  //   ),
+                  // );
                 },
               ),
             ],

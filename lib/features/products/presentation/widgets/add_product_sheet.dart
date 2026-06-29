@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/core/utilities/date_formatter.dart';
+import 'package:pos_system/core/utilities/image_displayer.dart';
+import 'package:pos_system/core/utilities/image_picker.dart';
 import 'package:pos_system/core/widgets/bottom_sheet_decorated.dart';
 import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/container.dart';
@@ -12,7 +14,9 @@ import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/core/widgets/page_navigator.dart';
 import 'package:pos_system/core/widgets/text_field.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
+import 'package:pos_system/features/products/presentation/state_management/picked_image_value.dart';
 import 'package:pos_system/features/products/presentation/state_management/single_scan_value.dart';
+import 'package:pos_system/features/products/presentation/widgets/product_image_picker.dart';
 import 'package:pos_system/features/products/presentation/widgets/scanner.dart';
 
 class AddProductSheet extends ConsumerStatefulWidget {
@@ -29,6 +33,7 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
   TextEditingController productRriceController = TextEditingController();
   DateTime? expirationDate;
   late String scannedBarcode;
+  late String pickedProductImage;
 
   // Layout Fields
   late ColorScheme myColorScheme;
@@ -49,6 +54,7 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
     height = MediaQuery.of(context).size.height;
     myColorScheme = Theme.of(context).colorScheme;
     scannedBarcode = ref.watch<String>(singleScanValueProvider);
+    pickedProductImage = ref.watch<String>(pickedImageValueProvider);
     bool isBarcodeScanned = scannedBarcode.isNotEmpty;
 
     return StatefulBuilder(
@@ -111,16 +117,47 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
                   ),
                 ),
               ),
+              GestureDetector(
+                onTap: () {
+                  MyNavigator.goTo(context, MyProductImagePicker());
+                },
+                child: MyContainer(
+                  width: width * 0.8,
+                  height: 50,
+                  padding: EdgeInsets.only(left: 16),
+                  borderRadius: 50,
+                  color: myColorScheme.surfaceContainerHighest,
+                  borderColor: myColorScheme.primaryFixed,
+                  child: Row(
+                    children: [
+                      (pickedProductImage.isEmpty)
+                          ? HugeIcon(
+                              icon: HugeIcons.strokeRoundedImage01,
+                              size: 32,
+                              color: myColorScheme.onSurfaceVariant,
+                            )
+                          : MyImageDisplayer(
+                              displaySize: 32,
+                              base64ImageString:
+                                  MyImageProcessor.decodeStringToUint8List(
+                                    pickedProductImage,
+                                  ),
+                            ),
+                      SizedBox(width: 8),
+                      MyText(
+                        text: (pickedProductImage.isEmpty)
+                            ? "Select Image"
+                            : "Selected Product Image",
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               // MyTextfield(
-              //   labelText: "Get Barcode (Button ni dapat)",
+              //   labelText: "Picture (Button ni dapat)",
               //   prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedText),
               //   textController: TextEditingController(),
               // ),
-              MyTextfield(
-                labelText: "Picture (Button ni dapat)",
-                prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedText),
-                textController: TextEditingController(),
-              ),
               expirationDateButton(context, setModalState),
               // MyTextfield(
               //   labelText: "Expiration Date",
