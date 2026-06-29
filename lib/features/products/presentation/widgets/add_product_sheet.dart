@@ -10,8 +10,6 @@ import 'package:pos_system/core/widgets/bottom_sheet_decorated.dart';
 import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/date_picker.dart';
-import 'package:pos_system/core/widgets/my_alert_dialog.dart';
-import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/core/widgets/page_navigator.dart';
 import 'package:pos_system/core/widgets/text_field.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
@@ -19,6 +17,7 @@ import 'package:pos_system/features/products/presentation/state_management/picke
 import 'package:pos_system/features/products/presentation/state_management/single_scan_value.dart';
 import 'package:pos_system/features/products/presentation/widgets/product_image_picker.dart';
 import 'package:pos_system/features/products/presentation/widgets/scanner.dart';
+import 'package:pos_system/features/products/presentation/widgets/sheet_save_product_logic.dart';
 
 class AddProductSheet extends ConsumerStatefulWidget {
   const AddProductSheet({super.key});
@@ -87,6 +86,7 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
               ),
               MyTextfield(
                 labelText: "Price",
+                textInputType: TextInputType.number,
                 prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedMoney04),
                 textController: productRriceController,
               ),
@@ -101,6 +101,7 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
                   borderRadius: 50,
                   color: myColorScheme.surfaceContainerHighest,
                   borderColor: myColorScheme.primaryFixed,
+                  clipBehavior: Clip.hardEdge,
                   child: Row(
                     children: [
                       HugeIcon(
@@ -109,10 +110,13 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
                         color: myColorScheme.onSurfaceVariant,
                       ),
                       SizedBox(width: 8),
-                      MyText(
-                        text: (isBarcodeScanned)
-                            ? scannedBarcode
-                            : "Scan Barcode",
+                      Expanded(
+                        child: MyText(
+                          text: (isBarcodeScanned)
+                              ? scannedBarcode
+                              : "Scan Barcode",
+                          textOverFlow: TextOverflow.fade,
+                        ),
                       ),
                     ],
                   ),
@@ -173,18 +177,16 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
                       child: MyButton(
                         buttonText: "Save Product",
                         onTap: () {
-                          myAlertDialogue(
-                            context: context,
-                            alertTitle: "Confirmation to Save Product?",
-                            alertContent:
-                                "You are about to save this product, only proceed if you have fill out all the details in the form.",
-                            onApprovalPressed: () {
-                              showMyAnimatedSnackBar(
-                                context: context,
-                                dataToDisplay:
-                                    "Name: ${productNameController.text} \nDescription: ${productDescriptionController.text} \nPrice: ${productRriceController.text} \nExpiration Date: ${expirationDate.toString()}",
-                              );
-                            },
+                          saveProductLogic(
+                            context,
+                            ref: ref,
+                            productName: productNameController.text,
+                            productDescription:
+                                productDescriptionController.text,
+                            productPrice: productRriceController.text,
+                            expirationDate: expirationDate.toString(),
+                            scannedBarcode: scannedBarcode,
+                            pickedProductImage: pickedProductImage,
                           );
                         },
                       ),
