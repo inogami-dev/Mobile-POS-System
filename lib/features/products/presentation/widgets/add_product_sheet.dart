@@ -31,6 +31,7 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
   TextEditingController productNameController = TextEditingController();
   TextEditingController productDescriptionController = TextEditingController();
   TextEditingController productRriceController = TextEditingController();
+  TextEditingController productQuantityController = TextEditingController();
   DateTime? expirationDate;
   late String scannedBarcode;
   late String pickedProductImage;
@@ -89,6 +90,12 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
                 textInputType: TextInputType.number,
                 prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedMoney04),
                 textController: productRriceController,
+              ),
+              MyTextfield(
+                labelText: "Quantity",
+                textInputType: TextInputType.number,
+                prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedMoney04),
+                textController: productQuantityController,
               ),
               GestureDetector(
                 onTap: () {
@@ -184,6 +191,7 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
                             productDescription:
                                 productDescriptionController.text,
                             productPrice: productRriceController.text,
+                            productQuantity: productQuantityController.text,
                             expirationDate: expirationDate.toString(),
                             scannedBarcode: scannedBarcode,
                             pickedProductImage: pickedProductImage,
