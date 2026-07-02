@@ -56,6 +56,7 @@ class _MyCustButtonState extends State<MyButton> {
   late double _buttonWidthPercentage;
   late Color? _buttonColor;
   late Color _buttonBorderColor;
+  late Color? _buttonTextColor;
   late bool _isShadowEnabled;
 
   @override
@@ -70,6 +71,7 @@ class _MyCustButtonState extends State<MyButton> {
     _buttonWidth = widget.buttonWidth;
     _buttonWidthPercentage = widget.widthPercentage;
     _buttonColor = widget.color;
+    _buttonTextColor = widget.buttonTextColor;
     _buttonBorderColor = widget.borderColor;
     _isShadowEnabled = widget.enableShadow;
 
@@ -79,6 +81,7 @@ class _MyCustButtonState extends State<MyButton> {
       _buttonWidth = null;
       _buttonWidthPercentage = 0.3;
       _buttonColor = myColorScheme.surfaceContainer;
+      _buttonTextColor = myColorScheme.onSurface;
       _buttonBorderColor = Colors.transparent;
       _isShadowEnabled = false;
     }
@@ -113,7 +116,7 @@ class _MyCustButtonState extends State<MyButton> {
               _buttonText,
               style: TextStyle(
                 fontWeight: widget.buttonTextFontWeight,
-                color: widget.buttonTextColor ?? myColorScheme.onPrimary,
+                color: _buttonTextColor ?? myColorScheme.onPrimary,
                 letterSpacing: widget.buttonTextSpacing,
                 fontFamily: widget.buttonTextFontFamily,
                 fontSize: widget.buttonTextFontSize,
@@ -129,7 +132,8 @@ class _MyCustButtonState extends State<MyButton> {
     return BoxShadow(
       // color: const Color.fromARGB(50, 33, 149, 243),
       color: (_isShadowEnabled)
-          ? widget.buttonShadowColor?.withAlpha(50) ?? myColorScheme.shadow
+          ? widget.buttonShadowColor?.withAlpha(50) ??
+                myColorScheme.shadow.withAlpha(50)
           : Colors.transparent,
       offset: offset,
       blurRadius: 2,

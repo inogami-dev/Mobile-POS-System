@@ -49,7 +49,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                MyAppBar(title: "Profile", enableBackButton: true),
+                // MyAppBar(title: "Profile", enableBackButton: true),
                 SizedBox(height: 32),
 
                 (userState.isLoading || userState.value == null)

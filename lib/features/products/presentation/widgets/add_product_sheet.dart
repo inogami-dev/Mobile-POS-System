@@ -94,7 +94,9 @@ class _AddProductSheetState extends ConsumerState<AddProductSheet> {
               MyTextfield(
                 labelText: "Quantity",
                 textInputType: TextInputType.number,
-                prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedMoney04),
+                prefixIcon: HugeIcon(
+                  icon: HugeIcons.strokeRoundedTextNumberSign,
+                ),
                 textController: productQuantityController,
               ),
               GestureDetector(

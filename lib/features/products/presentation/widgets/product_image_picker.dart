@@ -114,8 +114,8 @@ class _MyProductImagePickerState extends ConsumerState<MyProductImagePicker> {
                     },
                   ),
                   MyButton(
-                    widthPercentage: 0.56,
-                    buttonText: "Save Product Image",
+                    widthPercentage: 0.6,
+                    buttonText: "Set as Product Image",
                     onTap: () {
                       if (pickedImage.isEmpty) {
                         showMyAnimatedSnackBar(
