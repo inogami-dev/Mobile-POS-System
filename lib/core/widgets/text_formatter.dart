@@ -9,6 +9,7 @@ class MyText extends StatelessWidget {
   final String fontFamily;
   final Color? color;
   final double? letterSpacing;
+  final double? lineHeight;
 
   const MyText({
     super.key,
@@ -20,6 +21,7 @@ class MyText extends StatelessWidget {
     this.fontFamily = "Quicksand",
     this.color,
     this.letterSpacing,
+    this.lineHeight,
   });
 
   @override
@@ -33,6 +35,8 @@ class MyText extends StatelessWidget {
       maxLines: maxLines,
       style: TextStyle(
         fontSize: fontSize,
+        // wordSpacing: 0.5,
+        height: lineHeight,
         fontWeight: fontWeight,
         fontFamily: fontFamily,
         overflow: (maxLines > 1)

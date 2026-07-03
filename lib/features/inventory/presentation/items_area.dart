@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pos_system/features/inventory/presentation/item.dart';
+import 'package:pos_system/features/inventory/presentation/widgets/item.dart';
+import 'package:pos_system/features/products/data/model/product_model.dart';
 
 class MyItemsArea extends ConsumerStatefulWidget {
   const MyItemsArea({super.key});
@@ -20,22 +21,30 @@ class _MyItemsAreaState extends ConsumerState<MyItemsArea> {
       // color: Colors.amber,
       padding: EdgeInsets.only(top: 32, left: 16, right: 16),
       child: GridView.builder(
-        // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        //   crossAxisCount: 2,
-        //   childAspectRatio: 2.0,
-        // ),
-        // itemBuilder: (BuildContext context, int index) {
-        //   return MyItem();
-        // },
+        itemCount: 25,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           mainAxisSpacing: 16.0,
           crossAxisSpacing: 16.0,
+          childAspectRatio: 0.85,
         ),
         itemBuilder: (context, index) {
-          return MyItem(text: "Item ${index + 1}");
+          return MyItem(
+            product: ProductModel(
+              storeId: "storeId_$index",
+              name: "Product $index",
+              price: 1456.0,
+              barCode: "barcode_$index",
+              quantity: 5,
+              description:
+                  "Description for Product $index kjadka adbak ab wha wbad awhbdj hs s a abdakj",
+              picture: "",
+              expirationDate: "2024-12-31",
+              registeredBy: "User $index",
+              registeredOn: DateTime.now().toString(),
+            ),
+          );
         },
-        itemCount: 10,
       ),
     );
   }
