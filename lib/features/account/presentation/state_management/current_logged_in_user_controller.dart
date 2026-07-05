@@ -24,6 +24,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
 import 'package:pos_system/features/account/presentation/state_management/personal_info_repo_provider.dart';
+import 'package:pos_system/features/inventory/presentation/state_management/all_listed_products.dart';
 import 'package:pos_system/features/store/presentation/state_management/store_info_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -68,6 +69,9 @@ class CurrentLoggedInUserController extends _$CurrentLoggedInUserController {
     ref
         .read(storeInfoRepoControllerProvider.notifier)
         .setCurrentStore(newStoreId);
+
+    // Also tell the AllListedProducts provider to refresh its data
+    ref.invalidate(allListedProductsProvider);
   }
 
   // Notice I DELETED the setCurrentLoggedInUser method!
