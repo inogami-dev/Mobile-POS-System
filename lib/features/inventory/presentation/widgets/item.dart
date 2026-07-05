@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:pos_system/core/utilities/image_displayer.dart';
+import 'package:pos_system/core/utilities/image_picker.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/products/data/model/product_model.dart';
@@ -17,6 +19,9 @@ class MyItem extends StatelessWidget {
     double height = MediaQuery.of(context).size.height * 0.08;
     final myColorScheme = Theme.of(context).colorScheme;
 
+    final doesProductExpire =
+        product.expirationDate != null && product.expirationDate!.isNotEmpty;
+
     return MyContainer(
       width: width,
       height: height,
@@ -29,6 +34,14 @@ class MyItem extends StatelessWidget {
         clipBehavior: Clip.hardEdge,
         children: [
           // Placeholder(),
+          Positioned.fill(
+            child: MyImageDisplayer(
+              isOval: false,
+              imageInBase64Format: MyImageProcessor.decodeStringToUint8List(
+                product.picture,
+              ),
+            ),
+          ),
           Positioned(
             top: 2.5,
             right: 2.5,
@@ -79,7 +92,9 @@ class MyItem extends StatelessWidget {
                   ),
                   Spacer(),
                   MyText(
-                    text: "Exp: ${product.expirationDate}",
+                    text: (doesProductExpire)
+                        ? "Exp: ${product.expirationDate}"
+                        : "No Expiration",
                     maxLines: 2,
                     fontSize: kDefaultFontSize - 5,
                     lineHeight: 1.1,

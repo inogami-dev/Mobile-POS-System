@@ -17,7 +17,7 @@ class ProductModel with _$ProductModel implements BaseEntity {
     required double price,
     required int quantity,
     required String picture,
-    required String expirationDate,
+    required String? expirationDate,
     required String registeredOn,
     required String registeredBy,
     // required int stock,
