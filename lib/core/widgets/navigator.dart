@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 
+enum MyAnimationType {
+  slideFromRight,
+  slideFromBottom,
+  fade,
+  scale,
+  rotationScale,
+}
+
 class MyNavigator {
   /// Navigates to the [nextPage] with a custom animation.
   static void goTo(
     BuildContext context,
     Widget nextPage, {
-    int animationType = 0,
+    MyAnimationType animationType = MyAnimationType.slideFromRight,
   }) {
     Navigator.push(
       context,
@@ -29,7 +37,7 @@ class MyNavigator {
             // ----------------------------------------------------------------
             // OPTION 1: SLIDE FROM BOTTOM (Good for Modal/Details pages)
             // ----------------------------------------------------------------
-            case 1:
+            case MyAnimationType.slideFromBottom:
               return SlideTransition(
                 position: Tween<Offset>(
                   begin: const Offset(0.0, 1.0),
@@ -41,13 +49,13 @@ class MyNavigator {
             // ----------------------------------------------------------------
             // OPTION 2: FADE TRANSITION (Simple & Elegant)
             // ----------------------------------------------------------------
-            case 2:
+            case MyAnimationType.fade:
               return FadeTransition(opacity: curvedAnimation, child: child);
 
             // ----------------------------------------------------------------
             // OPTION 3: SCALE TRANSITION (Zooms in from center)
             // ----------------------------------------------------------------
-            case 3:
+            case MyAnimationType.scale:
               return ScaleTransition(
                 scale: Tween<double>(
                   begin: 0.0,
@@ -59,7 +67,7 @@ class MyNavigator {
             // ----------------------------------------------------------------
             // OPTION 4: ROTATION + SCALE (Playful/Crazy)
             // ----------------------------------------------------------------
-            case 4:
+            case MyAnimationType.rotationScale:
               return RotationTransition(
                 turns: Tween<double>(
                   begin: 0.5,
@@ -78,6 +86,7 @@ class MyNavigator {
             // DEFAULT (0): SLIDE FROM RIGHT (Standard iOS/Android feel)
             // ----------------------------------------------------------------
             default:
+              // MyAnimationType.slideFromRight:
               return SlideTransition(
                 position: Tween<Offset>(
                   begin: const Offset(1.0, 0.0),

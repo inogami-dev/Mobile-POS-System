@@ -36,7 +36,7 @@ class MyItem extends StatelessWidget {
         MyNavigator.goTo(
           context,
           ItemHero(heroTag: product.id!),
-          animationType: 2,
+          animationType: MyAnimationType.fade,
         );
       },
       child: MyHero(
