@@ -10,7 +10,7 @@ import 'package:pos_system/core/widgets/bottom_sheet_decorated.dart';
 import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/date_picker.dart';
-import 'package:pos_system/core/widgets/page_navigator.dart';
+import 'package:pos_system/core/widgets/navigator.dart';
 import 'package:pos_system/core/widgets/text_field.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/products/presentation/state_management/picked_image_value.dart';

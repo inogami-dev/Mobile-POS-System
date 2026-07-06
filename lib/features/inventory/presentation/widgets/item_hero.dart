@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pos_system/core/widgets/hero.dart';
 
 class ItemHero extends StatelessWidget {
   final String heroTag;
@@ -11,13 +12,13 @@ class ItemHero extends StatelessWidget {
         onTap: () {
           Navigator.pop(context);
         },
-        child: Hero(
+        child: MyHero(
           tag: heroTag,
           child: Container(
             color: Colors.transparent,
             child: Center(
               child: Text(
-                "Item Hero",
+                heroTag,
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
             ),

@@ -3,7 +3,8 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/core/utilities/image_displayer.dart';
 import 'package:pos_system/core/utilities/image_picker.dart';
 import 'package:pos_system/core/widgets/container.dart';
-import 'package:pos_system/core/widgets/page_navigator.dart';
+import 'package:pos_system/core/widgets/hero.dart';
+import 'package:pos_system/core/widgets/navigator.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/inventory/presentation/widgets/item_hero.dart';
 import 'package:pos_system/features/products/data/model/product_model.dart';
@@ -26,19 +27,19 @@ class MyItem extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ItemHero(heroTag: product.id!),
-          ),
-        );
-        // MyNavigator.goTo(
+        // Navigator.push(
         //   context,
-        //   ItemHero(heroTag: product.id!),
-        //   animationType: 2,
+        //   MaterialPageRoute(
+        //     builder: (context) => ItemHero(heroTag: product.id!),
+        //   ),
         // );
+        MyNavigator.goTo(
+          context,
+          ItemHero(heroTag: product.id!),
+          animationType: 2,
+        );
       },
-      child: Hero(
+      child: MyHero(
         tag: product.id!,
         child: MyContainer(
           width: width,
