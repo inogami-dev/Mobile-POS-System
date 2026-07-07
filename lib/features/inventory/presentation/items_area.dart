@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
+import 'package:pos_system/core/widgets/progress_indicator_static.dart';
 import 'package:pos_system/core/widgets/scrollbar.dart';
 import 'package:pos_system/features/inventory/presentation/state_management/all_listed_products.dart';
 import 'package:pos_system/features/inventory/presentation/widgets/item.dart';
@@ -51,23 +52,9 @@ class _MyItemsAreaState extends ConsumerState<MyItemsArea> {
             childAspectRatio: 0.85,
           ),
           itemBuilder: (context, index) {
-            return MyItem(
-              product:
-                  allListedProducts?[index] ??
-                  ProductModel(
-                    storeId: "storeId_$index",
-                    name: "Product $index",
-                    price: 1456.0,
-                    barCode: "barcode_$index",
-                    quantity: 5,
-                    description:
-                        "Description for Product $index kjadka adbak ab wha wbad awhbdj hs s a abdakj",
-                    picture: "",
-                    expirationDate: "2024-12-31",
-                    registeredBy: "User $index",
-                    registeredOn: DateTime.now().toString(),
-                  ),
-            );
+            return (allListedProducts == null)
+                ? MyProgressIndicator()
+                : MyItem(product: allListedProducts[index]);
           },
         ),
       ),
