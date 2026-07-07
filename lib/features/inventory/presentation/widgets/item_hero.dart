@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pos_system/core/widgets/hero.dart';
+import 'package:pos_system/core/widgets/text_formatter.dart';
+import 'package:pos_system/features/products/data/model/product_model.dart';
 
 class ItemHero extends StatelessWidget {
   final String heroTag;
-  const ItemHero({super.key, required this.heroTag});
+  final ProductModel product;
+  const ItemHero({super.key, required this.heroTag, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +17,7 @@ class ItemHero extends StatelessWidget {
         },
         child: MyHero(
           tag: heroTag,
+          // child: MyItem(product: product),
           child: Container(
             color: Colors.transparent,
             child: Center(

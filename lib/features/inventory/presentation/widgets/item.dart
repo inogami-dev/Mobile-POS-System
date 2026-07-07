@@ -18,8 +18,8 @@ class MyItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width * 0.45;
-    double height = MediaQuery.of(context).size.height * 0.08;
+    double displayWidth = width ?? MediaQuery.of(context).size.width * 0.45;
+    double displayHeight = height ?? MediaQuery.of(context).size.height * 0.08;
     final myColorScheme = Theme.of(context).colorScheme;
 
     final doesProductExpire =
@@ -27,23 +27,17 @@ class MyItem extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => ItemHero(heroTag: product.id!),
-        //   ),
-        // );
         MyNavigator.goTo(
           context,
-          ItemHero(heroTag: product.id!),
+          ItemHero(heroTag: product.id!, product: product),
           animationType: MyAnimationType.fade,
         );
       },
       child: MyHero(
         tag: product.id!,
         child: MyContainer(
-          width: width,
-          height: height,
+          width: displayWidth,
+          height: displayHeight,
           padding: EdgeInsets.all(0),
           clipBehavior: Clip.hardEdge,
           borderColor: myColorScheme.outlineVariant,
@@ -73,8 +67,8 @@ class MyItem extends StatelessWidget {
                 bottom: -0.5,
                 // left: 2.5,
                 child: Container(
-                  width: width,
-                  height: height,
+                  width: displayWidth,
+                  height: displayHeight,
                   padding: EdgeInsets.only(
                     left: 10,
                     right: 10,

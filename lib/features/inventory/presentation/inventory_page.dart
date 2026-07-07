@@ -4,6 +4,7 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/core/widgets/bottom_sheet.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/root_scaffold/root_scaffold_state.dart';
+import 'package:pos_system/features/inventory/presentation/inventory_search_bar.dart';
 import 'package:pos_system/features/inventory/presentation/items_area.dart';
 import 'package:pos_system/features/inventory/presentation/bottom_inventory_options_bar.dart';
 import 'package:pos_system/features/products/presentation/add_product_sheet.dart';
@@ -41,6 +42,7 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SafeArea(bottom: false, child: MyInventorySearchBar()),
               Expanded(child: MyItemsArea()),
               // Spacer(),
               MyBottomInventoryPageOptionsBar(
