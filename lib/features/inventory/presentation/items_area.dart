@@ -7,7 +7,6 @@ import 'package:pos_system/core/widgets/progress_indicator_static.dart';
 import 'package:pos_system/core/widgets/scrollbar.dart';
 import 'package:pos_system/features/inventory/presentation/state_management/all_listed_products.dart';
 import 'package:pos_system/features/inventory/presentation/widgets/item.dart';
-import 'package:pos_system/features/products/data/model/product_model.dart';
 
 class MyItemsArea extends ConsumerStatefulWidget {
   const MyItemsArea({super.key});

@@ -3,16 +3,16 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/core/utilities/image_displayer.dart';
-import 'package:pos_system/core/utilities/image_picker.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/products/data/model/product_model.dart';
 
 class MyItemContents extends StatelessWidget {
-  final double? width;
-  final double? height;
+  final double width;
+  final double height;
   final ProductModel product;
   final Uint8List encodedProductImage;
+  final bool isExpanded;
 
   const MyItemContents({
     super.key,
@@ -20,6 +20,7 @@ class MyItemContents extends StatelessWidget {
     required this.height,
     required this.product,
     required this.encodedProductImage,
+    required this.isExpanded,
   });
 
   @override
@@ -40,13 +41,9 @@ class MyItemContents extends StatelessWidget {
         alignment: Alignment.center,
         clipBehavior: Clip.hardEdge,
         children: [
-          // Placeholder(),
           Positioned.fill(
             child: MyImageDisplayer(
               isOval: false,
-              // imageInBase64Format: MyImageProcessor.decodeStringToUint8List(
-              //   product.picture,
-              // ),
               imageInBase64Format: encodedProductImage,
             ),
           ),
@@ -62,13 +59,13 @@ class MyItemContents extends StatelessWidget {
             bottom: -0.5,
             // left: 2.5,
             child: Container(
-              width: width,
-              height: height,
+              width: (isExpanded) ? (width * 0.99) : width,
+              height: (isExpanded) ? (height * 0.15) : height,
               padding: EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
               margin: EdgeInsets.fromLTRB(4, 0, 4, 0),
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
-                // color: Colors.white10,
+                // color: Colors.black,
                 gradient: LinearGradient(
                   colors: [
                     myColorScheme.surfaceDim.withAlpha(10),
@@ -78,13 +75,16 @@ class MyItemContents extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
+                //
                 // borderRadius: BorderRadius.only(
                 //   bottomLeft: Radius.circular(16),
                 //   bottomRight: Radius.circular(16),
                 // ),
               ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: (isExpanded)
+                    ? MainAxisAlignment.end
+                    : MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   MyText(

@@ -24,8 +24,6 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
-    final myColorScheme = Theme.of(context).colorScheme;
-
     // For inventory options bar container
     final bool isInventoryPageVisible =
         ref.watch(rootScaffoldStateProvider) == 2;

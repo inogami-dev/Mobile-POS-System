@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/utilities/image_picker.dart';
 import 'package:pos_system/core/widgets/hero.dart';
-import 'package:pos_system/features/inventory/presentation/widgets/item.dart';
 import 'package:pos_system/features/inventory/presentation/widgets/item_contents.dart';
 import 'package:pos_system/features/products/data/model/product_model.dart';
 
@@ -36,6 +35,7 @@ class ItemHero extends StatelessWidget {
               width: width,
               height: height,
               product: product,
+              isExpanded: true,
               encodedProductImage: productImage,
             ),
           ),

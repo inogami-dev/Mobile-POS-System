@@ -36,6 +36,7 @@ class MyItem extends StatelessWidget {
           width: displayWidth,
           height: displayHeight,
           product: product,
+          isExpanded: false,
           encodedProductImage: productImage,
         ),
       ),
