@@ -12,6 +12,7 @@ class MyScrollBar extends StatelessWidget {
   final double thickness;
   final double radius;
   final EdgeInsets padding;
+  final bool isInteractive;
 
   const MyScrollBar({
     super.key,
@@ -26,6 +27,7 @@ class MyScrollBar extends StatelessWidget {
     this.thickness = 5,
     this.radius = 50,
     this.padding = const EdgeInsets.all(5),
+    this.isInteractive = false,
   });
 
   @override
@@ -43,6 +45,7 @@ class MyScrollBar extends StatelessWidget {
       radius: Radius.circular(radius),
       padding: padding,
       thumbColor: thumbColor ?? myColorScheme.onPrimaryContainer.withAlpha(200),
+      interactive: isInteractive,
       child: child,
     );
   }
