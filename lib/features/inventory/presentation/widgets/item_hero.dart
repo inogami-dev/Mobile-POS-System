@@ -24,8 +24,8 @@ class ItemHero extends StatelessWidget {
       body: GestureDetector(
         onTap: () {
           Navigator.pop(context);
-          log("Larger | Width: $width, Height: $height");
-          log("Larger Item Dimension | ${width * height}");
+          // log("Larger | Width: $width, Height: $height");
+          // log("Larger Item Dimension | ${width * height}");
         },
         child: MyHero(
           tag: heroTag,

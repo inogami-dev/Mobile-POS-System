@@ -27,8 +27,8 @@ class MyItem extends StatelessWidget {
           ItemHero(heroTag: product.id!, product: product),
           animationType: MyAnimationType.fade,
         );
-        log("Small | Width: $displayWidth, Height: $displayHeight");
-        log("Small Item Dimension | ${displayWidth * displayHeight}");
+        // log("Small | Width: $displayWidth, Height: $displayHeight");
+        // log("Small Item Dimension | ${displayWidth * displayHeight}");
       },
       child: MyHero(
         tag: product.id!,

@@ -13,7 +13,7 @@ void saveProductLogic(
   required String productDescription,
   required String productPrice,
   required String productQuantity,
-  required String expirationDate,
+  required String? expirationDate,
   required String scannedBarcode,
   required String pickedProductImage,
 }) {
@@ -28,6 +28,7 @@ void saveProductLogic(
           .value!;
       final storeID = currentlyLoggedInUser.currentStoreInView;
       final productRepoRef = ref.read(productRepositoryProvider(storeID));
+
       productRepoRef.add(
         ProductModel(
           name: productName,
@@ -37,7 +38,7 @@ void saveProductLogic(
           price: double.parse(productPrice),
           quantity: int.parse(productQuantity),
           picture: pickedProductImage,
-          expirationDate: expirationDate.toString(),
+          expirationDate: expirationDate?.toString() ?? "", // no expiry
           registeredOn: DateTime.now().toString(),
           registeredBy: currentlyLoggedInUser.id!,
         ),

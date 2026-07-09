@@ -10,8 +10,9 @@ part 'store_info_controller.g.dart';
 
 @riverpod
 class StoreInfoRepoController extends _$StoreInfoRepoController {
+  @override
   StoreInfo build() {
-    final currentlyLoggedInUser = ref.read(
+    final currentlyLoggedInUser = ref.watch(
       currentLoggedInUserControllerProvider,
     );
 

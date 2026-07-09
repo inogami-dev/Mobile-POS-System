@@ -27,8 +27,7 @@ class MyItemContents extends StatelessWidget {
   Widget build(BuildContext context) {
     final myColorScheme = Theme.of(context).colorScheme;
 
-    final doesProductExpire =
-        product.expirationDate != null && product.expirationDate!.isNotEmpty;
+    final doesProductExpire = product.expirationDate != "";
 
     return MyContainer(
       width: width,
