@@ -18,6 +18,7 @@ class AllListedProducts extends _$AllListedProducts {
       productRepositoryProvider(currentSelectedStoreID),
     );
     final products = await productRepository.getAllRecords();
+    products.sort((a, b) => a.queryName.compareTo(b.queryName));
     return products;
   }
 }
