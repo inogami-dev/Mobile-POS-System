@@ -9,8 +9,9 @@ class ProductModel with _$ProductModel implements BaseEntity {
   const ProductModel._();
 
   const factory ProductModel({
-    String? id,
+    @override String? id,
     required String name,
+    required String queryName,
     required String storeId,
     required String description,
     required String barCode,

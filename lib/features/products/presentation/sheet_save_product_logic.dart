@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/widgets/my_alert_dialog.dart';
 import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/features/account/presentation/state_management/current_logged_in_user_controller.dart';
+import 'package:pos_system/features/inventory/presentation/state_management/all_listed_products.dart';
 import 'package:pos_system/features/products/data/model/product_model.dart';
 import 'package:pos_system/features/products/presentation/state_management/product_repo_ref_controller.dart';
 
@@ -22,7 +23,7 @@ void saveProductLogic(
     alertTitle: "Confirmation to Save Product?",
     alertContent:
         "You are about to save this product, only proceed if you have fill out all the details in the form.",
-    onApprovalPressed: () {
+    onApprovalPressed: () async {
       final currentlyLoggedInUser = ref
           .read(currentLoggedInUserControllerProvider)
           .value!;
@@ -31,12 +32,13 @@ void saveProductLogic(
 
       productRepoRef.add(
         ProductModel(
-          name: productName,
+          name: productName.trim(),
+          queryName: productName.trim().toLowerCase(),
           storeId: storeID,
-          description: productDescription,
+          description: productDescription.trim(),
           barCode: scannedBarcode,
-          price: double.parse(productPrice),
-          quantity: int.parse(productQuantity),
+          price: double.parse(productPrice.trim()),
+          quantity: int.parse(productQuantity.trim()),
           picture: pickedProductImage,
           expirationDate: expirationDate?.toString() ?? "", // no expiry
           registeredOn: DateTime.now().toString(),
@@ -48,6 +50,10 @@ void saveProductLogic(
         dataToDisplay:
             "Name: ${productName} \nDescription: ${productDescription} \nPrice: ${productPrice} \nExpiration Date: ${expirationDate.toString()}",
       );
+      Future.microtask(() {
+        ref.invalidate(allListedProductsProvider);
+      });
+
       Navigator.pop(context);
       Navigator.pop(context);
     },

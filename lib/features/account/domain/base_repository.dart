@@ -60,8 +60,17 @@ abstract class BaseRepository<T extends BaseEntity> {
     required dynamic value,
   }) async {
     try {
+      String searchTerm = value.toString().toLowerCase();
+
+      // QuerySnapshot querySnapshot = await collection
+      //     .where(field, isEqualTo: value,)
+      //     .get();
+
       QuerySnapshot querySnapshot = await collection
-          .where(field, isEqualTo: value)
+          // 2. Start at the exact search term
+          .where(field, isGreaterThanOrEqualTo: searchTerm)
+          // 3. End at the search term + a high Unicode character (\uf8ff)
+          .where(field, isLessThan: searchTerm + '\uf8ff')
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
