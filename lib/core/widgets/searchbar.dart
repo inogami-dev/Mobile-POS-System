@@ -60,6 +60,32 @@ class _MySearchBarState extends ConsumerState<MySearchBar> {
           color: myColorScheme.onSurface.withAlpha(170),
         ),
         viewConstraints: const BoxConstraints(maxHeight: 200),
+        viewBuilder: (Iterable<Widget> suggestions) {
+          // NOTE: The arguments of the Iterable suggestions parameter came from suggestionsBuilder property
+          return Theme(
+            data: Theme.of(context).copyWith(
+              scrollbarTheme: ScrollbarThemeData(
+                // Keep your custom primary color here!
+                thumbColor: WidgetStateProperty.all(
+                  myColorScheme.onSurface.withAlpha(150),
+                ),
+              ),
+            ),
+            child: RawScrollbar(
+              // Force the scrollbar to be permanently visible
+              thumbVisibility: true,
+              thickness: 6.0,
+              mainAxisMargin: 5,
+              padding: EdgeInsets.only(bottom: 20),
+              radius: const Radius.circular(10),
+              child: ListView(
+                padding: EdgeInsets.zero, // Removes weird default top padding
+                // Convert the iterable of widgets into a standard list!
+                children: suggestions.toList(),
+              ),
+            ),
+          );
+        },
         onClose: () {
           Future.delayed(Duration(milliseconds: 100), () {
             // FocusManager.instance.primaryFocus?.unfocus();
@@ -68,10 +94,6 @@ class _MySearchBarState extends ConsumerState<MySearchBar> {
 
           ref.read(queriedProductsProvider.notifier).resetQueryState();
         },
-        onOpen: () {},
-        // onChanged: (String value) {
-        //   isSearching = true;
-        // },
         suggestionsBuilder: (context, controller) async {
           final query = controller.text.trim();
 
@@ -133,13 +155,14 @@ class MySearchAnchorBarSuggestion extends ConsumerWidget {
   // final SearchController controller;
   // const MySearchAnchorBarSuggestion({super.key, required this.controller});
 
-  final ProductModel product;
-  final SearchController controller;
-  const MySearchAnchorBarSuggestion({
+  MySearchAnchorBarSuggestion({
     super.key,
     required this.product,
     required this.controller,
   });
+
+  final ProductModel product;
+  final SearchController controller;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

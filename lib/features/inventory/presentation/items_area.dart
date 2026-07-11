@@ -34,6 +34,7 @@ class _MyItemsAreaState extends ConsumerState<MyItemsArea> {
         ? defaultListOfProducts
         : queriedProducts;
     log("allListedProducts: ${allListedProducts?.length ?? 0}");
+    final myColorScheme = Theme.of(context).colorScheme;
 
     width = MyDimensions.getWidth(context);
 
@@ -45,6 +46,8 @@ class _MyItemsAreaState extends ConsumerState<MyItemsArea> {
         controller: _scrollController,
         padding: EdgeInsets.only(left: 10, bottom: 10, right: -15),
         isInteractive: true,
+        thumbColor: myColorScheme.onSurfaceVariant.withAlpha(100),
+        trackColor: myColorScheme.onSurface.withAlpha(50),
         child: GridView.builder(
           padding: EdgeInsets.all(0),
           controller: _scrollController,

@@ -48,12 +48,12 @@ void saveProductLogic(
 
       // Add the product to the database
       await productRepoRef.add(newProduct);
-      // ref.invalidate(allListedProductsProvider);
+      // Fetch the newly added product from the database
       final fetchedNewlyAddedProduct = await productRepoRef.getByQuery(
         field: "registeredOn",
         value: newProduct.registeredOn,
       );
-      log("Fetched new product: ${fetchedNewlyAddedProduct.length}");
+      // Add the newly added product to the cached list
       ref
           .read(allListedProductsProvider.notifier)
           .addNewProductToTheList(fetchedNewlyAddedProduct.first);
