@@ -82,7 +82,10 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    MyNavigator.goTo(context, MyProductImagePicker());
+                    MyNavigator.goTo(
+                      context,
+                      MyProductImagePicker(isOval: false),
+                    );
                   },
                   child: MyContainer(
                     width: width * 0.8,

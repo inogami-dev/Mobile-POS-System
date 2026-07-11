@@ -12,7 +12,9 @@ import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/products/presentation/state_management/picked_image_value.dart';
 
 class MyProductImagePicker extends ConsumerStatefulWidget {
-  const MyProductImagePicker({super.key});
+  /// [isOval] indicates if the [MyProductImagePicker] should be circular or not.
+  final bool isOval;
+  const MyProductImagePicker({super.key, this.isOval = true});
 
   @override
   ConsumerState<MyProductImagePicker> createState() =>
@@ -30,6 +32,7 @@ class _MyProductImagePickerState extends ConsumerState<MyProductImagePicker> {
     height = MyDimensions.getHeight(context);
     myColorScheme = Theme.of(context).colorScheme;
     String pickedImage = ref.watch(pickedImageValueProvider);
+    double effectiveBorderRadius = (widget.isOval) ? 100 : 16;
 
     return Scaffold(
       body: SafeArea(
@@ -48,20 +51,30 @@ class _MyProductImagePickerState extends ConsumerState<MyProductImagePicker> {
                 margin: EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   children: [
-                    MyContainer(
-                      width: width * 0.56,
-                      height: width * 0.56,
-                      padding: EdgeInsets.all(4),
-                      borderColor: myColorScheme.outline.withAlpha(200),
-                      borderRadius: 100,
-                      child: MyImageDisplayer(
-                        displaySize: width * 0.56,
-                        imageInBase64Format:
-                            MyImageProcessor.decodeStringToUint8List(
-                              pickedImage,
-                            ),
+                    GestureDetector(
+                      onTap: () {
+                        showMyAnimatedSnackBar(
+                          context: context,
+                          dataToDisplay:
+                              "Please click either of the two buttons below to pick an image. \n\nGallery or Camera.",
+                        );
+                      },
+                      child: MyContainer(
+                        width: width * 0.56,
+                        height: width * 0.56,
+                        padding: EdgeInsets.all(4),
+                        borderColor: myColorScheme.outline.withAlpha(200),
+                        borderRadius: effectiveBorderRadius,
+                        child: MyImageDisplayer(
+                          displaySize: width * 0.56,
+                          imageInBase64Format:
+                              MyImageProcessor.decodeStringToUint8List(
+                                pickedImage,
+                              ),
+                        ),
                       ),
                     ),
+                    SizedBox(height: 8),
                     (ref.read(pickedImageValueProvider).isEmpty)
                         ? MyText(text: "Select the image you want to use.")
                         : SizedBox(),
