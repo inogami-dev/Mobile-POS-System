@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:pos_system/core/widgets/bottom_sheet.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/navigator.dart';
 import 'package:pos_system/core/widgets/root_scaffold/root_scaffold_state.dart';
@@ -9,7 +8,6 @@ import 'package:pos_system/features/inventory/presentation/inventory_search_bar.
 import 'package:pos_system/features/inventory/presentation/items_area.dart';
 import 'package:pos_system/features/inventory/presentation/bottom_inventory_options_bar.dart';
 import 'package:pos_system/features/products/presentation/add_product_form.dart';
-import 'package:pos_system/features/products/presentation/add_product_sheet.dart';
 
 class InventoryPage extends ConsumerStatefulWidget {
   const InventoryPage({super.key});

@@ -60,174 +60,176 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
     bool isBarcodeScanned = scannedBarcode.isNotEmpty;
 
     return Scaffold(
+      backgroundColor: Colors.transparent, //
       body: SafeArea(
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
             FocusScope.of(context).unfocus();
           },
-          child: MyDecoratedBottomSheet(
-            width: width,
-            // height: height * 0.56,
-            child: Column(
-              spacing: 8,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0, bottom: 16),
-                  child: MyText(
-                    text: "Add a Product",
-                    fontSize: kDefaultFontSize + 8,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    MyNavigator.goTo(
-                      context,
-                      MyProductImagePicker(isOval: false),
-                    );
-                  },
-                  child: MyContainer(
-                    width: width * 0.8,
-                    height: height * 0.25,
-                    padding: EdgeInsets.fromLTRB(8, 8, 8, 4),
-                    clipBehavior: Clip.hardEdge,
-                    borderRadius: 16,
-                    color: myColorScheme.surfaceContainerHighest,
-                    borderColor: myColorScheme.primaryFixed,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        (pickedProductImage.isEmpty)
-                            ? HugeIcon(
-                                icon: HugeIcons.strokeRoundedImage01,
-                                size: 32,
-                                color: myColorScheme.onSurfaceVariant,
-                              )
-                            : Expanded(
-                                child: ClipRRect(
-                                  borderRadius: BorderRadiusGeometry.circular(
-                                    10,
-                                  ),
-                                  child: MyImageDisplayer(
-                                    displaySize: width * 0.8,
-                                    isOval: false,
-                                    imageInBase64Format:
-                                        MyImageProcessor.decodeStringToUint8List(
-                                          pickedProductImage,
-                                        ),
-                                  ),
-                                ),
-                              ),
-                        SizedBox(width: 8),
-                        MyText(
-                          fontSize: kDefaultFontSize - 2,
-                          text: (pickedProductImage.isEmpty)
-                              ? "Select an Image"
-                              : "Selected Product Image",
-                        ),
-                        // SizedBox(width: 8),
-                      ],
+          child: SingleChildScrollView(
+            child: MyDecoratedBottomSheet(
+              width: width,
+              child: Column(
+                spacing: 8,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0, bottom: 16),
+                    child: MyText(
+                      text: "Add a Product",
+                      fontSize: kDefaultFontSize + 8,
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
-                ),
-                MyTextfield(
-                  labelText: "Product Name",
-                  prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedPackage),
-                  textController: productNameController,
-                ),
-                MyTextfield(
-                  labelText: "Product Description",
-                  prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedText),
-                  textController: productDescriptionController,
-                ),
-                MyTextfield(
-                  labelText: "Price",
-                  textInputType: TextInputType.number,
-                  prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedMoney04),
-                  textController: productRriceController,
-                ),
-                MyTextfield(
-                  labelText: "Quantity",
-                  textInputType: TextInputType.number,
-                  prefixIcon: HugeIcon(
-                    icon: HugeIcons.strokeRoundedTextNumberSign,
+                  GestureDetector(
+                    onTap: () {
+                      MyNavigator.goTo(
+                        context,
+                        MyProductImagePicker(isOval: false),
+                      );
+                    },
+                    child: MyContainer(
+                      width: width * 0.8,
+                      height: height * 0.25,
+                      padding: EdgeInsets.fromLTRB(8, 8, 8, 4),
+                      clipBehavior: Clip.hardEdge,
+                      borderRadius: 16,
+                      color: myColorScheme.surfaceContainerHighest,
+                      borderColor: myColorScheme.primaryFixed,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          (pickedProductImage.isEmpty)
+                              ? HugeIcon(
+                                  icon: HugeIcons.strokeRoundedImage01,
+                                  size: 32,
+                                  color: myColorScheme.onSurfaceVariant,
+                                )
+                              : Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadiusGeometry.circular(
+                                      10,
+                                    ),
+                                    child: MyImageDisplayer(
+                                      displaySize: width * 0.8,
+                                      isOval: false,
+                                      imageInBase64Format:
+                                          MyImageProcessor.decodeStringToUint8List(
+                                            pickedProductImage,
+                                          ),
+                                    ),
+                                  ),
+                                ),
+                          SizedBox(width: 8),
+                          MyText(
+                            fontSize: kDefaultFontSize - 2,
+                            text: (pickedProductImage.isEmpty)
+                                ? "Select an Image"
+                                : "Selected Product Image",
+                          ),
+                          // SizedBox(width: 8),
+                        ],
+                      ),
+                    ),
                   ),
-                  textController: productQuantityController,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    MyNavigator.goTo(context, MyScanner());
-                  },
-                  child: MyContainer(
+                  MyTextfield(
+                    labelText: "Product Name",
+                    prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedPackage),
+                    textController: productNameController,
+                  ),
+                  MyTextfield(
+                    labelText: "Product Description",
+                    prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedText),
+                    textController: productDescriptionController,
+                  ),
+                  MyTextfield(
+                    labelText: "Price",
+                    textInputType: TextInputType.number,
+                    prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedMoney04),
+                    textController: productRriceController,
+                  ),
+                  MyTextfield(
+                    labelText: "Quantity",
+                    textInputType: TextInputType.number,
+                    prefixIcon: HugeIcon(
+                      icon: HugeIcons.strokeRoundedTextNumberSign,
+                    ),
+                    textController: productQuantityController,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      MyNavigator.goTo(context, MyScanner());
+                    },
+                    child: MyContainer(
+                      width: width * 0.8,
+                      height: 50,
+                      padding: EdgeInsets.only(left: 16),
+                      borderRadius: 50,
+                      color: myColorScheme.surfaceContainerHighest,
+                      borderColor: myColorScheme.primaryFixed,
+                      clipBehavior: Clip.hardEdge,
+                      child: Row(
+                        children: [
+                          HugeIcon(
+                            icon: HugeIcons.strokeRoundedBarCode01,
+                            size: 32,
+                            color: myColorScheme.onSurfaceVariant,
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: MyText(
+                              text: (isBarcodeScanned)
+                                  ? scannedBarcode
+                                  : "Scan Barcode",
+                              textOverFlow: TextOverflow.fade,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  expirationDateButton(context),
+                  SizedBox(height: 16),
+                  Container(
                     width: width * 0.8,
-                    height: 50,
-                    padding: EdgeInsets.only(left: 16),
-                    borderRadius: 50,
-                    color: myColorScheme.surfaceContainerHighest,
-                    borderColor: myColorScheme.primaryFixed,
-                    clipBehavior: Clip.hardEdge,
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 8,
                       children: [
-                        HugeIcon(
-                          icon: HugeIcons.strokeRoundedBarCode01,
-                          size: 32,
-                          color: myColorScheme.onSurfaceVariant,
+                        MyButton(
+                          buttonText: "Cancel",
+                          isUsedAsAbortButton: true,
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
                         ),
-                        SizedBox(width: 8),
                         Expanded(
-                          child: MyText(
-                            text: (isBarcodeScanned)
-                                ? scannedBarcode
-                                : "Scan Barcode",
-                            textOverFlow: TextOverflow.fade,
+                          child: MyButton(
+                            buttonText: "Save Product",
+                            onTap: () {
+                              saveProductLogic(
+                                context,
+                                ref: ref,
+                                productName: productNameController.text,
+                                productDescription:
+                                    productDescriptionController.text,
+                                productPrice: productRriceController.text,
+                                productQuantity: productQuantityController.text,
+                                expirationDate: expirationDate.toString(),
+                                scannedBarcode: scannedBarcode,
+                                pickedProductImage: pickedProductImage,
+                              );
+                            },
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-                expirationDateButton(context),
-                SizedBox(height: 16),
-                Container(
-                  width: width * 0.8,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    spacing: 8,
-                    children: [
-                      MyButton(
-                        buttonText: "Cancel",
-                        isUsedAsAbortButton: true,
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      Expanded(
-                        child: MyButton(
-                          buttonText: "Save Product",
-                          onTap: () {
-                            saveProductLogic(
-                              context,
-                              ref: ref,
-                              productName: productNameController.text,
-                              productDescription:
-                                  productDescriptionController.text,
-                              productPrice: productRriceController.text,
-                              productQuantity: productQuantityController.text,
-                              expirationDate: expirationDate.toString(),
-                              scannedBarcode: scannedBarcode,
-                              pickedProductImage: pickedProductImage,
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
 
-                SizedBox(height: 8),
-              ],
+                  SizedBox(height: 8),
+                ],
+              ),
             ),
           ),
         ),

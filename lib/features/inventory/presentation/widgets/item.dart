@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pos_system/core/utilities/image_picker.dart';
 import 'package:pos_system/core/widgets/hero.dart';
 import 'package:pos_system/core/widgets/navigator.dart';
+import 'package:pos_system/core/widgets/progress_indicator_static.dart';
 import 'package:pos_system/features/inventory/presentation/widgets/item_contents.dart';
 import 'package:pos_system/features/inventory/presentation/widgets/item_hero.dart';
 import 'package:pos_system/features/products/data/model/product_model.dart';
@@ -30,16 +31,18 @@ class MyItem extends StatelessWidget {
         // log("Small | Width: $displayWidth, Height: $displayHeight");
         // log("Small Item Dimension | ${displayWidth * displayHeight}");
       },
-      child: MyHero(
-        tag: product.id!,
-        child: MyItemContents(
-          width: displayWidth,
-          height: displayHeight,
-          product: product,
-          isExpanded: false,
-          encodedProductImage: productImage,
-        ),
-      ),
+      child: (product.id != null)
+          ? MyHero(
+              tag: product.id!,
+              child: MyItemContents(
+                width: displayWidth,
+                height: displayHeight,
+                product: product,
+                isExpanded: false,
+                encodedProductImage: productImage,
+              ),
+            )
+          : MyProgressIndicator(),
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/widgets/my_alert_dialog.dart';
@@ -30,29 +32,37 @@ void saveProductLogic(
       final storeID = currentlyLoggedInUser.currentStoreInView;
       final productRepoRef = ref.read(productRepositoryProvider(storeID));
 
-      productRepoRef.add(
-        ProductModel(
-          name: productName.trim(),
-          queryName: productName.trim().toLowerCase(),
-          storeId: storeID,
-          description: productDescription.trim(),
-          barCode: scannedBarcode,
-          price: double.parse(productPrice.trim()),
-          quantity: int.parse(productQuantity.trim()),
-          picture: pickedProductImage,
-          expirationDate: expirationDate?.toString() ?? "", // no expiry
-          registeredOn: DateTime.now().toString(),
-          registeredBy: currentlyLoggedInUser.id!,
-        ),
+      final newProduct = ProductModel(
+        name: productName.trim(),
+        queryName: productName.trim().toLowerCase(),
+        storeId: storeID,
+        description: productDescription.trim(),
+        barCode: scannedBarcode,
+        price: double.parse(productPrice.trim()),
+        quantity: int.parse(productQuantity.trim()),
+        picture: pickedProductImage,
+        expirationDate: expirationDate?.toString() ?? "", // no expiry
+        registeredOn: DateTime.now().toString(),
+        registeredBy: currentlyLoggedInUser.id!,
       );
+
+      // Add the product to the database
+      await productRepoRef.add(newProduct);
+      // ref.invalidate(allListedProductsProvider);
+      final fetchedNewlyAddedProduct = await productRepoRef.getByQuery(
+        field: "registeredOn",
+        value: newProduct.registeredOn,
+      );
+      log("Fetched new product: ${fetchedNewlyAddedProduct.length}");
+      ref
+          .read(allListedProductsProvider.notifier)
+          .addNewProductToTheList(fetchedNewlyAddedProduct.first);
+
       showMyAnimatedSnackBar(
         context: context,
         dataToDisplay:
             "Name: ${productName} \nDescription: ${productDescription} \nPrice: ${productPrice} \nExpiration Date: ${expirationDate.toString()}",
       );
-      Future.microtask(() {
-        ref.invalidate(allListedProductsProvider);
-      });
 
       Navigator.pop(context);
       Navigator.pop(context);
