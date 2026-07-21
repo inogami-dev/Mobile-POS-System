@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/utilities/image_picker.dart';

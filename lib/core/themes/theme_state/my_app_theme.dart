@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MyAppTheme {
+  MyAppTheme._();
   // static const Color _appBrandColor = Color.fromARGB(255, 1, 60, 138);
 
   static const Color _appBrandColor = Colors.blue;
