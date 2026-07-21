@@ -63,14 +63,25 @@ class _MyProductImagePickerState extends ConsumerState<MyProductImagePicker> {
                         width: width * 0.56,
                         height: width * 0.56,
                         padding: EdgeInsets.all(4),
-                        borderColor: myColorScheme.outline.withAlpha(200),
+                        borderColor: (pickedImage.isEmpty)
+                            ? Colors.transparent
+                            : myColorScheme.outline.withAlpha(200),
                         borderRadius: effectiveBorderRadius,
-                        child: MyImageDisplayer(
-                          displaySize: width * 0.56,
-                          imageInBase64Format:
-                              MyImageProcessor.decodeStringToUint8List(
-                                pickedImage,
-                              ),
+                        child: MyContainer(
+                          width: width * 0.56,
+                          height: width * 0.56,
+                          padding: EdgeInsets.all(0),
+                          clipBehavior: Clip.hardEdge,
+                          borderColor: myColorScheme.outline.withAlpha(200),
+                          borderRadius: effectiveBorderRadius - 4,
+                          child: MyImageDisplayer(
+                            displaySize: width * 0.56,
+                            isOval: false,
+                            imageInBase64Format:
+                                MyImageProcessor.decodeStringToUint8List(
+                                  pickedImage,
+                                ),
+                          ),
                         ),
                       ),
                     ),
