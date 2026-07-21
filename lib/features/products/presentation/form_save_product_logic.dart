@@ -39,7 +39,9 @@ void saveProductLogic(
         price: double.parse(productPrice.trim()),
         quantity: int.parse(productQuantity.trim()),
         picture: pickedProductImage,
-        expirationDate: expirationDate?.toString() ?? "", // no expiry
+        expirationDate: (expirationDate == null)
+            ? ""
+            : expirationDate, // no expiry
         registeredOn: DateTime.now().toString(),
         registeredBy: currentlyLoggedInUser.id!,
       );

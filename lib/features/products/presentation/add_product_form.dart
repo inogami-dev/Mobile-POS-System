@@ -17,7 +17,7 @@ import 'package:pos_system/features/products/presentation/state_management/picke
 import 'package:pos_system/features/products/presentation/state_management/single_scan_value.dart';
 import 'package:pos_system/features/products/presentation/widgets/product_image_picker.dart';
 import 'package:pos_system/features/products/presentation/widgets/scanner.dart';
-import 'package:pos_system/features/products/presentation/sheet_save_product_logic.dart';
+import 'package:pos_system/features/products/presentation/form_save_product_logic.dart';
 
 class AddProductForm extends ConsumerStatefulWidget {
   const AddProductForm({super.key});

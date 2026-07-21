@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -27,7 +28,8 @@ class MyItemContents extends StatelessWidget {
   Widget build(BuildContext context) {
     final myColorScheme = Theme.of(context).colorScheme;
 
-    final doesProductExpire = product.expirationDate != "";
+    final doesProductExpire = (product.expirationDate != "");
+    log("Expiration Date: ${product.expirationDate}");
 
     return MyContainer(
       width: width,
@@ -55,69 +57,12 @@ class MyItemContents extends StatelessWidget {
             ),
           ),
           Positioned(
-            bottom: -0.5,
-            // left: 2.5,
-            child: Container(
-              width: (isExpanded) ? (width * 0.99) : width,
-              height: (isExpanded) ? (height * 0.15) : height,
-              padding: EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
-              margin: EdgeInsets.fromLTRB(4, 0, 4, 0),
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(
-                // color: Colors.black,
-                gradient: LinearGradient(
-                  colors: [
-                    myColorScheme.surfaceDim.withAlpha(10),
-                    myColorScheme.surfaceDim.withAlpha(50),
-                    myColorScheme.surfaceDim.withAlpha(100),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-                //
-                // borderRadius: BorderRadius.only(
-                //   bottomLeft: Radius.circular(16),
-                //   bottomRight: Radius.circular(16),
-                // ),
-              ),
-              child: Column(
-                mainAxisAlignment: (isExpanded)
-                    ? MainAxisAlignment.end
-                    : MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MyText(
-                    text: product.name,
-                    textOverFlow: TextOverflow.ellipsis,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  MyText(
-                    text: product.description,
-                    maxLines: 2,
-                    fontSize: kDefaultFontSize - 4,
-                    lineHeight: 1.1,
-                  ),
-                  Spacer(),
-                  MyText(
-                    text: (doesProductExpire)
-                        ? "Exp: ${product.expirationDate}"
-                        : "No Expiration",
-                    maxLines: 2,
-                    fontSize: kDefaultFontSize - 5,
-                    lineHeight: 1.1,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
             top: 2.5,
             left: 2.5,
             child: Container(
               margin: EdgeInsets.only(right: 20),
               padding: EdgeInsets.fromLTRB(4, 4, 12, 4),
               decoration: BoxDecoration(
-                // color: myColorScheme.surface,
                 gradient: LinearGradient(
                   colors: [
                     myColorScheme.secondaryContainer.withAlpha(250),
@@ -147,6 +92,57 @@ class MyItemContents extends StatelessWidget {
               child: MyText(
                 text: "\$${product.price.toStringAsFixed(2)}",
                 fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -0.5,
+            // left: 2.5,
+            child: Container(
+              width: (isExpanded) ? (width * 0.99) : width,
+              height: (isExpanded) ? (height * 0.15) : height,
+              padding: EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
+              margin: EdgeInsets.fromLTRB(4, 0, 4, 0),
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                // color: Colors.black,
+                gradient: LinearGradient(
+                  colors: [
+                    myColorScheme.surfaceDim.withAlpha(10),
+                    myColorScheme.surfaceDim.withAlpha(50),
+                    myColorScheme.surfaceDim.withAlpha(100),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: (isExpanded)
+                    ? MainAxisAlignment.end
+                    : MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  MyText(
+                    text: product.name,
+                    textOverFlow: TextOverflow.ellipsis,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  MyText(
+                    text: product.description,
+                    maxLines: 2,
+                    fontSize: kDefaultFontSize - 4,
+                    lineHeight: 1.1,
+                  ),
+                  Spacer(),
+                  MyText(
+                    text: (doesProductExpire)
+                        ? "Exp: ${product.expirationDate}"
+                        : "No Expiration",
+                    maxLines: 2,
+                    fontSize: kDefaultFontSize - 5,
+                    lineHeight: 1.1,
+                  ),
+                ],
               ),
             ),
           ),

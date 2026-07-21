@@ -19,11 +19,14 @@ class InventoryPage extends ConsumerStatefulWidget {
 class _InventoryPageState extends ConsumerState<InventoryPage> {
   late double width;
   late double height;
+  late ColorScheme myColor;
 
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
+    myColor = Theme.of(context).colorScheme;
+
     // For inventory options bar container
     final bool isInventoryPageVisible =
         ref.watch(rootScaffoldStateProvider) == 2;
@@ -92,7 +95,9 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
       child: MyContainer(
         width: width * 0.16,
         height: height * 0.1,
-        borderRadius: 100,
+        color: myColor.surface.withAlpha(100),
+        borderColor: myColor.outlineVariant,
+        borderRadius: 8,
         child: icon ?? Placeholder(),
       ),
     );
