@@ -29,12 +29,14 @@ class ItemHero extends StatelessWidget {
           tag: heroTag,
           // child: MyItem(product: product),
           child: SafeArea(
-            child: MyItemContents(
-              width: width,
-              height: height,
-              product: product,
-              isExpanded: true,
-              encodedProductImage: productImage,
+            child: Material(
+              child: MyItemContents(
+                width: width,
+                height: height,
+                product: product,
+                isExpanded: true,
+                encodedProductImage: productImage,
+              ),
             ),
           ),
         ),

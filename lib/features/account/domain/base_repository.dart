@@ -117,5 +117,7 @@ abstract class BaseRepository<T extends BaseEntity> {
   // Delete --------------------------------------------------
   Future<void> delete(String id) async {
     await collection.doc(id).delete();
+    log("Product ID delete function: ${id}");
+    log("SUCCESSFUL DELETION");
   }
 }

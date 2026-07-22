@@ -33,4 +33,21 @@ class AllListedProducts extends _$AllListedProducts {
 
     log("New Product Added to the Cached List: ${newProduct.name}");
   }
+
+  void removeProductFromTheList(ProductModel product) {
+    // List<ProductModel>? newProductList = state.value?.map((product) {
+    //   if (newProduct.id == state.value?.first.id) {
+    //   }
+    //   return product;
+    // }).toList();
+    // state.value?.remove(product);
+    if (state.hasValue) {
+      List<ProductModel> newProductList = state.value!;
+      newProductList.remove(product);
+      state = AsyncValue.data(newProductList);
+
+      // state = AsyncValue.data([]);
+      log("Product Removed from the Cached List: ${product.name}");
+    }
+  }
 }

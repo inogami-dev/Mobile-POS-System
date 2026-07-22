@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:pos_system/core/utilities/date_formatter.dart';
 import 'package:pos_system/core/utilities/image_displayer.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
@@ -56,6 +57,7 @@ class MyItemContents extends StatelessWidget {
               color: myColorScheme.outlineVariant,
             ),
           ),
+          // Price Tag
           Positioned(
             top: 2.5,
             left: 2.5,
@@ -64,6 +66,8 @@ class MyItemContents extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(4, 4, 12, 4),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
                   colors: [
                     myColorScheme.secondaryContainer.withAlpha(250),
                     myColorScheme.surfaceBright.withAlpha(80),
@@ -75,8 +79,6 @@ class MyItemContents extends StatelessWidget {
                     myColorScheme.secondaryContainer.withAlpha(50),
                     myColorScheme.secondaryContainer.withAlpha(5),
                   ],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
                 ),
                 border: Border.all(
                   color: myColorScheme.outlineVariant,
@@ -95,6 +97,8 @@ class MyItemContents extends StatelessWidget {
               ),
             ),
           ),
+
+          // Product Details
           Positioned(
             bottom: -0.5,
             // left: 2.5,
@@ -111,6 +115,8 @@ class MyItemContents extends StatelessWidget {
                     myColorScheme.surfaceDim.withAlpha(10),
                     myColorScheme.surfaceDim.withAlpha(50),
                     myColorScheme.surfaceDim.withAlpha(100),
+                    myColorScheme.surfaceDim.withAlpha(150),
+                    myColorScheme.surfaceDim.withAlpha(200),
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -136,7 +142,7 @@ class MyItemContents extends StatelessWidget {
                   Spacer(),
                   MyText(
                     text: (doesProductExpire)
-                        ? "Exp: ${product.expirationDate}"
+                        ? "Exp: ${MyDateFormatter.formatDate(dateTimeInString: product.expirationDate)}"
                         : "No Expiration",
                     maxLines: 2,
                     fontSize: kDefaultFontSize - 5,

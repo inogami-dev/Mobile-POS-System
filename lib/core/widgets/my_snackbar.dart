@@ -1,10 +1,14 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:pos_system/core/utilities/dimension.dart';
+import 'package:pos_system/core/widgets/progress_indicator_static.dart';
 
 void showMyAnimatedSnackBar({
   required BuildContext context,
   required String dataToDisplay,
+  Widget? widgetToDisplay,
+  bool isUsingIcon = true,
   // Color borderColor = Colors.white,
   // Color bgColor = Colors.white60,
   // Color bgColor = const Color.fromARGB(242, 255, 255, 255),
@@ -55,13 +59,26 @@ void showMyAnimatedSnackBar({
                 ),
                 child: Row(
                   children: [
-                    icon ??
-                        Icon(
-                          Icons.info_outline_rounded,
-                          color: myColorScheme.outline,
-                          size: 32,
+                    if (widgetToDisplay == null && isUsingIcon)
+                      icon ??
+                          Icon(
+                            Icons.info_outline_rounded,
+                            color: myColorScheme.outline,
+                            size: 32,
+                          ),
+                    if (widgetToDisplay == null && isUsingIcon)
+                      SizedBox(width: 8),
+                    if (widgetToDisplay != null)
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: MyDimensions.getWidth(context) * 0.15,
+                          maxHeight: MyDimensions.getWidth(context) * 0.15,
                         ),
-                    SizedBox(width: 8),
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 16),
+                          child: MyProgressIndicator(),
+                        ),
+                      ),
                     Expanded(child: Text(dataToDisplay, softWrap: true)),
                   ],
                 ),

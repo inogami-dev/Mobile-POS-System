@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pos_system/core/widgets/progress_indicator_static.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 
 /// [onPressed] is a callback function (){}
@@ -16,6 +17,7 @@ void myAlertDialogue({
   Color onApprovalButtonColor = const Color.fromARGB(255, 26, 139, 232),
   Color onApprovalButtonTextColor = Colors.white,
   String onCancelButtonText = "No",
+  bool isLoading = false,
 }) {
   showCupertinoDialog(
     barrierColor: barrierColor,
@@ -36,15 +38,23 @@ void myAlertDialogue({
               // color: Colors.grey.shade800,
             ),
           ),
-          CupertinoDialogAction(
-            onPressed: onApprovalPressed,
-            child: MyText(
-              text: onApprovalButtonText,
-              color: onApprovalButtonColor,
-              fontWeight: FontWeight.w600,
-              fontSize: kDefaultFontSize + 2.5,
-            ),
-          ),
+          (!isLoading)
+              ? CupertinoDialogAction(
+                  onPressed: onApprovalPressed,
+                  child: MyText(
+                    text: onApprovalButtonText,
+                    color: onApprovalButtonColor,
+                    fontWeight: FontWeight.w600,
+                    fontSize: kDefaultFontSize + 2.5,
+                  ),
+                )
+              : Center(
+                  child: SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: MyProgressIndicator(),
+                  ),
+                ),
         ],
       );
     },
