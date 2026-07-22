@@ -49,8 +49,8 @@ class _RegisterStoreFormState extends ConsumerState<RegisterStoreForm> {
 
     currentLoggedInUser = ref.read(currentLoggedInUserControllerProvider);
     // Only set the default value of storeOwnerController is it is empty to prevent overwriting.
-    if (storeOwnerController.text == "") {
-      storeOwnerController.text = currentLoggedInUser.value!.id!;
+    if (storeOwnerController.text == "" && currentLoggedInUser.valueOrNull != null) {
+      storeOwnerController.text = currentLoggedInUser.valueOrNull!.id!;
     }
 
     final personalInfoRepo = ref.read(myPersonalInfoRepoProvider);
@@ -175,8 +175,13 @@ class _RegisterStoreFormState extends ConsumerState<RegisterStoreForm> {
             picture: pictureController.text,
           );
 
-          // Update user info
-          List<String> ownedStores = [...currentLoggedInUser.value!.ownerAt];
+           // Update user info
+          final user = currentLoggedInUser.valueOrNull;
+          if (user == null) {
+            log("Cannot save store info: user profile not loaded.");
+            return;
+          }
+          List<String> ownedStores = [...user.ownerAt];
 
           final newlyRegisteredStore = await ref
               .read(storeInfoRepoRefProvider)
@@ -184,7 +189,7 @@ class _RegisterStoreFormState extends ConsumerState<RegisterStoreForm> {
           ownedStores.add(newlyRegisteredStore.last.id!);
           log("ownedStores: $ownedStores");
 
-          PersonalInfo updatedUserOwnedStores = currentLoggedInUser.value!
+          PersonalInfo updatedUserOwnedStores = user
               .copyWith(
                 ownerAt: ownedStores,
                 currentStoreInView: newlyRegisteredStore.last.id!,
@@ -192,7 +197,7 @@ class _RegisterStoreFormState extends ConsumerState<RegisterStoreForm> {
           log("updatedUserOwnedStores: ${updatedUserOwnedStores.ownerAt}");
 
           personalInfoRepo.update(
-            currentLoggedInUser.value!.id!,
+            user.id!,
             updatedUserOwnedStores,
           );
 
@@ -211,7 +216,7 @@ class _RegisterStoreFormState extends ConsumerState<RegisterStoreForm> {
     bool isNameControllerNotEmpty = storeNameController.text != ""; // nay sulod
     bool isStoreOwnerControllerNotEmptyNorUsingDefaultValue =
         (storeOwnerController.text != "" &&
-        storeOwnerController.text != currentLoggedInUser.value!.id);
+        storeOwnerController.text != (currentLoggedInUser.valueOrNull?.id ?? ""));
     bool isPictureControllerNotEmpty = pictureController.text != "";
 
     if (isNameControllerNotEmpty ||

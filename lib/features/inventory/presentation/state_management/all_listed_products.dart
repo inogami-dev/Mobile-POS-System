@@ -11,10 +11,9 @@ part 'all_listed_products.g.dart';
 class AllListedProducts extends _$AllListedProducts {
   @override
   Future<List<ProductModel>> build() async {
-    final currentSelectedStoreID = ref
-        .watch(currentLoggedInUserControllerProvider)
-        .value!
-        .currentStoreInView;
+    final user = ref.watch(currentLoggedInUserControllerProvider).valueOrNull;
+    if (user == null) return [];
+    final currentSelectedStoreID = user.currentStoreInView;
 
     final productRepository = ref.watch(
       productRepositoryProvider(currentSelectedStoreID),

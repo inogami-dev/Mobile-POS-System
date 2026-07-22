@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
+import 'package:pos_system/core/widgets/progress_indicator_static.dart';
+import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/account/data/model/personal_info_model/personal_info.dart';
 import 'package:pos_system/core/utilities/image_displayer.dart';
 import 'package:pos_system/core/utilities/image_picker.dart';
@@ -27,7 +29,20 @@ class _LoggedInUserAccountState extends ConsumerState<LoggedInUserAccount> {
     width = MyDimensions.getWidth(context);
     height = MyDimensions.getHeight(context);
     myColorScheme = Theme.of(context).colorScheme;
-    loggedInUserInfo = ref.watch(currentLoggedInUserControllerProvider).value!;
+
+    final userState = ref.watch(currentLoggedInUserControllerProvider);
+    if (userState.hasError) {
+      return Center(
+        child: MyText(
+          text: "Oops! Error loading account details.",
+          color: myColorScheme.error,
+        ),
+      );
+    }
+    if (userState.isLoading || userState.valueOrNull == null) {
+      return const Center(child: MyProgressIndicator());
+    }
+    loggedInUserInfo = userState.valueOrNull!;
 
     return Container(
       width: width * 0.9,

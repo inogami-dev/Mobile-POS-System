@@ -8,6 +8,7 @@ import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/my_alert_dialog.dart';
 import 'package:pos_system/core/widgets/progress_indicator_static.dart';
 import 'package:pos_system/core/widgets/root_scaffold/root_scaffold_state.dart';
+import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/account/presentation/logged_in_user_account.dart';
 import 'package:pos_system/features/account/presentation/state_management/current_logged_in_user_controller.dart';
 import 'package:pos_system/features/account/presentation/widget/logged_in_user_account_store_details.dart';
@@ -52,24 +53,35 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                 // MyAppBar(title: "Profile", enableBackButton: true),
                 SizedBox(height: 32),
 
-                (userState.isLoading || userState.value == null)
-                    ? Center(child: MyProgressIndicator())
-                    : Expanded(
-                        child: Column(
-                          children: [
-                            LoggedInUserAccount(),
-                            LoggedInUserAccountStoreDetails(),
-
-                            Spacer(),
-                            (isLoggingOut)
-                                ? const MyProgressIndicator()
-                                : loggoutButton(context),
-                            SizedBox(
-                              height: MyAppLayout.bottomNavbarHeight + 16,
-                            ),
-                          ],
-                        ),
+                if (userState.hasError)
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: MyText(
+                        text: "Error loading profile details. Please check your internet connection.",
+                        color: myColorScheme.error,
                       ),
+                    ),
+                  )
+                else if (userState.isLoading || userState.valueOrNull == null)
+                  Center(child: MyProgressIndicator())
+                else
+                  Expanded(
+                    child: Column(
+                      children: [
+                        LoggedInUserAccount(),
+                        LoggedInUserAccountStoreDetails(),
+
+                        Spacer(),
+                        (isLoggingOut)
+                            ? const MyProgressIndicator()
+                            : loggoutButton(context),
+                        SizedBox(
+                          height: MyAppLayout.bottomNavbarHeight + 16,
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),

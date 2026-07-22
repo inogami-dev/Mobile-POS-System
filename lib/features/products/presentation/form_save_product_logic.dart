@@ -26,7 +26,14 @@ void saveProductLogic(
     onApprovalPressed: () async {
       final currentlyLoggedInUser = ref
           .read(currentLoggedInUserControllerProvider)
-          .value!;
+          .valueOrNull;
+      if (currentlyLoggedInUser == null) {
+        showMyAnimatedSnackBar(
+          context: context,
+          dataToDisplay: "Could not retrieve user info. Please check your connection.",
+        );
+        return;
+      }
       final storeID = currentlyLoggedInUser.currentStoreInView;
       final productRepoRef = ref.read(productRepositoryProvider(storeID));
 

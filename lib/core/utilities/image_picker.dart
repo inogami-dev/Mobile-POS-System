@@ -36,13 +36,6 @@ class MyImageProcessor {
       print("Compressed Base64 String: $base64StringImage");
       base64Image = base64StringImage;
 
-      // TODO: be back here tomorrow
-      // /// upload to database can be done here or outside this method
-      // MyFirebaseServices.updateProfilePicture(
-      //   userID: userID,
-      //   base64Image: base64Image,
-      // );
-
       return base64Image;
     }
 

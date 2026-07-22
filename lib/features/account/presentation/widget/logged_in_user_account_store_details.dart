@@ -26,15 +26,39 @@ class LoggedInUserAccountStoreDetails extends ConsumerWidget {
     final userState = ref.watch(currentLoggedInUserControllerProvider);
     final storesState = ref.watch(userStoresProvider);
 
+    // Handle error states gracefully (e.g. offline)
+    if (userState.hasError || storesState.hasError) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              MyText(
+                text: "Oops! ",
+                color: myColorScheme.error.withAlpha(156),
+                fontSize: kDefaultFontSize + 16,
+                fontWeight: FontWeight.w600,
+              ),
+              MyText(
+                text: "Please check your internet connection.",
+                color: myColorScheme.error.withAlpha(156),
+                fontSize: kDefaultFontSize + 2,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     // SAFELY handle the loading states (No exclamation marks needed!)
     if (userState.isLoading || storesState.isLoading) {
       return const Center(child: MyProgressIndicator());
     }
 
-    final personalInfo = userState.value;
+    final personalInfo = userState.valueOrNull;
     if (personalInfo == null) return const SizedBox(); // User not logged in
 
-    final List<StoreInfo> storesList = storesState.value ?? [];
+    final List<StoreInfo> storesList = storesState.valueOrNull ?? [];
 
     // Create a list of Store NAMES for the dropdown
     List<String> storeNames = storesList

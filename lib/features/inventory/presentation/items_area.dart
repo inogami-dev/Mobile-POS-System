@@ -8,6 +8,7 @@ import 'package:pos_system/core/widgets/scrollbar.dart';
 import 'package:pos_system/features/inventory/presentation/state_management/all_listed_products.dart';
 import 'package:pos_system/features/inventory/presentation/widgets/item.dart';
 import 'package:pos_system/features/products/presentation/state_management/queried_products.dart';
+import 'package:pos_system/core/widgets/text_formatter.dart';
 
 class MyItemsArea extends ConsumerStatefulWidget {
   const MyItemsArea({super.key});
@@ -29,7 +30,21 @@ class _MyItemsAreaState extends ConsumerState<MyItemsArea> {
   @override
   Widget build(BuildContext context) {
     final queriedProducts = ref.watch(queriedProductsProvider);
-    final defaultListOfProducts = ref.watch(allListedProductsProvider).value;
+    final allProductsState = ref.watch(allListedProductsProvider);
+
+    if (allProductsState.hasError) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: MyText(
+            text: "Error loading products. Please check your connection.",
+            color: Theme.of(context).colorScheme.error,
+          ),
+        ),
+      );
+    }
+
+    final defaultListOfProducts = allProductsState.valueOrNull;
     final allListedProducts = (queriedProducts.isEmpty)
         ? defaultListOfProducts
         : queriedProducts;

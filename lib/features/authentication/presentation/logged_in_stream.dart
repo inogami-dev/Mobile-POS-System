@@ -134,7 +134,8 @@ class LoggedInStream extends ConsumerWidget {
       loading: () => const Scaffold(body: Center(child: MyProgressIndicator())),
       error: (error, stack) => Scaffold(
         body: Center(
-          child: MyText(text: "Error: $error, \nStack: $stack", maxLines: 20),
+          // child: MyText(text: "Error: $error, \nStack: $stack", maxLines: 20),
+          child: MyText(text: "Oops! Please check your internet connection."),
         ),
       ),
       data: (personalInfo) {

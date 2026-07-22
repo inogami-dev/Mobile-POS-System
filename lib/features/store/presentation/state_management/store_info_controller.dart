@@ -17,8 +17,9 @@ class StoreInfoRepoController extends _$StoreInfoRepoController {
     );
 
     // Setup the store
-    if (currentlyLoggedInUser.value != null) {
-      String storeID = currentlyLoggedInUser.value!.currentStoreInView;
+    final user = currentlyLoggedInUser.valueOrNull;
+    if (user != null) {
+      String storeID = user.currentStoreInView;
       setCurrentStore(storeID);
     }
 
@@ -35,11 +36,12 @@ class StoreInfoRepoController extends _$StoreInfoRepoController {
   Future<void> setCurrentStore(String storeID) async {
     try {
       final store = await ref.read(storeInfoRepoRefProvider).getByID(storeID);
-      state = store!;
+      if (store != null) {
+        state = store;
+      }
     } catch (e, stackTrace) {
       log("Error: $e");
       log("Stack Trace: $stackTrace");
-      rethrow;
     }
     ;
   }
