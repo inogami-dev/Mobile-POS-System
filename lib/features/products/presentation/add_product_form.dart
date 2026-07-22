@@ -10,9 +10,12 @@ import 'package:pos_system/core/widgets/bottom_sheet_decorated.dart';
 import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/date_picker.dart';
+import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/core/widgets/navigator.dart';
 import 'package:pos_system/core/widgets/text_field.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
+import 'package:pos_system/features/products/data/model/product_model.dart';
+import 'package:pos_system/features/products/presentation/form_update_product_logic.dart';
 import 'package:pos_system/features/products/presentation/state_management/picked_image_value.dart';
 import 'package:pos_system/features/products/presentation/state_management/single_scan_value.dart';
 import 'package:pos_system/features/products/presentation/widgets/product_image_picker.dart';
@@ -20,7 +23,8 @@ import 'package:pos_system/features/products/presentation/widgets/scanner.dart';
 import 'package:pos_system/features/products/presentation/form_save_product_logic.dart';
 
 class AddProductForm extends ConsumerStatefulWidget {
-  const AddProductForm({super.key});
+  final ProductModel? product;
+  const AddProductForm({super.key, this.product});
 
   @override
   ConsumerState<AddProductForm> createState() => _AddProductFormState();
@@ -40,6 +44,30 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
   late ColorScheme myColorScheme;
   late double width;
   late double height;
+  late String pageTitle;
+  late String buttonText;
+
+  @override
+  void initState() {
+    super.initState();
+    // Update
+    if (widget.product != null) {
+      pickedProductImage = widget.product!.picture;
+      productNameController.text = widget.product!.name;
+      productDescriptionController.text = widget.product!.description;
+      productRriceController.text = widget.product!.price.toString();
+      productQuantityController.text = widget.product!.quantity.toString();
+      expirationDate = DateTime.tryParse(widget.product!.expirationDate!);
+      scannedBarcode = widget.product!.barCode;
+      pageTitle = "Edit Product";
+      buttonText = "Update Product";
+    }
+    // New
+    else {
+      pageTitle = "Add Product";
+      buttonText = "Save Product";
+    }
+  }
 
   @override
   void dispose() {
@@ -55,8 +83,10 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     myColorScheme = Theme.of(context).colorScheme;
-    scannedBarcode = ref.watch<String>(singleScanValueProvider);
-    pickedProductImage = ref.watch<String>(pickedImageValueProvider);
+    if (widget.product == null) {
+      scannedBarcode = ref.watch<String>(singleScanValueProvider);
+      pickedProductImage = ref.watch<String>(pickedImageValueProvider);
+    }
     bool isBarcodeScanned = scannedBarcode.isNotEmpty;
 
     return Scaffold(
@@ -76,7 +106,7 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0, bottom: 16),
                     child: MyText(
-                      text: "Add a Product",
+                      text: pageTitle,
                       fontSize: kDefaultFontSize + 8,
                       fontWeight: FontWeight.w800,
                     ),
@@ -206,20 +236,57 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
                         ),
                         Expanded(
                           child: MyButton(
-                            buttonText: "Save Product",
+                            buttonText: buttonText,
                             onTap: () {
-                              saveProductLogic(
-                                context,
-                                ref: ref,
-                                productName: productNameController.text,
-                                productDescription:
-                                    productDescriptionController.text,
-                                productPrice: productRriceController.text,
-                                productQuantity: productQuantityController.text,
-                                expirationDate: expirationDate.toString(),
-                                scannedBarcode: scannedBarcode,
-                                pickedProductImage: pickedProductImage,
-                              );
+                              if (widget.product != null &&
+                                  isToBeUpdatedProductBeenAltered()) {
+                                updateProductLogic(
+                                  context,
+                                  ref: ref,
+                                  product: ProductModel(
+                                    id: widget.product!.id,
+                                    name: productNameController.text.trim(),
+                                    queryName: productNameController.text
+                                        .trim()
+                                        .toLowerCase(),
+                                    storeId: widget.product!.storeId,
+                                    description: productDescriptionController
+                                        .text
+                                        .trim(),
+                                    barCode: scannedBarcode.trim(),
+                                    price: double.parse(
+                                      productRriceController.text.trim(),
+                                    ),
+                                    quantity: int.parse(
+                                      productQuantityController.text.trim(),
+                                    ),
+                                    picture: pickedProductImage,
+                                    expirationDate: (expirationDate != null)
+                                        ? expirationDate.toString()
+                                        : widget.product!.expirationDate,
+                                    registeredOn: widget.product!.registeredOn,
+                                    registeredBy: widget.product!.registeredBy,
+                                  ),
+                                );
+                              } else {
+                                showMyAnimatedSnackBar(
+                                  context: context,
+                                  dataToDisplay: "Else",
+                                );
+                                saveProductLogic(
+                                  context,
+                                  ref: ref,
+                                  productName: productNameController.text,
+                                  productDescription:
+                                      productDescriptionController.text,
+                                  productPrice: productRriceController.text,
+                                  productQuantity:
+                                      productQuantityController.text,
+                                  expirationDate: expirationDate.toString(),
+                                  scannedBarcode: scannedBarcode,
+                                  pickedProductImage: pickedProductImage,
+                                );
+                              }
                             },
                           ),
                         ),
@@ -278,5 +345,35 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
         // ),
       ),
     );
+  }
+
+  /// This is for the Update not when adding new Product
+  /// To prevent calling firebase whenever there is no change when updating.
+  bool isToBeUpdatedProductBeenAltered() {
+    if (pickedProductImage != widget.product!.picture ||
+        productNameController.text != widget.product!.name ||
+        productDescriptionController.text != widget.product!.description ||
+        productRriceController.text != widget.product!.price.toString() ||
+        productQuantityController.text != widget.product!.quantity.toString() ||
+        expirationDate.toString() != widget.product!.expirationDate ||
+        scannedBarcode != widget.product!.barCode ||
+        pickedProductImage != widget.product!.picture) {
+      log("01: ${productNameController.text}");
+      log("02: ${widget.product!.name}");
+      log("11: ${productDescriptionController.text}");
+      log("12: ${widget.product!.description}");
+      log("21: ${productRriceController.text}");
+      log("22: ${widget.product!.price.toString()}");
+      log("31: ${productQuantityController.text}");
+      log("32: ${widget.product!.quantity.toString()}");
+      log("41: ${expirationDate.toString()}");
+      log("42: ${widget.product!.expirationDate}");
+      log("51: ${scannedBarcode}");
+      log("52: ${widget.product!.barCode}");
+      log("61: ${pickedProductImage.length}");
+      log("62: ${widget.product!.picture.length}");
+      return true;
+    }
+    return false;
   }
 }

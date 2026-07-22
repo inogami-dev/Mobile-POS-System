@@ -35,19 +35,17 @@ class AllListedProducts extends _$AllListedProducts {
   }
 
   void removeProductFromTheList(ProductModel product) {
-    // List<ProductModel>? newProductList = state.value?.map((product) {
-    //   if (newProduct.id == state.value?.first.id) {
-    //   }
-    //   return product;
-    // }).toList();
-    // state.value?.remove(product);
-    if (state.hasValue) {
-      List<ProductModel> newProductList = state.value!;
-      newProductList.remove(product);
-      state = AsyncValue.data(newProductList);
+    List<ProductModel> tempProductList = state.value!;
+    tempProductList.removeWhere((testProduct) {
+      if (testProduct.id == product.id) {
+        return true;
+      }
+      return false;
+    });
+    tempProductList.sort((a, b) => a.queryName.compareTo(b.queryName));
+    state = AsyncValue.data(tempProductList);
 
-      // state = AsyncValue.data([]);
-      log("Product Removed from the Cached List: ${product.name}");
-    }
+    log("Product Removed from the Cached List: ${product.name}");
+    // }
   }
 }

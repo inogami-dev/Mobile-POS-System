@@ -24,7 +24,7 @@ class MyDecoratedBottomSheet extends StatelessWidget {
       child: MyContainer(
         width: width,
         height: height,
-        color: myColorScheme.surface.withAlpha(180),
+        color: myColorScheme.surface,
         clipBehavior: Clip.antiAlias,
         child: child,
       ),

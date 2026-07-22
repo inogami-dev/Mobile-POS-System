@@ -132,8 +132,8 @@ class _MyCustButtonState extends State<MyButton> {
     return BoxShadow(
       // color: const Color.fromARGB(50, 33, 149, 243),
       color: (_isShadowEnabled)
-          ? widget.buttonShadowColor?.withAlpha(50) ??
-                myColorScheme.shadow.withAlpha(50)
+          ? widget.buttonShadowColor?.withAlpha(24) ??
+                myColorScheme.shadow.withAlpha(24)
           : Colors.transparent,
       offset: offset,
       blurRadius: 2,

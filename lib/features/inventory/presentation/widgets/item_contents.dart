@@ -6,8 +6,12 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/core/utilities/date_formatter.dart';
 import 'package:pos_system/core/utilities/image_displayer.dart';
 import 'package:pos_system/core/widgets/container.dart';
+import 'package:pos_system/core/widgets/my_alert_dialog.dart';
+import 'package:pos_system/core/widgets/my_snackbar.dart';
+import 'package:pos_system/core/widgets/navigator.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/products/data/model/product_model.dart';
+import 'package:pos_system/features/products/presentation/add_product_form.dart';
 
 class MyItemContents extends StatelessWidget {
   final double width;
@@ -49,12 +53,34 @@ class MyItemContents extends StatelessWidget {
               imageInBase64Format: encodedProductImage,
             ),
           ),
+
+          /// Edit Icon
           Positioned(
             top: 2.5,
             right: 2.5,
-            child: HugeIcon(
-              icon: HugeIcons.strokeRoundedInformationDiamond,
-              color: myColorScheme.outlineVariant,
+            child: GestureDetector(
+              onTap: () {
+                // showMyAnimatedSnackBar(context: context, dataToDisplay: "Test");
+                myAlertDialogue(
+                  context: context,
+                  alertTitle: "Confirm to Edit Product",
+                  alertContent: "Are you sure you want to edit this product?",
+                  onApprovalButtonText: "Edit",
+                  onApprovalPressed: () {
+                    Navigator.pop(context);
+                    MyNavigator.goTo(
+                      context,
+                      AddProductForm(product: product),
+                      animationType: MyAnimationType.slideFromBottom,
+                    );
+                  },
+                );
+              },
+              child: HugeIcon(
+                icon: HugeIcons.strokeRoundedEditTable,
+                color: Colors.white38,
+                size: (isExpanded) ? 32 : 24,
+              ),
             ),
           ),
           // Price Tag
@@ -94,19 +120,21 @@ class MyItemContents extends StatelessWidget {
               child: MyText(
                 text: "\$${product.price.toStringAsFixed(2)}",
                 fontWeight: FontWeight.w600,
+                fontSize: kDefaultFontSize + ((isExpanded) ? 4 : 0),
               ),
             ),
           ),
 
           // Product Details
           Positioned(
-            bottom: -0.5,
-            // left: 2.5,
-            child: Container(
+            bottom: 0,
+            child: AnimatedContainer(
+              duration: Duration(milliseconds: 50),
+              curve: Curves.easeInOut,
               width: (isExpanded) ? (width * 0.99) : width,
               height: (isExpanded) ? (height * 0.15) : height,
               padding: EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
-              margin: EdgeInsets.fromLTRB(4, 0, 4, 0),
+              // margin: EdgeInsets.fromLTRB(4, 0, 4, 0),
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
                 // color: Colors.black,
@@ -132,11 +160,13 @@ class MyItemContents extends StatelessWidget {
                     text: product.name,
                     textOverFlow: TextOverflow.ellipsis,
                     fontWeight: FontWeight.w600,
+                    fontSize: kDefaultFontSize + ((isExpanded) ? 8 : 0),
                   ),
                   MyText(
                     text: product.description,
                     maxLines: 2,
-                    fontSize: kDefaultFontSize - 4,
+                    // fontSize: kDefaultFontSize - 4,
+                    fontSize: kDefaultFontSize + ((isExpanded) ? 0 : -4),
                     lineHeight: 1.1,
                   ),
                   Spacer(),
@@ -145,7 +175,8 @@ class MyItemContents extends StatelessWidget {
                         ? "Exp: ${MyDateFormatter.formatDate(dateTimeInString: product.expirationDate)}"
                         : "No Expiration",
                     maxLines: 2,
-                    fontSize: kDefaultFontSize - 5,
+                    // fontSize: kDefaultFontSize - 5,
+                    fontSize: kDefaultFontSize + ((isExpanded) ? -2 : -5),
                     lineHeight: 1.1,
                   ),
                 ],
