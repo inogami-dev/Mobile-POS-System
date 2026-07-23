@@ -46,6 +46,7 @@ class MyImageDisplayerState extends State<MyImageDisplayer> {
             widget.imageInBase64Format!,
             width: widget.displaySize,
             height: widget.displaySize,
+            gaplessPlayback: true,
             fit: BoxFit.cover,
             // Error Builder: Shows an icon if the string is broken
             errorBuilder: (context, error, stackTrace) {

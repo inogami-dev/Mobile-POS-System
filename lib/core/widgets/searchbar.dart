@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
-import 'package:pos_system/core/utilities/image_displayer.dart';
+import 'package:pos_system/core/widgets/image_displayer.dart';
 import 'package:pos_system/core/utilities/image_picker.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 // import 'package:pos_system/features/account/presentation/state_management/current_logged_in_user_controller.dart';
@@ -155,14 +155,14 @@ class MySearchAnchorBarSuggestion extends ConsumerWidget {
   // final SearchController controller;
   // const MySearchAnchorBarSuggestion({super.key, required this.controller});
 
+  final ProductModel product;
+  final SearchController controller;
+
   MySearchAnchorBarSuggestion({
     super.key,
     required this.product,
     required this.controller,
   });
-
-  final ProductModel product;
-  final SearchController controller;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -13,6 +13,7 @@ void showMyAnimatedSnackBar({
   // Color bgColor = Colors.white60,
   // Color bgColor = const Color.fromARGB(242, 255, 255, 255),
   // Color bgColor = Colors.white70,
+  double? movingDistance,
   Color? borderColor,
   Color? bgColor,
   bool isAutoDismiss = true,
@@ -22,6 +23,8 @@ void showMyAnimatedSnackBar({
   final myColorScheme = Theme.of(context).colorScheme;
 
   final overlay = Overlay.of(context);
+
+  final finalMovingDistance = movingDistance ?? 80;
 
   final overlayEntry = OverlayEntry(
     builder: (context) {
@@ -34,7 +37,10 @@ void showMyAnimatedSnackBar({
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeOutCubic,
           builder: (context, offset, child) {
-            return Transform.translate(offset: offset * 80, child: child);
+            return Transform.translate(
+              offset: offset * finalMovingDistance,
+              child: child,
+            );
           },
           child: Material(
             color: Colors.transparent,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
-import 'package:pos_system/core/utilities/image_displayer.dart';
+import 'package:pos_system/core/widgets/image_displayer.dart';
 import 'package:pos_system/core/utilities/image_picker.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 

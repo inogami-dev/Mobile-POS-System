@@ -4,11 +4,12 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/core/utilities/date_formatter.dart';
-import 'package:pos_system/core/utilities/image_displayer.dart';
+import 'package:pos_system/core/widgets/image_displayer.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/my_alert_dialog.dart';
 import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/core/widgets/navigator.dart';
+import 'package:pos_system/core/widgets/scrollbar.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/products/data/model/product_model.dart';
 import 'package:pos_system/features/products/presentation/add_product_form.dart';
@@ -31,10 +32,12 @@ class MyItemContents extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ScrollController descriptioncrollController = ScrollController();
     final myColorScheme = Theme.of(context).colorScheme;
 
     final doesProductExpire = (product.expirationDate != "");
     log("Expiration Date: ${product.expirationDate}");
+    int baseTintForProductDetailsArea = (isExpanded) ? 80 : 30;
 
     return MyContainer(
       width: width,
@@ -131,8 +134,8 @@ class MyItemContents extends StatelessWidget {
             child: AnimatedContainer(
               duration: Duration(milliseconds: 50),
               curve: Curves.easeInOut,
-              width: (isExpanded) ? (width * 0.99) : width,
-              height: (isExpanded) ? (height * 0.15) : height,
+              width: width,
+              height: (isExpanded) ? (height * 0.2) : height,
               padding: EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
               // margin: EdgeInsets.fromLTRB(4, 0, 4, 0),
               clipBehavior: Clip.hardEdge,
@@ -140,11 +143,21 @@ class MyItemContents extends StatelessWidget {
                 // color: Colors.black,
                 gradient: LinearGradient(
                   colors: [
-                    myColorScheme.surfaceDim.withAlpha(10),
-                    myColorScheme.surfaceDim.withAlpha(50),
-                    myColorScheme.surfaceDim.withAlpha(100),
-                    myColorScheme.surfaceDim.withAlpha(150),
-                    myColorScheme.surfaceDim.withAlpha(200),
+                    myColorScheme.surfaceDim.withAlpha(
+                      baseTintForProductDetailsArea + 50,
+                    ),
+                    myColorScheme.surfaceDim.withAlpha(
+                      baseTintForProductDetailsArea + 50,
+                    ),
+                    myColorScheme.surfaceDim.withAlpha(
+                      baseTintForProductDetailsArea + 100,
+                    ),
+                    myColorScheme.surfaceDim.withAlpha(
+                      baseTintForProductDetailsArea + 135,
+                    ),
+                    myColorScheme.surfaceDim.withAlpha(
+                      baseTintForProductDetailsArea + 175,
+                    ),
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -162,14 +175,26 @@ class MyItemContents extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                     fontSize: kDefaultFontSize + ((isExpanded) ? 8 : 0),
                   ),
-                  MyText(
-                    text: product.description,
-                    maxLines: 2,
-                    // fontSize: kDefaultFontSize - 4,
-                    fontSize: kDefaultFontSize + ((isExpanded) ? 0 : -4),
-                    lineHeight: 1.1,
+                  Expanded(
+                    child: MyScrollBar(
+                      controller: descriptioncrollController,
+                      padding: EdgeInsets.only(right: -8),
+                      isTrackVisible: (isExpanded) ? true : false,
+                      isThumbVisible: (isExpanded) ? true : false,
+                      child: SingleChildScrollView(
+                        controller: descriptioncrollController,
+                        child: MyText(
+                          text: product.description,
+                          maxLines: (isExpanded) ? 10 : 2,
+                          // fontSize: kDefaultFontSize - 4,
+                          fontSize: kDefaultFontSize + ((isExpanded) ? 0 : -4),
+                          lineHeight: 1.1,
+                        ),
+                      ),
+                    ),
                   ),
-                  Spacer(),
+                  SizedBox(height: 8),
+                  // Spacer(),
                   MyText(
                     text: (doesProductExpire)
                         ? "Exp: ${MyDateFormatter.formatDate(dateTimeInString: product.expirationDate)}"

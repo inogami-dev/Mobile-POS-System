@@ -16,7 +16,7 @@ bool isPastTheSetTimeDelay({
   if (difference > Duration(milliseconds: millDelayPerScan)) {
     return true;
   } else {
-    log(difference.toString());
+    log("Time difference between scan: ${difference.toString()}");
   }
 
   return false;

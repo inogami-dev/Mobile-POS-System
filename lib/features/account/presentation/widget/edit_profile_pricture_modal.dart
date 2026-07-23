@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
-import 'package:pos_system/core/utilities/image_displayer.dart';
+import 'package:pos_system/core/widgets/image_displayer.dart';
 import 'package:pos_system/core/utilities/image_picker.dart';
 import 'package:pos_system/core/widgets/bottom_sheet.dart';
 import 'package:pos_system/core/widgets/button.dart';

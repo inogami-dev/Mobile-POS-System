@@ -48,4 +48,13 @@ class AllListedProducts extends _$AllListedProducts {
     log("Product Removed from the Cached List: ${product.name}");
     // }
   }
+
+  ProductModel? getProduct(String barcode) {
+    // return state.value!.forEach((product) {
+    //   if(product.id == productID){
+    //     return product;
+    //   }
+    // });
+    return state.value!.firstWhere((product) => product.barCode == barcode);
+  }
 }
