@@ -34,27 +34,35 @@ class MyScanner extends ConsumerStatefulWidget {
 class _MyScannerState extends ConsumerState<MyScanner> {
   /// Object Fields
   late MyAudioPlayer myAudioPlayer;
+  late MobileScannerController cameraController;
 
   // late BarcodeCapture barcodes;
   String scannedBarcodes = "";
-  int iteration = 0; // for testing only (deletable)
+  // int iteration = 0; // for testing only (deletable)
   DateTime lastTimeScanned = DateTime.now();
 
   @override
   void initState() {
     super.initState();
     myAudioPlayer = MyAudioPlayer(player: AudioPlayer());
+    cameraController = MobileScannerController(
+      initialZoom: 500,
+      // torchEnabled: true,
+      autoZoom: true,
+    );
   }
 
   @override
   void dispose() {
     myAudioPlayer.dispose();
+    cameraController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return MobileScanner(
+      controller: cameraController,
       onDetect: (barcodes) {
         // Stream
         if (isPastTheSetTimeDelay(
@@ -64,13 +72,23 @@ class _MyScannerState extends ConsumerState<MyScanner> {
           scannedBarcodes = barcodes.barcodes.first.rawValue!;
           lastTimeScanned = DateTime.now();
 
+          String? scannedProductName = ref
+              .read(allListedProductsProvider.notifier)
+              .getProduct(scannedBarcodes)
+              ?.name;
+
+          bool isScannedProductRegisteredInInventory =
+              scannedProductName != null;
+
           if (widget.isUsedToScanMultipleTimes) {
-            ref
-                .read(toCounterItemsProvider.notifier)
-                .addProductToCounter(scannedBarcodes);
-            log(
-              "Scanned Items [${ref.read(toCounterItemsProvider).length}]: ${ref.read(toCounterItemsProvider)}",
-            );
+            if (isScannedProductRegisteredInInventory) {
+              ref
+                  .read(toCounterItemsProvider.notifier)
+                  .addProductToCounter(scannedBarcodes);
+              log(
+                "Scanned Items [${ref.read(toCounterItemsProvider).length}]: ${ref.read(toCounterItemsProvider)}",
+              );
+            }
           } else {
             ref
                 .read(singleScanValueProvider.notifier)
@@ -80,19 +98,26 @@ class _MyScannerState extends ConsumerState<MyScanner> {
           // myAudioPlayer.playLocalAudio("audios/bruhh_sound_effect.mp3");
           myAudioPlayer.playLocalAudio("audios/shop_scan_sound_fx.mp3");
 
-          iteration++;
-          // showMyAnimatedSnackBar(
-          //   context: context,
-          //   dataToDisplay: "$iteration: $scannedBarcodes",
-          //   movingDistance: widget.snackbarMovingDistance,
-          // );
-          showMyAnimatedSnackBar(
-            context: context,
-            // dataToDisplay: "Scanned: ${widget.productName}",
-            dataToDisplay:
-                "Scanned: ${ref.watch(allListedProductsProvider.notifier).getProduct(scannedBarcodes)?.name}",
-            movingDistance: widget.snackbarMovingDistance,
-          );
+          if (isScannedProductRegisteredInInventory) {
+            showMyAnimatedSnackBar(
+              context: context,
+              // dataToDisplay: "Scanned: ${widget.productName}",
+              icon: Icon(Icons.check_rounded, color: Colors.green),
+              dataToDisplay: "Scanned: ${scannedProductName}",
+              movingDistance: widget.snackbarMovingDistance,
+            );
+          } else {
+            showMyAnimatedSnackBar(
+              context: context,
+              // dataToDisplay: "Scanned: ${widget.productName}",
+              icon: Icon(
+                Icons.warning_amber_rounded,
+                color: Colors.orange.shade400.withAlpha(156),
+              ),
+              dataToDisplay: "No product found in Inventory..",
+              movingDistance: widget.snackbarMovingDistance,
+            );
+          }
 
           // Exit na pag nakascan nag kaisa
           if (!widget.isUsedToScanMultipleTimes && scannedBarcodes.isNotEmpty) {

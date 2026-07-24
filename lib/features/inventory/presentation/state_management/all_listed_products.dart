@@ -50,11 +50,10 @@ class AllListedProducts extends _$AllListedProducts {
   }
 
   ProductModel? getProduct(String barcode) {
-    // return state.value!.forEach((product) {
-    //   if(product.id == productID){
-    //     return product;
-    //   }
-    // });
-    return state.value!.firstWhere((product) => product.barCode == barcode);
+    try {
+      return state.value!.firstWhere((product) => product.barCode == barcode);
+    } catch (e) {
+      return null;
+    }
   }
 }

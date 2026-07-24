@@ -36,7 +36,7 @@ class MyItemContents extends StatelessWidget {
     final myColorScheme = Theme.of(context).colorScheme;
 
     final doesProductExpire = (product.expirationDate != "");
-    log("Expiration Date: ${product.expirationDate}");
+    // log("Expiration Date: ${product.expirationDate}");
     int baseTintForProductDetailsArea = (isExpanded) ? 80 : 30;
 
     return MyContainer(
