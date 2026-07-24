@@ -19,7 +19,7 @@ class ToCounterItems extends _$ToCounterItems {
     final existingIndex = state.indexWhere((item) => item.id == productBarcode);
 
     if (existingIndex != -1) {
-      log("THE PRODUCT WAS ALREADY SCANNED..");
+      log("THE PRODUCT WAS ALREADY SCANNED BEFORE..");
 
       // Get the existing item
       final existingItem = state[existingIndex];
@@ -36,7 +36,7 @@ class ToCounterItems extends _$ToCounterItems {
 
       state = newState; // Assign the new list to state!
     } else {
-      log("THE PRODUCT WAS NOT YET SCANNED..");
+      log("THE PRODUCT WAS NOT YET SCANNED BEFORE..");
 
       // 2. The item is NEW. Find it in the master inventory list.
       final inventoryItems = ref.read(allListedProductsProvider).value ?? [];
@@ -50,7 +50,7 @@ class ToCounterItems extends _$ToCounterItems {
         );
       } catch (e) {
         log("Product with barcode $productBarcode not found in inventory!");
-        return; // Exit if they scanned a barcode that doesn't exist in your system
+        return;
       }
 
       // 3. Create the new ScannedItem

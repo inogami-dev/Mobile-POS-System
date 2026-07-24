@@ -95,10 +95,12 @@ class _MyScannerState extends ConsumerState<MyScanner> {
                 .setScannedValue(scannedBarcodes);
             log("Scanner was used as a single scanner only");
           }
-          // myAudioPlayer.playLocalAudio("audios/bruhh_sound_effect.mp3");
-          myAudioPlayer.playLocalAudio("audios/shop_scan_sound_fx.mp3");
 
           if (isScannedProductRegisteredInInventory) {
+            // Only beeps when the product is registered in the invetory to notify the user of the successful scan
+            // myAudioPlayer.playLocalAudio("audios/bruhh_sound_effect.mp3");
+            myAudioPlayer.playLocalAudio("audios/shop_scan_sound_fx.mp3");
+
             showMyAnimatedSnackBar(
               context: context,
               // dataToDisplay: "Scanned: ${widget.productName}",
@@ -107,6 +109,7 @@ class _MyScannerState extends ConsumerState<MyScanner> {
               movingDistance: widget.snackbarMovingDistance,
             );
           } else {
+            myAudioPlayer.playLocalAudio("audios/bruhh_sound_effect.mp3");
             showMyAnimatedSnackBar(
               context: context,
               // dataToDisplay: "Scanned: ${widget.productName}",
