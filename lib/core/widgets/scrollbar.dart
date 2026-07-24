@@ -9,6 +9,7 @@ class MyScrollBar extends StatelessWidget {
   final double trackRadius;
   final Color? trackBorderColor;
   final Color? thumbColor;
+  final double? opacityPercentage;
   final double thickness;
   final double radius;
   final EdgeInsets padding;
@@ -24,6 +25,7 @@ class MyScrollBar extends StatelessWidget {
     this.trackRadius = 50,
     this.trackBorderColor,
     this.thumbColor,
+    this.opacityPercentage,
     this.thickness = 5,
     this.radius = 50,
     this.padding = const EdgeInsets.all(5),
@@ -38,15 +40,26 @@ class MyScrollBar extends StatelessWidget {
       controller: controller,
       thumbVisibility: isThumbVisible,
       trackVisibility: isTrackVisible,
-      trackColor: trackColor ?? myColorScheme.onSurface.withAlpha(100),
+      trackColor:
+          trackColor ?? myColorScheme.onSurface.withAlpha(_myOpacity(100)),
       trackRadius: Radius.circular(trackRadius),
       trackBorderColor: trackBorderColor ?? Colors.transparent,
       thickness: thickness,
       radius: Radius.circular(radius),
       padding: padding,
-      thumbColor: thumbColor ?? myColorScheme.onPrimaryContainer.withAlpha(200),
+      thumbColor:
+          thumbColor ??
+          myColorScheme.onPrimaryContainer.withAlpha(_myOpacity(200)),
       interactive: isInteractive,
       child: child,
     );
+  }
+
+  int _myOpacity(int defaultValue) {
+    if (opacityPercentage == null) {
+      return defaultValue;
+    } else {
+      return (opacityPercentage! * defaultValue).toInt();
+    }
   }
 }

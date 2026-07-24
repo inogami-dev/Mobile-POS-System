@@ -269,10 +269,6 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
                                   ),
                                 );
                               } else {
-                                showMyAnimatedSnackBar(
-                                  context: context,
-                                  dataToDisplay: "Else",
-                                );
                                 saveProductLogic(
                                   context,
                                   ref: ref,

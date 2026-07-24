@@ -109,17 +109,29 @@ class _MyScannerState extends ConsumerState<MyScanner> {
               movingDistance: widget.snackbarMovingDistance,
             );
           } else {
-            myAudioPlayer.playLocalAudio("audios/bruhh_sound_effect.mp3");
-            showMyAnimatedSnackBar(
-              context: context,
-              // dataToDisplay: "Scanned: ${widget.productName}",
-              icon: Icon(
-                Icons.warning_amber_rounded,
-                color: Colors.orange.shade400.withAlpha(156),
-              ),
-              dataToDisplay: "No product found in Inventory..",
-              movingDistance: widget.snackbarMovingDistance,
-            );
+            // This is for when registering a new product to the inventory
+            if (widget.isUsedToScanMultipleTimes) {
+              myAudioPlayer.playLocalAudio("audios/bruhh_sound_effect.mp3");
+              showMyAnimatedSnackBar(
+                context: context,
+                // dataToDisplay: "Scanned: ${widget.productName}",
+                icon: Icon(
+                  Icons.warning_amber_rounded,
+                  color: Colors.orange.shade400.withAlpha(156),
+                ),
+                dataToDisplay: "No product found in Inventory..",
+                movingDistance: widget.snackbarMovingDistance,
+              );
+            } else {
+              myAudioPlayer.playLocalAudio("audios/shop_scan_sound_fx.mp3");
+              showMyAnimatedSnackBar(
+                context: context,
+                // dataToDisplay: "Scanned: ${widget.productName}",
+                icon: Icon(Icons.check_rounded, color: Colors.green),
+                dataToDisplay: "Successfully Scanned",
+                movingDistance: widget.snackbarMovingDistance,
+              );
+            }
           }
 
           // Exit na pag nakascan nag kaisa

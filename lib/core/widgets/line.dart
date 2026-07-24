@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class MyLine extends StatelessWidget {
   final bool isVertical;
-  final double length;
+  final double? length;
   final double thickness;
   final Color color;
   final bool isRounded;
@@ -10,7 +10,7 @@ class MyLine extends StatelessWidget {
   const MyLine({
     super.key,
     this.isVertical = true,
-    required this.length,
+    this.length,
     this.thickness = 1,
     this.color = Colors.black26,
     this.isRounded = false,
