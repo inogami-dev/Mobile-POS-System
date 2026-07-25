@@ -79,7 +79,7 @@ class _MyCustButtonState extends State<MyButton> {
     if (widget.isUsedAsAbortButton) {
       _buttonText = "Cancel";
       _buttonWidth = null;
-      _buttonWidthPercentage = 0.3;
+      // _buttonWidthPercentage = 0.3;
       _buttonColor = myColorScheme.surfaceContainer;
       _buttonTextColor = myColorScheme.onSurface;
       _buttonBorderColor = Colors.transparent;

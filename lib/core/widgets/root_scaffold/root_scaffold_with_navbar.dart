@@ -1,12 +1,16 @@
+import 'dart:developer';
+
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/core/constants/app_layout.dart';
+import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/root_scaffold/root_scaffold_state.dart';
 import 'package:pos_system/features/account/presentation/account_page.dart';
 import 'package:pos_system/features/cashier/presentation/cashier_page.dart';
+import 'package:pos_system/features/cashier/presentation/state_management/to_checkout.dart';
 import 'package:pos_system/features/home/presentation/home_page.dart';
 import 'package:pos_system/features/inventory/presentation/inventory_page.dart';
 import 'package:pos_system/features/utang/presentation/utang_page.dart';
@@ -24,6 +28,13 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
       bottomNavigationBar: CurvedNavigationBar(
         index: currentIndex,
         onTap: (index) {
+          // For Cashier Page to have a special button
+          if (currentIndex == 1) {
+            ref.read(toCheckoutProvider.notifier).toggle();
+            log("toggled");
+          } else {
+            ref.read(toCheckoutProvider.notifier).toggle(false);
+          }
           ref.read(rootScaffoldStateProvider.notifier).changeIndex(index);
         },
         backgroundColor: Colors.transparent,
@@ -37,9 +48,11 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
             child: HugeIcon(icon: HugeIcons.strokeRoundedHome01),
           ),
           CurvedNavigationBarItem(
-            label: 'Cashier',
+            label: (currentIndex == 1) ? 'Checkout' : 'Cashier',
             labelStyle: TextStyle(color: labelAndIconColor),
-            child: HugeIcon(icon: HugeIcons.strokeRoundedCashier),
+            child: (currentIndex == 1)
+                ? HugeIcon(icon: HugeIcons.strokeRoundedArrowUp01)
+                : HugeIcon(icon: HugeIcons.strokeRoundedCashier),
           ),
           CurvedNavigationBarItem(
             label: 'Inventory',

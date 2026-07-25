@@ -95,10 +95,6 @@ class ToCounterItems extends _$ToCounterItems {
   }
 
   Future<void> checkoutCompletion(List<ScannedItem> items) async {
-    // MyTryAndCatch.catchStack(
-    //   methodName: "checkoutCompletion",
-    //   className: "ToCounterItems",
-    //   toTry: () {
     String storeID = ref
         .read(currentLoggedInUserControllerProvider)
         .value!
@@ -131,12 +127,14 @@ class ToCounterItems extends _$ToCounterItems {
       state = [];
       log("Success: ${item.name}");
     }
-    //   },
-    // );
   }
 
   void removeAProductFromCounter(String productBarcode) {
     // Instead of using .remove(), we just make a new list and ignore the specific element.
     state = state.where((element) => element.id != productBarcode).toList();
+  }
+
+  void abortTransaction() {
+    state = [];
   }
 }
