@@ -5,6 +5,7 @@ import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/line.dart';
 import 'package:pos_system/core/widgets/my_alert_dialog.dart';
 import 'package:pos_system/core/widgets/my_snackbar.dart';
+import 'package:pos_system/core/widgets/root_scaffold/root_scaffold_state.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/cashier/data/model/scanned_item.dart';
 import 'package:pos_system/features/cashier/presentation/state_management/to_counter_items.dart';
@@ -35,6 +36,7 @@ class _CashierPageState extends ConsumerState<CashierPage> {
     height = MyDimensions.getHeight(context);
     final myColorScheme = Theme.of(context).colorScheme;
     List<ScannedItem> scannedItems = ref.watch(toCounterItemsProvider);
+    int currentIndex = ref.watch(rootScaffoldStateProvider);
 
     return Scaffold(
       body: Container(
@@ -43,13 +45,14 @@ class _CashierPageState extends ConsumerState<CashierPage> {
         alignment: Alignment.center,
         child: Column(
           children: [
-            SafeArea(
-              bottom: false,
-              child: ClipRRect(
-                borderRadius: BorderRadiusGeometry.circular(8),
-                child: MyCounterScanner(),
+            if (currentIndex == 1)
+              SafeArea(
+                bottom: false,
+                child: ClipRRect(
+                  borderRadius: BorderRadiusGeometry.circular(8),
+                  child: MyCounterScanner(),
+                ),
               ),
-            ),
             Padding(
               padding: const EdgeInsets.only(top: 45),
               child: Row(
