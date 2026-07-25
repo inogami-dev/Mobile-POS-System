@@ -99,7 +99,7 @@ void showMyAnimatedSnackBar({
 
   overlay.insert(overlayEntry);
 
-  // Auto dismiss after 2s
+  // Auto dismiss after certain duration.
   Future.delayed(Duration(milliseconds: dismissTimeInMillis), () {
     if (isAutoDismiss) {
       overlayEntry.remove();

@@ -1,7 +1,10 @@
 import 'dart:developer';
+import 'package:pos_system/core/utilities/try_and_catch.dart';
+import 'package:pos_system/features/account/presentation/state_management/current_logged_in_user_controller.dart';
 import 'package:pos_system/features/cashier/data/model/scanned_item.dart';
 import 'package:pos_system/features/inventory/presentation/state_management/all_listed_products.dart';
 import 'package:pos_system/features/products/data/model/product_model.dart';
+import 'package:pos_system/features/products/presentation/state_management/product_repo_ref_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'to_counter_items.g.dart';
@@ -66,6 +69,70 @@ class ToCounterItems extends _$ToCounterItems {
     }
 
     log("Number of stored items: ${state.length}");
+  }
+
+  void editAProductQuantity({
+    required String barcode,
+    required double quantity,
+  }) {
+    final newState = state;
+    final existingIndex = state.indexWhere((item) => item.id == barcode);
+
+    try {
+      newState[existingIndex] = newState[existingIndex].copyWith(
+        quantity: quantity,
+      );
+      state = [...newState];
+    } catch (e, stackTrace) {
+      log(
+        "There is an error on editAProductQuantity method in ToCounterItems state (to_counter_items.dart) \nThe Error is $e at $stackTrace",
+      );
+    }
+  }
+
+  ScannedItem getAnItem(String barcode) {
+    return state.firstWhere((element) => element.id == barcode);
+  }
+
+  Future<void> checkoutCompletion(List<ScannedItem> items) async {
+    // MyTryAndCatch.catchStack(
+    //   methodName: "checkoutCompletion",
+    //   className: "ToCounterItems",
+    //   toTry: () {
+    String storeID = ref
+        .read(currentLoggedInUserControllerProvider)
+        .value!
+        .currentStoreInView;
+    log("Store ID: ${storeID}");
+
+    for (var item in items) {
+      log("Processing: ${item.name}");
+      ProductModel product = ref
+          .read(allListedProductsProvider.notifier)
+          .getProduct(item.id!)!;
+      // Deduct the quantity from the database
+      ref
+          .read(productRepositoryProvider(storeID))
+          .update(
+            product.id!,
+            product.copyWith(
+              quantity: product.quantity - item.quantity.toInt(),
+            ),
+          );
+      // Deduct the quantity from the inventory
+      ref
+          .read(allListedProductsProvider.notifier)
+          .updateProduct(
+            product.copyWith(
+              quantity: product.quantity - item.quantity.toInt(),
+            ),
+          );
+      // Clear the counter
+      state = [];
+      log("Success: ${item.name}");
+    }
+    //   },
+    // );
   }
 
   void removeAProductFromCounter(String productBarcode) {

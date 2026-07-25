@@ -80,6 +80,7 @@ class _MyScannerState extends ConsumerState<MyScanner> {
           bool isScannedProductRegisteredInInventory =
               scannedProductName != null;
 
+          // For the saving into the state
           if (widget.isUsedToScanMultipleTimes) {
             if (isScannedProductRegisteredInInventory) {
               ref
@@ -96,6 +97,7 @@ class _MyScannerState extends ConsumerState<MyScanner> {
             log("Scanner was used as a single scanner only");
           }
 
+          // For the Sound Fx and Notifier SnackBar
           if (isScannedProductRegisteredInInventory) {
             // Only beeps when the product is registered in the invetory to notify the user of the successful scan
             // myAudioPlayer.playLocalAudio("audios/bruhh_sound_effect.mp3");
@@ -107,6 +109,7 @@ class _MyScannerState extends ConsumerState<MyScanner> {
               icon: Icon(Icons.check_rounded, color: Colors.green),
               dataToDisplay: "Scanned: ${scannedProductName}",
               movingDistance: widget.snackbarMovingDistance,
+              dismissTimeInMillis: 1500,
             );
           } else {
             // This is for when registering a new product to the inventory
@@ -121,6 +124,7 @@ class _MyScannerState extends ConsumerState<MyScanner> {
                 ),
                 dataToDisplay: "No product found in Inventory..",
                 movingDistance: widget.snackbarMovingDistance,
+                dismissTimeInMillis: 3000,
               );
             } else {
               myAudioPlayer.playLocalAudio("audios/shop_scan_sound_fx.mp3");
@@ -130,6 +134,7 @@ class _MyScannerState extends ConsumerState<MyScanner> {
                 icon: Icon(Icons.check_rounded, color: Colors.green),
                 dataToDisplay: "Successfully Scanned",
                 movingDistance: widget.snackbarMovingDistance,
+                dismissTimeInMillis: 3000,
               );
             }
           }

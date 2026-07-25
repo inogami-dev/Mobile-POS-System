@@ -195,14 +195,23 @@ class MyItemContents extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   // Spacer(),
-                  MyText(
-                    text: (doesProductExpire)
-                        ? "Exp: ${MyDateFormatter.formatDate(dateTimeInString: product.expirationDate)}"
-                        : "No Expiration",
-                    maxLines: 2,
-                    // fontSize: kDefaultFontSize - 5,
-                    fontSize: kDefaultFontSize + ((isExpanded) ? -2 : -5),
-                    lineHeight: 1.1,
+                  Row(
+                    children: [
+                      MyText(
+                        text: (doesProductExpire)
+                            ? "Exp: ${MyDateFormatter.formatDate(dateTimeInString: product.expirationDate)}"
+                            : "No Expiration",
+                        maxLines: 2,
+                        // fontSize: kDefaultFontSize - 5,
+                        fontSize: kDefaultFontSize + ((isExpanded) ? -2 : -5),
+                        lineHeight: 1.1,
+                      ),
+                      Spacer(),
+                      MyText(
+                        text: "${product.quantity} left",
+                        fontSize: kDefaultFontSize + ((isExpanded) ? -2 : -5),
+                      ),
+                    ],
                   ),
                 ],
               ),

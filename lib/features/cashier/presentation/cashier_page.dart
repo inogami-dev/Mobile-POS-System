@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
+import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/line.dart';
+import 'package:pos_system/core/widgets/my_alert_dialog.dart';
+import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/cashier/data/model/scanned_item.dart';
 import 'package:pos_system/features/cashier/presentation/state_management/to_counter_items.dart';
@@ -75,6 +78,32 @@ class _CashierPageState extends ConsumerState<CashierPage> {
               width: width,
             ),
             // SizedBox(height: height * 0.10),
+            Container(
+              margin: EdgeInsets.only(bottom: height * 0.1),
+              child: MyButton(
+                buttonText: "Checkout",
+                onTap: () {
+                  myAlertDialogue(
+                    context: context,
+                    alertTitle: "Confirm Checkout",
+                    alertContent:
+                        "Please confirm that the items in the list are correct as this action cannot be undone.",
+                    onApprovalPressed: () async {
+                      await ref
+                          .read(toCounterItemsProvider.notifier)
+                          .checkoutCompletion(scannedItems);
+                      // Show a cue that the transaction is successful
+                      showMyAnimatedSnackBar(
+                        context: context,
+                        icon: Icon(Icons.check_rounded, color: Colors.green),
+                        dataToDisplay: "Successful Transaction!",
+                      );
+                      Navigator.pop(context);
+                    },
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),

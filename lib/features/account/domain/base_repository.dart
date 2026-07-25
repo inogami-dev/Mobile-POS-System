@@ -110,8 +110,12 @@ abstract class BaseRepository<T extends BaseEntity> {
 
   // Update -------------------------------------------------
   Future<void> update(String id, T item) async {
-    log("SUCCESSFUL UPDATE");
-    await collection.doc(id).update(toMap(item));
+    try {
+      await collection.doc(id).update(toMap(item));
+      log("SUCCESSFUL UPDATE");
+    } catch (e, stackTrace) {
+      log("Error updating data: $e\n$stackTrace");
+    }
   }
 
   // Delete --------------------------------------------------

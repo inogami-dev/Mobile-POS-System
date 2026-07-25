@@ -56,4 +56,18 @@ class AllListedProducts extends _$AllListedProducts {
       return null;
     }
   }
+
+  void updateProduct(ProductModel updatedProduct) {
+    log("This is executed 1");
+    List<ProductModel> newState = state.value!;
+    int productToChangeIndex = newState.indexWhere(
+      (product) => product.barCode == updatedProduct.barCode,
+    );
+    log("This is executed 2");
+
+    newState[productToChangeIndex] = updatedProduct;
+    newState.sort((a, b) => a.queryName.compareTo(b.queryName));
+    state = AsyncValue.data(newState);
+    log("Product Updated: ${updatedProduct.name}");
+  }
 }
