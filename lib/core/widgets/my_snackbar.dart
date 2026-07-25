@@ -14,6 +14,7 @@ void showMyAnimatedSnackBar({
   // Color bgColor = const Color.fromARGB(242, 255, 255, 255),
   // Color bgColor = Colors.white70,
   double? movingDistance,
+  int dismissTimeInMillis = 3500,
   Color? borderColor,
   Color? bgColor,
   bool isAutoDismiss = true,
@@ -99,7 +100,7 @@ void showMyAnimatedSnackBar({
   overlay.insert(overlayEntry);
 
   // Auto dismiss after 2s
-  Future.delayed(const Duration(milliseconds: 3500), () {
+  Future.delayed(Duration(milliseconds: dismissTimeInMillis), () {
     if (isAutoDismiss) {
       overlayEntry.remove();
     }
