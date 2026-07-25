@@ -15,7 +15,7 @@ class MyTextfield extends StatefulWidget {
   final String? hintText;
   final String labelText;
   // final IconData prefixIcon;
-  final HugeIcon prefixIcon;
+  final HugeIcon? prefixIcon;
   final Color? prefixIconColor;
   final double borderRadius;
   final double borderWidth;
@@ -29,10 +29,12 @@ class MyTextfield extends StatefulWidget {
   final HugeIcon? suffixIcon;
   final Color? suffixIconColor;
   final bool isReadOnly;
+  final TextStyle? style;
   final double leftMargin;
   final double topMargin;
   final double rightMargin;
   final double bottomMargin;
+  final int maxLines;
   final TextInputType? textInputType;
 
   /// This will manage the data the textfield will accept
@@ -46,13 +48,15 @@ class MyTextfield extends StatefulWidget {
     this.heightPercentage = 1.0,
     this.hintText,
     required this.labelText,
-    required this.prefixIcon,
+    this.prefixIcon,
     this.prefixIconColor,
     this.suffixIconColor,
+    this.style,
     required this.textController,
     this.borderRadius = 30,
     this.borderWidth = 1,
     this.focusBorderWidth = 1.5,
+    this.maxLines = 1,
     this.borderColor,
     this.activeBorderColor,
     this.focusNode,
@@ -117,8 +121,15 @@ class _MyTextfieldState extends State<MyTextfield> {
         focusNode: widget.focusNode,
         readOnly: widget.isReadOnly,
         obscureText: _isObscurePassword,
+        // expands: true, Forces the text field to stretch to the parent container's height
+        expands: (widget.isUsingStaticDimension) ? false : true,
+        // maxLines MUST be null for expands to work
+        maxLines: (widget.isUsingStaticDimension) ? widget.maxLines : null,
+        // Keeps your typed text perfectly centered vertically
+        textAlignVertical: TextAlignVertical.center,
         obscuringCharacter: "*",
         cursorColor: myColorScheme.outline,
+        style: widget.style ?? TextStyle(fontFamily: "Quicksand"),
         decoration: InputDecoration(
           // labelText: widget.labelText,
           label: MyText(text: widget.labelText, color: myColorScheme.onSurface),
@@ -138,11 +149,13 @@ class _MyTextfieldState extends State<MyTextfield> {
           alignLabelWithHint: true,
           filled: true,
           contentPadding: const EdgeInsets.only(top: 3, right: 3, bottom: 5),
-          prefixIcon: Padding(
-            padding: const EdgeInsets.only(left: 10),
-            // child: Icon(widget.prefixIcon),
-            child: widget.prefixIcon,
-          ),
+          prefixIcon: (widget.prefixIcon != null)
+              ? Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  // child: Icon(widget.prefixIcon),
+                  child: widget.prefixIcon,
+                )
+              : SizedBox(),
           prefixIconConstraints: BoxConstraints.tight(Size(50, 32)),
           prefixIconColor: prefixIconColor,
           suffixIcon: (widget.suffixIcon != null || widget.isPasswordField)
