@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/core/constants/app_layout.dart';
-import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/root_scaffold/root_scaffold_state.dart';
 import 'package:pos_system/features/account/presentation/account_page.dart';
 import 'package:pos_system/features/cashier/presentation/cashier_page.dart';
@@ -28,13 +27,17 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
       bottomNavigationBar: CurvedNavigationBar(
         index: currentIndex,
         onTap: (index) {
-          // For Cashier Page to have a special button
-          if (currentIndex == 1) {
+          if (currentIndex == 1 && index == 1) {
             ref.read(toCheckoutProvider.notifier).toggle();
-            log("toggled");
-          } else {
-            ref.read(toCheckoutProvider.notifier).toggle(false);
+            log("Scanner toggled");
+            return; // STOP here. Do not navigate.
           }
+
+          // If we navigate anywhere else (or navigate to Cashier for the first time),
+          // ensure the scanner state is forced closed!
+          ref.read(toCheckoutProvider.notifier).toggle(false);
+
+          // Proceed with normal navigation
           ref.read(rootScaffoldStateProvider.notifier).changeIndex(index);
         },
         backgroundColor: Colors.transparent,

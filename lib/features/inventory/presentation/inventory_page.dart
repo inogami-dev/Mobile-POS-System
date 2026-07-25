@@ -44,7 +44,14 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SafeArea(bottom: false, child: MyInventorySearchBar()),
-              Expanded(child: MyItemsArea()),
+              Expanded(
+                child: AnimatedOpacity(
+                  duration: Duration(milliseconds: 1000),
+                  curve: Curves.easeInOut,
+                  opacity: isInventoryPageVisible ? 1 : 0,
+                  child: MyItemsArea(),
+                ),
+              ),
               // Spacer(),
               MyBottomInventoryPageOptionsBar(
                 isInventoryPageVisible: isInventoryPageVisible,

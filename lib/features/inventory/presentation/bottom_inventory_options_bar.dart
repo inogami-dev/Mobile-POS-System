@@ -63,7 +63,7 @@ class MyBottomInventoryPageOptionsBar extends StatelessWidget {
       opacity: isInventoryPageVisible ? 1 : 0,
       child: AnimatedContainer(
         duration: Duration(milliseconds: durationInMillis),
-        curve: Curves.easeIn,
+        curve: Curves.easeInOutCubic,
         width: width,
         height: inventoryPageOptionsBarHeight,
         color: myColorScheme.surfaceContainerHighest,

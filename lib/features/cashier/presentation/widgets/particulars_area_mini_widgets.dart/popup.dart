@@ -2,11 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/core/widgets/my_alert_dialog.dart';
 import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/core/widgets/progress_indicator_static.dart';
-import 'package:pos_system/core/widgets/text_field.dart';
 import 'package:pos_system/features/cashier/presentation/state_management/to_counter_items.dart';
 import 'package:pos_system/features/cashier/presentation/widgets/particulars_area_mini_widgets.dart/input_quantity.dart';
 

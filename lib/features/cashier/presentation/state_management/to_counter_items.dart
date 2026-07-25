@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'package:pos_system/core/utilities/try_and_catch.dart';
 import 'package:pos_system/features/account/presentation/state_management/current_logged_in_user_controller.dart';
 import 'package:pos_system/features/cashier/data/model/scanned_item.dart';
 import 'package:pos_system/features/inventory/presentation/state_management/all_listed_products.dart';

@@ -60,8 +60,8 @@ class _CashierPageState extends ConsumerState<CashierPage> {
                     curve: Curves.easeInOutCubic,
                     child: AnimatedOpacity(
                       opacity: (toCheckout) ? 0 : 1,
-                      duration: Duration(milliseconds: 400),
-                      curve: Curves.easeIn,
+                      duration: Duration(milliseconds: 1000),
+                      curve: Curves.easeInOutCubic,
                       child: SafeArea(
                         bottom: false,
                         child: ClipRRect(
