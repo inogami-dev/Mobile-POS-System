@@ -51,26 +51,26 @@ class _CashierPageState extends ConsumerState<CashierPage> {
             Positioned.fill(
               child: Column(
                 children: [
-                  // if (currentIndex == 1 && !toCheckout)
-                  AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
-                    height: (currentIndex == 1 && !toCheckout)
-                        ? height * 0.4
-                        : 0,
-                    curve: Curves.easeInOutCubic,
-                    child: AnimatedOpacity(
-                      opacity: (toCheckout) ? 0 : 1,
-                      duration: Duration(milliseconds: 1000),
+                  if (currentIndex == 1 && !toCheckout) // for further testing
+                    AnimatedContainer(
+                      duration: Duration(milliseconds: 500),
+                      height: (currentIndex == 1 && !toCheckout)
+                          ? height * 0.4
+                          : 0,
                       curve: Curves.easeInOutCubic,
-                      child: SafeArea(
-                        bottom: false,
-                        child: ClipRRect(
-                          borderRadius: BorderRadiusGeometry.circular(8),
-                          child: MyCounterScanner(),
+                      child: AnimatedOpacity(
+                        opacity: (toCheckout) ? 0 : 1,
+                        duration: Duration(milliseconds: 1000),
+                        curve: Curves.easeInOutCubic,
+                        child: SafeArea(
+                          bottom: false,
+                          child: ClipRRect(
+                            borderRadius: BorderRadiusGeometry.circular(8),
+                            child: MyCounterScanner(),
+                          ),
                         ),
                       ),
                     ),
-                  ),
                   Padding(
                     padding: const EdgeInsets.only(top: 35),
                     child: Row(
