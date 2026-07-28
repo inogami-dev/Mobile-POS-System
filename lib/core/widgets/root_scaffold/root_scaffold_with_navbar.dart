@@ -32,45 +32,71 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
             log("Scanner toggled");
             return; // STOP here. Do not navigate.
           }
-
           // If we navigate anywhere else (or navigate to Cashier for the first time),
           // ensure the scanner state is forced closed!
           ref.read(toCheckoutProvider.notifier).toggle(false);
-
           // Proceed with normal navigation
           ref.read(rootScaffoldStateProvider.notifier).changeIndex(index);
         },
         backgroundColor: Colors.transparent,
         height: MyAppLayout.bottomNavbarHeight,
         color: myColorScheme.secondaryContainer,
-        buttonBackgroundColor: myColorScheme.primaryContainer,
+        buttonBackgroundColor: (currentIndex == 1)
+            ? myColorScheme.primary
+            : myColorScheme.primaryContainer,
         items: [
           CurvedNavigationBarItem(
             label: 'Home',
-            labelStyle: TextStyle(color: labelAndIconColor),
-            child: HugeIcon(icon: HugeIcons.strokeRoundedHome01),
+            labelStyle: TextStyle(
+              color: labelAndIconColor,
+              fontFamily: "Quicksand",
+            ),
+            child: toVertiCenterIcon(
+              HugeIcon(icon: HugeIcons.strokeRoundedHome04),
+            ),
           ),
           CurvedNavigationBarItem(
             label: (currentIndex == 1) ? 'Checkout' : 'Cashier',
-            labelStyle: TextStyle(color: labelAndIconColor),
-            child: (currentIndex == 1)
-                ? HugeIcon(icon: HugeIcons.strokeRoundedArrowUp01)
-                : HugeIcon(icon: HugeIcons.strokeRoundedCashier),
+            labelStyle: TextStyle(
+              color: labelAndIconColor,
+              fontFamily: "Quicksand",
+            ),
+            child: toVertiCenterIcon(
+              (currentIndex == 1)
+                  ? HugeIcon(icon: HugeIcons.strokeRoundedArrowUp01)
+                  : HugeIcon(icon: HugeIcons.strokeRoundedCashier),
+            ),
           ),
           CurvedNavigationBarItem(
             label: 'Inventory',
-            labelStyle: TextStyle(color: labelAndIconColor),
-            child: HugeIcon(icon: HugeIcons.strokeRoundedGroupItems),
+            labelStyle: TextStyle(
+              color: labelAndIconColor,
+              fontFamily: "Quicksand",
+            ),
+            child: toVertiCenterIcon(
+              HugeIcon(icon: HugeIcons.strokeRoundedGroupItems),
+            ),
           ),
           CurvedNavigationBarItem(
             label: 'Utang',
-            labelStyle: TextStyle(color: labelAndIconColor),
-            child: HugeIcon(icon: HugeIcons.strokeRoundedReceiptText, size: 26),
+            labelStyle: TextStyle(
+              color: labelAndIconColor,
+              fontFamily: "Quicksand",
+            ),
+            child: toVertiCenterIcon(
+              HugeIcon(icon: HugeIcons.strokeRoundedReceiptText, size: 24),
+            ),
           ),
           CurvedNavigationBarItem(
             label: 'Account',
-            labelStyle: TextStyle(color: myColorScheme.secondary),
-            child: HugeIcon(icon: HugeIcons.strokeRoundedUserAccount, size: 26),
+            labelStyle: TextStyle(
+              color: myColorScheme.secondary,
+              fontFamily: "Quicksand",
+              wordSpacing: 3.0,
+            ),
+            child: toVertiCenterIcon(
+              HugeIcon(icon: HugeIcons.strokeRoundedAccountSetting03, size: 26),
+            ),
           ),
         ],
       ),
@@ -86,4 +112,13 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
     UtangPage(),
     AccountPage(),
   ];
+
+  // Vertically center the icon visually
+  Container toVertiCenterIcon(HugeIcon icon) {
+    return Container(
+      alignment: Alignment.bottomCenter,
+      // padding: EdgeInsets.only(bottom: 2),
+      child: icon,
+    );
+  }
 }
