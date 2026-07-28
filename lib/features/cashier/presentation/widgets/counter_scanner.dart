@@ -4,7 +4,9 @@ import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/features/products/presentation/widgets/scanner.dart';
 
 class MyCounterScanner extends StatelessWidget {
-  const MyCounterScanner({super.key});
+  final isTurnedOff;
+
+  const MyCounterScanner({super.key, this.isTurnedOff = false});
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,7 @@ class MyCounterScanner extends StatelessWidget {
             millDelayPerScan: 1200,
             snackbarMovingDistance: (height * 0.32) + 40,
             productName: "Counter",
+            isTurnedOff: isTurnedOff,
           ),
         ),
       ),

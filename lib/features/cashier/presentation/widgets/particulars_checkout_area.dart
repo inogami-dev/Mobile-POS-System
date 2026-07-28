@@ -4,11 +4,9 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/core/constants/app_layout.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/button.dart';
-import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/my_alert_dialog.dart';
 import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/core/widgets/text_field.dart';
-import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/cashier/data/model/scanned_item.dart';
 import 'package:pos_system/features/cashier/presentation/state_management/to_checkout.dart';
 import 'package:pos_system/features/cashier/presentation/state_management/to_counter_items.dart';
@@ -24,31 +22,58 @@ class ParticularsCheckoutArea extends ConsumerStatefulWidget {
 
 class _ParticularsCheckoutAreaState
     extends ConsumerState<ParticularsCheckoutArea> {
+  TextEditingController totalAmountController = TextEditingController();
+  TextEditingController paymentController = TextEditingController();
+  TextEditingController changeController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    totalAmountController.dispose();
+    paymentController.dispose();
+    changeController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MyDimensions.getWidth(context);
     final height = MyDimensions.getHeight(context);
     final myColorScheme = Theme.of(context).colorScheme;
+    final toCheckout = ref.watch(toCheckoutProvider);
+    const animationDuration = Duration(milliseconds: 500);
+    const animationCurve = Curves.easeInOutCubic;
+    totalAmountController.text = widget.scannedItems.fold<double>(0, (
+      total,
+      currentVal,
+    ) {
+      return total + (currentVal.price * currentVal.quantity);
+    }).toString();
 
     return AnimatedContainer(
-      duration: Duration(milliseconds: 500),
+      duration: animationDuration,
       width: width,
-      height: height * 0.42,
+      height: height * 0.32,
       decoration: BoxDecoration(
-        color: myColorScheme.surfaceContainerHigh,
+        // color: myColorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(8),
           topRight: Radius.circular(8),
         ),
       ),
-      curve: Curves.bounceOut,
+      curve: animationCurve,
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
-          Container(
-            width: width * 0.8,
+          // Textfields
+          AnimatedContainer(
+            duration: animationDuration,
+            curve: animationCurve,
+            width: (toCheckout) ? width * 0.9 : width,
             padding: EdgeInsets.fromLTRB(8, 16, 8, 24),
-            color: myColorScheme.outlineVariant,
+            decoration: BoxDecoration(
+              color: myColorScheme.outlineVariant,
+              borderRadius: BorderRadius.circular((toCheckout) ? 16 : 32),
+            ),
             child: Column(
               children: [
                 SizedBox(
@@ -67,36 +92,64 @@ class _ParticularsCheckoutAreaState
                       color: myColorScheme.outline,
                     ),
                     prefixIconConstraints: Size(50, 24),
-                    textController: TextEditingController()..text = "1056",
+                    activeBorderColor: myColorScheme.outline,
+                    style: TextStyle(
+                      fontSize: kDefaultFontSize + 4,
+                      fontFamily: "Quicksand",
+                    ),
+                    isReadOnly: true,
+                    textController: totalAmountController,
                   ),
                 ),
                 // ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
 
-                MyTextfield(
-                  prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedMoney01),
-                  labelText: "Amount",
-                  textController: TextEditingController(),
-                ),
-                SizedBox(height: 8),
-
-                SizedBox(
-                  width: width * 0.8,
-                  height: height * 0.056,
+                AnimatedOpacity(
+                  opacity: (toCheckout) ? 1 : 0,
+                  duration: animationDuration,
+                  curve: animationCurve,
                   child: MyTextfield(
-                    isUsingStaticDimension: false,
-                    widthPercentage: width * 0.8,
-                    heightPercentage: height * 0.006,
-                    labelText: "Change",
-                    borderRadius: 8,
-                    borderColor: myColorScheme.outlineVariant,
-                    prefixIcon: HugeIcon(
-                      icon: HugeIcons.strokeRoundedPhilippinePeso,
-                      size: 22,
-                      color: myColorScheme.outline,
+                    isReadOnly: (toCheckout) ? false : true,
+                    prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedMoney01),
+                    labelText: "Payment Money",
+                    textInputType: TextInputType.number,
+                    textController: paymentController,
+                    style: TextStyle(
+                      fontSize: kDefaultFontSize + 4,
+                      fontFamily: "Quicksand",
                     ),
-                    prefixIconConstraints: Size(50, 24),
-                    textController: TextEditingController()..text = "1056",
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                AnimatedOpacity(
+                  opacity: (toCheckout) ? 1 : 0,
+                  duration: animationDuration,
+                  curve: animationCurve,
+                  child: SizedBox(
+                    width: width * 0.8,
+                    height: height * 0.056,
+                    child: MyTextfield(
+                      isUsingStaticDimension: false,
+                      widthPercentage: width * 0.8,
+                      heightPercentage: height * 0.006,
+                      labelText: "Change",
+                      borderRadius: 8,
+                      borderColor: myColorScheme.outlineVariant,
+                      prefixIcon: HugeIcon(
+                        icon: HugeIcons.strokeRoundedPhilippinePeso,
+                        size: 22,
+                        color: myColorScheme.outline,
+                      ),
+                      prefixIconConstraints: Size(50, 24),
+                      activeBorderColor: myColorScheme.outline,
+                      style: TextStyle(
+                        fontSize: kDefaultFontSize + 4,
+                        fontFamily: "Quicksand",
+                      ),
+                      isReadOnly: true,
+                      textController: changeController,
+                    ),
                   ),
                 ),
               ],
@@ -104,7 +157,7 @@ class _ParticularsCheckoutAreaState
           ),
 
           Positioned.fill(
-            top: height * 0.28,
+            top: height * 0.25,
             child: Container(
               width: width,
               alignment: Alignment.topCenter,
@@ -124,7 +177,7 @@ class _ParticularsCheckoutAreaState
                     // widthPercentage: 0.1,
                     buttonText: "Clear",
                     isUsedAsAbortButton: true,
-                    color: myColorScheme.primary.withAlpha(56),
+                    color: Colors.transparent,
                     onTap: () {
                       if (widget.scannedItems.isEmpty) {
                         showMyAnimatedSnackBar(

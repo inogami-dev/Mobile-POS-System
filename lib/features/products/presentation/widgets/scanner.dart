@@ -18,6 +18,7 @@ class MyScanner extends ConsumerStatefulWidget {
   final bool isUsedToScanMultipleTimes;
   final double? snackbarMovingDistance;
   final String productName;
+  final bool isTurnedOff;
 
   const MyScanner({
     super.key,
@@ -25,6 +26,7 @@ class MyScanner extends ConsumerStatefulWidget {
     this.millDelayPerScan = 1000,
     this.snackbarMovingDistance,
     this.productName = "Product",
+    this.isTurnedOff = false,
   });
 
   @override
@@ -64,6 +66,9 @@ class _MyScannerState extends ConsumerState<MyScanner> {
     return MobileScanner(
       controller: cameraController,
       onDetect: (barcodes) {
+        // Off switch
+        if (widget.isTurnedOff) return;
+
         // Stream
         if (isPastTheSetTimeDelay(
           millDelayPerScan: widget.millDelayPerScan,
