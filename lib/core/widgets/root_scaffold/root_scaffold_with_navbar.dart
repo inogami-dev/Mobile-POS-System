@@ -20,6 +20,9 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentIndex = ref.watch(rootScaffoldStateProvider);
+
+    final isCheckoutOpen = ref.watch(toCheckoutProvider);
+
     ColorScheme myColorScheme = Theme.of(context).colorScheme;
     Color labelAndIconColor = myColorScheme.secondary;
 
@@ -30,72 +33,87 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
           if (currentIndex == 1 && index == 1) {
             ref.read(toCheckoutProvider.notifier).toggle();
             log("Scanner toggled");
-            return; // STOP here. Do not navigate.
+            return;
           }
-          // If we navigate anywhere else (or navigate to Cashier for the first time),
-          // ensure the scanner state is forced closed!
           ref.read(toCheckoutProvider.notifier).toggle(false);
-          // Proceed with normal navigation
           ref.read(rootScaffoldStateProvider.notifier).changeIndex(index);
         },
         backgroundColor: Colors.transparent,
         height: MyAppLayout.bottomNavbarHeight,
         color: myColorScheme.secondaryContainer,
-        buttonBackgroundColor: (currentIndex == 1)
-            ? myColorScheme.primary
-            : myColorScheme.primaryContainer,
+
+        buttonBackgroundColor: _myFloatingButtonColorDeterminer(
+          currentIndex: currentIndex,
+          isCheckoutOpen: isCheckoutOpen,
+          myColorScheme: myColorScheme,
+        ),
+
         items: [
-          CurvedNavigationBarItem(
+          _myCurvedNavigationBarItem(
             label: 'Home',
-            labelStyle: TextStyle(
-              color: labelAndIconColor,
-              fontFamily: "Quicksand",
-            ),
-            child: toVertiCenterIcon(
-              HugeIcon(icon: HugeIcons.strokeRoundedHome04),
+            color: labelAndIconColor,
+            icon: _toVertiCenterIcon(
+              isTheCurretIndex: (currentIndex == 0),
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedHome04),
             ),
           ),
-          CurvedNavigationBarItem(
-            label: (currentIndex == 1) ? 'Checkout' : 'Cashier',
-            labelStyle: TextStyle(
-              color: labelAndIconColor,
-              fontFamily: "Quicksand",
-            ),
-            child: toVertiCenterIcon(
-              (currentIndex == 1)
-                  ? HugeIcon(icon: HugeIcons.strokeRoundedArrowUp01)
+
+          _myCurvedNavigationBarItem(
+            label: (currentIndex == 1 && isCheckoutOpen)
+                ? 'Checkout'
+                : 'Cashier',
+            color: labelAndIconColor,
+            icon: _toVertiCenterIcon(
+              isTheCurretIndex: (currentIndex == 1),
+              hasSpecialVisual: (currentIndex == 1 && isCheckoutOpen),
+              icon: (currentIndex == 1)
+                  ? AnimatedCrossFade(
+                      firstChild: HugeIcon(
+                        icon: HugeIcons.strokeRoundedArrowDown01,
+                      ),
+                      secondChild: HugeIcon(
+                        icon: HugeIcons.strokeRoundedArrowUp01,
+                      ),
+                      crossFadeState: (isCheckoutOpen)
+                          ? CrossFadeState.showFirst
+                          : CrossFadeState.showSecond,
+                      sizeCurve: Curves.easeInOut,
+                      duration: Duration(milliseconds: 200),
+                    )
                   : HugeIcon(icon: HugeIcons.strokeRoundedCashier),
             ),
           ),
-          CurvedNavigationBarItem(
+
+          _myCurvedNavigationBarItem(
             label: 'Inventory',
-            labelStyle: TextStyle(
-              color: labelAndIconColor,
-              fontFamily: "Quicksand",
-            ),
-            child: toVertiCenterIcon(
-              HugeIcon(icon: HugeIcons.strokeRoundedGroupItems),
+            color: labelAndIconColor,
+            icon: _toVertiCenterIcon(
+              isTheCurretIndex: (currentIndex == 2),
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedGroupItems),
             ),
           ),
-          CurvedNavigationBarItem(
+
+          _myCurvedNavigationBarItem(
             label: 'Utang',
-            labelStyle: TextStyle(
-              color: labelAndIconColor,
-              fontFamily: "Quicksand",
-            ),
-            child: toVertiCenterIcon(
-              HugeIcon(icon: HugeIcons.strokeRoundedReceiptText, size: 24),
+            color: labelAndIconColor,
+            icon: _toVertiCenterIcon(
+              isTheCurretIndex: (currentIndex == 3),
+              icon: HugeIcon(
+                icon: HugeIcons.strokeRoundedReceiptText,
+                size: 24,
+              ),
             ),
           ),
-          CurvedNavigationBarItem(
+
+          _myCurvedNavigationBarItem(
             label: 'Account',
-            labelStyle: TextStyle(
-              color: myColorScheme.secondary,
-              fontFamily: "Quicksand",
-              wordSpacing: 3.0,
-            ),
-            child: toVertiCenterIcon(
-              HugeIcon(icon: HugeIcons.strokeRoundedAccountSetting03, size: 26),
+            color: myColorScheme.secondary,
+            icon: _toVertiCenterIcon(
+              isTheCurretIndex: (currentIndex == 4),
+              icon: HugeIcon(
+                icon: HugeIcons.strokeRoundedAccountSetting03,
+                size: 26,
+              ),
             ),
           ),
         ],
@@ -113,12 +131,44 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
     AccountPage(),
   ];
 
-  // Vertically center the icon visually
-  Container toVertiCenterIcon(HugeIcon icon) {
-    return Container(
-      alignment: Alignment.bottomCenter,
-      // padding: EdgeInsets.only(bottom: 2),
+  CurvedNavigationBarItem _myCurvedNavigationBarItem({
+    required String label,
+    required Color color,
+    required Widget icon,
+  }) {
+    return CurvedNavigationBarItem(
+      label: label,
+      labelStyle: TextStyle(color: color, fontFamily: "Quicksand"),
       child: icon,
     );
+  }
+
+  Widget _toVertiCenterIcon({
+    required Widget icon,
+    required bool isTheCurretIndex,
+    bool hasSpecialVisual = false,
+  }) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      margin: EdgeInsets.only(top: (isTheCurretIndex) ? 0 : 8),
+      curve: Curves.easeInOut,
+      transform: Matrix4.translationValues(0, hasSpecialVisual ? 12.0 : 0, 0),
+      child: icon,
+    );
+  }
+
+  /// Return a special buttons when in the Cashier page and the checkout is open
+  Color _myFloatingButtonColorDeterminer({
+    required int currentIndex,
+    required bool isCheckoutOpen,
+    required ColorScheme myColorScheme,
+  }) {
+    if (currentIndex == 1 && isCheckoutOpen) {
+      return Colors.transparent;
+    } else if (currentIndex == 1) {
+      return myColorScheme.primary;
+    } else {
+      return myColorScheme.primaryContainer;
+    }
   }
 }

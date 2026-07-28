@@ -12,6 +12,7 @@ import 'package:pos_system/features/cashier/presentation/state_management/to_che
 import 'package:pos_system/features/cashier/presentation/state_management/to_counter_items.dart';
 import 'package:pos_system/features/cashier/presentation/widgets/counter_scanner.dart';
 import 'package:pos_system/features/cashier/presentation/widgets/particulars_area.dart';
+import 'package:pos_system/features/cashier/presentation/widgets/particulars_checkout_area.dart';
 
 class CashierPage extends ConsumerStatefulWidget {
   const CashierPage({super.key});
@@ -104,101 +105,11 @@ class _CashierPageState extends ConsumerState<CashierPage> {
                 ],
               ),
             ),
-
-            // Clear Button
             AnimatedPositioned(
               duration: Duration(milliseconds: 400),
               curve: Curves.easeInOutCubic,
-              bottom: (toCheckout) ? height * 0.13 : -10,
-              left: 24,
-              child: MyButton(
-                // widthPercentage: 0.1,
-                buttonText: "Clear",
-                isUsedAsAbortButton: true,
-                color: myColorScheme.primary.withAlpha(56),
-                onTap: () {
-                  if (scannedItems.isEmpty) {
-                    showMyAnimatedSnackBar(
-                      context: context,
-                      icon: Icon(
-                        Icons.error_outline_rounded,
-                        color: myColorScheme.error,
-                      ),
-                      dataToDisplay: "Nothing to clear in here.",
-                    );
-                    // Revert back the scanner (reopen the scanner)
-                    ref.read(toCheckoutProvider.notifier).toggle(false);
-                    return;
-                  }
-
-                  myAlertDialogue(
-                    context: context,
-                    alertTitle: "Clear the counter",
-                    alertContent:
-                        "Are you sure you want to cancel this transaction? This action cannot be undone.",
-                    onApprovalPressed: () {
-                      // Clear the counter
-                      ref
-                          .read(toCounterItemsProvider.notifier)
-                          .abortTransaction();
-                      // Revert back the scanner (reopen the scanner)
-                      ref.read(toCheckoutProvider.notifier).toggle(false);
-                      // Show a cue that the transaction is successful aborted
-                      showMyAnimatedSnackBar(
-                        context: context,
-                        icon: Icon(Icons.check_rounded, color: Colors.green),
-                        dataToDisplay: "Aborted the Transaction!",
-                      );
-                      Navigator.pop(context);
-                    },
-                  );
-                },
-              ),
-            ),
-
-            AnimatedPositioned(
-              duration: Duration(milliseconds: 400),
-              curve: Curves.easeInOutCubic,
-              bottom: (toCheckout) ? height * 0.13 : -10,
-              right: 24,
-              child: MyButton(
-                buttonText: "Checkout",
-                // color: myColorScheme.primary.withAlpha(56),
-                onTap: () {
-                  if (scannedItems.isEmpty) {
-                    showMyAnimatedSnackBar(
-                      context: context,
-                      icon: Icon(
-                        Icons.error_outline_rounded,
-                        color: myColorScheme.error,
-                      ),
-                      dataToDisplay: "Nothing to checkout in here.",
-                    );
-                    // Revert back the scanner (reopen the scanner)
-                    ref.read(toCheckoutProvider.notifier).toggle(false);
-                    return;
-                  }
-
-                  myAlertDialogue(
-                    context: context,
-                    alertTitle: "Confirm Checkout",
-                    alertContent:
-                        "Please confirm that the items in the list are correct as this action cannot be undone.",
-                    onApprovalPressed: () async {
-                      await ref
-                          .read(toCounterItemsProvider.notifier)
-                          .checkoutCompletion(scannedItems);
-                      // Show a cue that the transaction is successful
-                      showMyAnimatedSnackBar(
-                        context: context,
-                        icon: Icon(Icons.check_rounded, color: Colors.green),
-                        dataToDisplay: "Successful Transaction!",
-                      );
-                      Navigator.pop(context);
-                    },
-                  );
-                },
-              ),
+              bottom: (toCheckout) ? height * 0.02 : -(height * 0.25),
+              child: ParticularsCheckoutArea(scannedItems: scannedItems),
             ),
           ],
         ),

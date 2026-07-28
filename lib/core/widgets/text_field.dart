@@ -16,6 +16,7 @@ class MyTextfield extends StatefulWidget {
   final String labelText;
   // final IconData prefixIcon;
   final HugeIcon? prefixIcon;
+  final Size? prefixIconConstraints;
   final Color? prefixIconColor;
   final double borderRadius;
   final double borderWidth;
@@ -50,6 +51,7 @@ class MyTextfield extends StatefulWidget {
     required this.labelText,
     this.prefixIcon,
     this.prefixIconColor,
+    this.prefixIconConstraints,
     this.suffixIconColor,
     this.style,
     required this.textController,
@@ -156,7 +158,9 @@ class _MyTextfieldState extends State<MyTextfield> {
                   child: widget.prefixIcon,
                 )
               : SizedBox(),
-          prefixIconConstraints: BoxConstraints.tight(Size(50, 32)),
+          prefixIconConstraints: BoxConstraints.tight(
+            widget.prefixIconConstraints ?? Size(50, 28),
+          ),
           prefixIconColor: prefixIconColor,
           suffixIcon: (widget.suffixIcon != null || widget.isPasswordField)
               ? GestureDetector(
