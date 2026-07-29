@@ -4,7 +4,7 @@ import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/scrollbar.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/cashier/data/model/scanned_item.dart';
-import 'package:pos_system/features/cashier/presentation/widgets/particulars_area_mini_widgets.dart/popup.dart';
+import 'package:pos_system/features/cashier/presentation/widgets/particulars_area_mini_widgets.dart/helpers/popup.dart';
 
 class ParticularsArea extends ConsumerWidget {
   const ParticularsArea({

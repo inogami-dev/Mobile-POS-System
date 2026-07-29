@@ -23,7 +23,7 @@ class MyScanner extends ConsumerStatefulWidget {
   const MyScanner({
     super.key,
     this.isUsedToScanMultipleTimes = false,
-    this.millDelayPerScan = 1000,
+    this.millDelayPerScan = 1500,
     this.snackbarMovingDistance,
     this.productName = "Product",
     this.isTurnedOff = false,
