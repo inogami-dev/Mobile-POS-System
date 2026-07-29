@@ -22,9 +22,39 @@ class ParticularsCheckoutArea extends ConsumerStatefulWidget {
 
 class _ParticularsCheckoutAreaState
     extends ConsumerState<ParticularsCheckoutArea> {
+  late ColorScheme myColorScheme;
   TextEditingController totalAmountController = TextEditingController();
   TextEditingController paymentController = TextEditingController();
   TextEditingController changeController = TextEditingController();
+
+  void paymentControllerListener() {
+    if (paymentController.text.isNotEmpty) {
+      setState(() {
+        changeController.text =
+            (double.parse(paymentController.text) -
+                    double.parse(totalAmountController.text))
+                .toString();
+      });
+    } else {
+      setState(() => changeController.text = "");
+    }
+  }
+
+  Color? changeColorChanger({required Color normal, required Color error}) {
+    if (changeController.text.isEmpty) return null;
+
+    if (double.parse(changeController.text) < 0) {
+      return error;
+    } else {
+      return normal;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    paymentController.addListener(paymentControllerListener);
+  }
 
   @override
   void dispose() {
@@ -32,13 +62,14 @@ class _ParticularsCheckoutAreaState
     totalAmountController.dispose();
     paymentController.dispose();
     changeController.dispose();
+    changeController.removeListener(paymentControllerListener);
   }
 
   @override
   Widget build(BuildContext context) {
     final width = MyDimensions.getWidth(context);
     final height = MyDimensions.getHeight(context);
-    final myColorScheme = Theme.of(context).colorScheme;
+    myColorScheme = Theme.of(context).colorScheme;
     final toCheckout = ref.watch(toCheckoutProvider);
     const animationDuration = Duration(milliseconds: 500);
     const animationCurve = Curves.easeInOutCubic;
@@ -110,7 +141,10 @@ class _ParticularsCheckoutAreaState
                   curve: animationCurve,
                   child: MyTextfield(
                     isReadOnly: (toCheckout) ? false : true,
-                    prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedMoney01),
+                    prefixIcon: HugeIcon(
+                      icon: HugeIcons.strokeRoundedMoney01,
+                      color: myColorScheme.outline,
+                    ),
                     labelText: "Payment Money",
                     textInputType: TextInputType.number,
                     textController: paymentController,
@@ -139,13 +173,18 @@ class _ParticularsCheckoutAreaState
                       prefixIcon: HugeIcon(
                         icon: HugeIcons.strokeRoundedPhilippinePeso,
                         size: 22,
-                        color: myColorScheme.outline,
+                        color: myColorScheme.onSurfaceVariant,
                       ),
                       prefixIconConstraints: Size(50, 24),
                       activeBorderColor: myColorScheme.outline,
                       style: TextStyle(
-                        fontSize: kDefaultFontSize + 4,
+                        fontSize: kDefaultFontSize + 6,
+                        fontWeight: FontWeight.w600,
                         fontFamily: "Quicksand",
+                        color: changeColorChanger(
+                          normal: myColorScheme.onSurface,
+                          error: myColorScheme.error,
+                        ),
                       ),
                       isReadOnly: true,
                       textController: changeController,
@@ -215,6 +254,7 @@ class _ParticularsCheckoutAreaState
                             dataToDisplay: "Aborted the Transaction!",
                           );
                           Navigator.pop(context);
+                          FocusManager.instance.primaryFocus?.unfocus();
                         },
                       );
                     },
@@ -222,7 +262,6 @@ class _ParticularsCheckoutAreaState
                   // Checkout Button
                   MyButton(
                     buttonText: "Checkout",
-                    // color: myColorScheme.primary.withAlpha(56),
                     onTap: () {
                       if (widget.scannedItems.isEmpty) {
                         showMyAnimatedSnackBar(
@@ -235,6 +274,32 @@ class _ParticularsCheckoutAreaState
                         );
                         // Revert back the scanner (reopen the scanner)
                         ref.read(toCheckoutProvider.notifier).toggle(false);
+                        return;
+                      }
+
+                      if (paymentController.text.isEmpty) {
+                        showMyAnimatedSnackBar(
+                          context: context,
+                          icon: Icon(
+                            Icons.error_outline_rounded,
+                            color: myColorScheme.error,
+                          ),
+                          dataToDisplay: "Input the payment amount first.",
+                        );
+                        return;
+                      }
+
+                      if (changeController.text.isNotEmpty &&
+                          double.parse(changeController.text) < 0) {
+                        showMyAnimatedSnackBar(
+                          context: context,
+                          icon: Icon(
+                            Icons.error_outline_rounded,
+                            color: myColorScheme.error,
+                          ),
+                          dataToDisplay:
+                              "Invalid payment amount. Input the right amount.",
+                        );
                         return;
                       }
 
