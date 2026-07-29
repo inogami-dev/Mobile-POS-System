@@ -32,6 +32,18 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
       bottomNavigationBar: CurvedNavigationBar(
         index: currentIndex,
         onTap: (index) {
+          // Don't allow navigating to other pages if the Checkout interface in the Cashier page is open
+          if (isCheckoutOpen && index != 1) {
+            showMyAnimatedSnackBar(
+              context: context,
+              icon: Icon(
+                Icons.error_outline_rounded,
+                color: myColorScheme.error,
+              ),
+              dataToDisplay: "Close the Checkout first.",
+            );
+            ref.read(toCheckoutProvider.notifier).toggle();
+          }
           if (currentIndex == 1 && index == 1) {
             // Don't proceed to checkout interface if there is no scanned items in the counter
             if (!isCheckoutOpen && scannedItems.isEmpty) {
@@ -50,8 +62,11 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
             log("Scanner toggled");
             return;
           }
+
+          // else {
           ref.read(toCheckoutProvider.notifier).toggle(false);
           ref.read(rootScaffoldStateProvider.notifier).changeIndex(index);
+          // }
         },
         backgroundColor: Colors.transparent,
         height: MyAppLayout.bottomNavbarHeight,
