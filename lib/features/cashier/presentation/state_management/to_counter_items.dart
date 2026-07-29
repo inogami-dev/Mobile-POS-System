@@ -26,6 +26,9 @@ class ToCounterItems extends _$ToCounterItems {
       // Get the existing item
       final existingItem = state[existingIndex];
 
+      // // If the inventory count of this item is 0 or will go below 0, prevent adding it into the counter.
+      // if (existingItem.quantity <= 0) log("aaaaaaaaaaaaaaa");
+
       // Create a brand new copy of the item with updated quantity
       final updatedItem = existingItem.copyWith(
         quantity: existingItem.quantity + 1,

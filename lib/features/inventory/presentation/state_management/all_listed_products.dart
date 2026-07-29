@@ -57,6 +57,24 @@ class AllListedProducts extends _$AllListedProducts {
     }
   }
 
+  bool isProductQuantityQualifyFromMinimumQty({
+    required String barcode,
+    required int minimumQty,
+  }) {
+    try {
+      final product = state.value!.firstWhere(
+        (product) => product.barCode == barcode,
+      );
+      if (product.quantity >= minimumQty) {
+        return true;
+      }
+
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
   void updateProduct(ProductModel updatedProduct) {
     log("This is executed 1");
     List<ProductModel> newState = state.value!;

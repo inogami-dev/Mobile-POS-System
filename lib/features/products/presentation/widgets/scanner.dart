@@ -87,6 +87,26 @@ class _MyScannerState extends ConsumerState<MyScanner> {
 
           // For the saving into the state
           if (widget.isUsedToScanMultipleTimes) {
+            bool isQuantityQualifiesTheMinimum = ref
+                .read(allListedProductsProvider.notifier)
+                .isProductQuantityQualifyFromMinimumQty(
+                  barcode: scannedBarcodes,
+                  minimumQty: 1,
+                );
+
+            // Return immediately if the product quantity is 0
+            if (!isQuantityQualifiesTheMinimum) {
+              showMyAnimatedSnackBar(
+                context: context,
+                icon: Icon(
+                  Icons.warning_amber_rounded,
+                  color: Colors.orange.shade400,
+                ),
+                dataToDisplay: "Insuficient inventory quantity.",
+              );
+              return;
+            }
+
             if (isScannedProductRegisteredInInventory) {
               ref
                   .read(toCounterItemsProvider.notifier)
