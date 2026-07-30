@@ -6,11 +6,13 @@ import 'package:pos_system/core/widgets/text_field.dart';
 
 class MyInputQuantity extends StatefulWidget {
   final int quantity;
+  final int availableInventory;
   final ValueChanged<int> onQuantityChanged;
   const MyInputQuantity({
     super.key,
     required this.quantity,
     required this.onQuantityChanged,
+    required this.availableInventory,
   });
 
   @override
@@ -72,6 +74,19 @@ class _MyInputQuantityState extends State<MyInputQuantity> {
               children: [
                 IconButton.outlined(
                   onPressed: () {
+                    if (effectiveQuantity >= widget.availableInventory) {
+                      showMyAnimatedSnackBar(
+                        context: context,
+                        icon: Icon(
+                          Icons.warning_amber_rounded,
+                          color: Colors.orange.shade400,
+                        ),
+                        dataToDisplay:
+                            "You can't go beyond the current inventory limit.",
+                      );
+                      return;
+                    }
+                    ;
                     setState(() {
                       effectiveQuantity++;
                       textController.text = effectiveQuantity.toString();

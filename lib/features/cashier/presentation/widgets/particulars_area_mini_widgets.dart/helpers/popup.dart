@@ -7,6 +7,7 @@ import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/core/widgets/progress_indicator_static.dart';
 import 'package:pos_system/features/cashier/presentation/state_management/to_counter_items.dart';
 import 'package:pos_system/features/cashier/presentation/widgets/particulars_area_mini_widgets.dart/helpers/input_quantity.dart';
+import 'package:pos_system/features/inventory/presentation/state_management/all_listed_products.dart';
 
 class MyParticularsPopup {
   MyParticularsPopup._();
@@ -20,6 +21,11 @@ class MyParticularsPopup {
     return () {
       try {
         int currentQuantity = initQuantity;
+        final inventoryStock = ref
+            .read(allListedProductsProvider.notifier)
+            .getProduct(productBarcode);
+        final productName = inventoryStock?.name ?? "Unknown Product";
+        final productQtyLeft = inventoryStock?.quantity ?? 0;
 
         myAlertDialogue(
           context: context,
@@ -33,11 +39,13 @@ class MyParticularsPopup {
             Navigator.pop(context);
           },
           alertTitle: "Edit Quantity",
-          alertContent: "(Press the arrows to change.)",
+          alertContent:
+              "(Press the arrows to change.)\n\n$productQtyLeft available $productName",
           onApprovalButtonText: "Save Quantity",
           onCancelButtonText: "Cancel Changes",
           contentWidget: MyInputQuantity(
             quantity: initQuantity,
+            availableInventory: productQtyLeft,
             onQuantityChanged: (newQuantity) {
               currentQuantity = newQuantity;
             },
