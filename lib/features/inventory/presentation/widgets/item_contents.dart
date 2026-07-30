@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -7,7 +6,6 @@ import 'package:pos_system/core/utilities/date_formatter.dart';
 import 'package:pos_system/core/widgets/image_displayer.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/my_alert_dialog.dart';
-import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/core/widgets/navigator.dart';
 import 'package:pos_system/core/widgets/scrollbar.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
@@ -207,9 +205,26 @@ class MyItemContents extends StatelessWidget {
                         lineHeight: 1.1,
                       ),
                       Spacer(),
-                      MyText(
-                        text: "${product.quantity} left",
-                        fontSize: kDefaultFontSize + ((isExpanded) ? -2 : -5),
+                      Row(
+                        spacing: 1,
+                        children: [
+                          MyText(
+                            text: "${product.quantity}",
+                            fontSize:
+                                kDefaultFontSize + ((isExpanded) ? -2 : -5),
+                            fontWeight: product.quantity == 0
+                                ? FontWeight.w600
+                                : FontWeight.w400,
+                            color: product.quantity == 0
+                                ? myColorScheme.error
+                                : myColorScheme.onSurface,
+                          ),
+                          MyText(
+                            text: " left",
+                            fontSize:
+                                kDefaultFontSize + ((isExpanded) ? -2 : -5),
+                          ),
+                        ],
                       ),
                     ],
                   ),
