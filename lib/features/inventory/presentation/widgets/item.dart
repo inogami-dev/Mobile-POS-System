@@ -36,8 +36,6 @@ class MyItem extends ConsumerWidget {
           ItemHero(heroTag: product.id!, product: product),
           animationType: MyAnimationType.fade,
         );
-        // log("Small | Width: $displayWidth, Height: $displayHeight");
-        // log("Small Item Dimension | ${displayWidth * displayHeight}");
       },
       child: (product.id != null)
           ? MyHero(

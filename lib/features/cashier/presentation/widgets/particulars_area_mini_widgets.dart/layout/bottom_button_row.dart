@@ -6,14 +6,13 @@ import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/features/cashier/data/model/scanned_item.dart';
 import 'package:pos_system/features/cashier/presentation/state_management/to_checkout.dart';
 import 'package:pos_system/features/cashier/presentation/state_management/to_counter_items.dart';
-import 'package:pos_system/features/sales/data/model/sales_model.dart';
 import 'package:pos_system/features/sales/presentation/state_management/sales_controller.dart';
 
 class LayoutBottomButtonRow extends ConsumerWidget {
   final List<ScannedItem> scannedItems;
   final height;
   final width;
-  final myColorScheme;
+  final ColorScheme myColorScheme;
   final paymentController;
   final changeController;
   final ValueChanged<String> onControllerValueReset;
@@ -36,9 +35,12 @@ class LayoutBottomButtonRow extends ConsumerWidget {
       child: Container(
         width: width,
         alignment: Alignment.topCenter,
-        padding: const EdgeInsets.only(top: 8),
+        padding: const EdgeInsets.only(top: 8, bottom: 8),
         decoration: BoxDecoration(
-          color: myColorScheme.outline,
+          color: myColorScheme.surfaceContainerHigh,
+          border: Border(
+            top: BorderSide(color: myColorScheme.outline.withAlpha(156)),
+          ),
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(50),
             topRight: const Radius.circular(50),

@@ -121,7 +121,7 @@ class _CashierPageState extends ConsumerState<CashierPage> {
                 child: Container(
                   width: width,
                   height: MyAppLayout.bottomNavbarHeight + 8,
-                  color: myColorScheme.outline,
+                  color: myColorScheme.surfaceContainerHigh,
                   // color: Colors.amber,
                 ),
               ),
