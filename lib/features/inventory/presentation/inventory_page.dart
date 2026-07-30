@@ -4,6 +4,7 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/navigator.dart';
 import 'package:pos_system/core/widgets/root_scaffold/root_scaffold_state.dart';
+import 'package:pos_system/core/widgets/tooltip.dart';
 import 'package:pos_system/features/inventory/presentation/inventory_search_bar.dart';
 import 'package:pos_system/features/inventory/presentation/items_area.dart';
 import 'package:pos_system/features/inventory/presentation/bottom_inventory_options_bar.dart';
@@ -58,6 +59,8 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
                 inventoryPageOptionsBarHeight: inventoryPageOptionsBarHeight,
                 children: [
                   inventoryPageOptions(
+                    icon: HugeIcon(icon: HugeIcons.strokeRoundedAddInvoice),
+                    tooltipMessage: "Add Product",
                     onTap: () {
                       // showMyBottomSheet(
                       //   context: context,
@@ -69,7 +72,6 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
                         animationType: MyAnimationType.slideFromBottom,
                       );
                     },
-                    icon: HugeIcon(icon: HugeIcons.strokeRoundedAddInvoice),
                   ),
                   // Placeholders only
                   inventoryPageOptions(
@@ -79,6 +81,8 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
                   SizedBox(width: 32),
                   // Placeholders only
                   inventoryPageOptions(
+                    icon: HugeIcon(icon: HugeIcons.strokeRoundedChart),
+                    tooltipMessage: "Sales Report",
                     onTap: () {},
                     // icon: HugeIcon(icon: HugeIcons.strokeRoundedEdit02),
                   ),
@@ -96,16 +100,23 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
     );
   }
 
-  Widget inventoryPageOptions({HugeIcon? icon, required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: MyContainer(
-        width: width * 0.16,
-        height: height * 0.1,
-        color: myColor.surface.withAlpha(100),
-        borderColor: myColor.outlineVariant,
-        borderRadius: 8,
-        child: icon ?? Placeholder(),
+  Widget inventoryPageOptions({
+    HugeIcon? icon,
+    required VoidCallback onTap,
+    String? tooltipMessage,
+  }) {
+    return MyTooltip(
+      message: tooltipMessage ?? "",
+      child: GestureDetector(
+        onTap: onTap,
+        child: MyContainer(
+          width: width * 0.16,
+          height: height * 0.1,
+          color: myColor.surface.withAlpha(100),
+          borderColor: myColor.outlineVariant,
+          borderRadius: 8,
+          child: icon ?? Placeholder(),
+        ),
       ),
     );
   }
