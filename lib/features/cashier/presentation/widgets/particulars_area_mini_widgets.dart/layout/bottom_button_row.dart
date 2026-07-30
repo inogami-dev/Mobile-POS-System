@@ -6,6 +6,8 @@ import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/features/cashier/data/model/scanned_item.dart';
 import 'package:pos_system/features/cashier/presentation/state_management/to_checkout.dart';
 import 'package:pos_system/features/cashier/presentation/state_management/to_counter_items.dart';
+import 'package:pos_system/features/sales/data/model/sales_model.dart';
+import 'package:pos_system/features/sales/presentation/state_management/sales_controller.dart';
 
 class LayoutBottomButtonRow extends ConsumerWidget {
   final List<ScannedItem> scannedItems;
@@ -144,6 +146,15 @@ class LayoutBottomButtonRow extends ConsumerWidget {
                     await ref
                         .read(toCounterItemsProvider.notifier)
                         .checkoutCompletion(scannedItems);
+
+                    await ref
+                        .read(salesControllerProvider.notifier)
+                        .saveToFirebase(
+                          items: scannedItems,
+                          payment: double.parse(paymentController.text),
+                          change: double.parse(changeController.text),
+                        );
+
                     // Show a cue that the transaction is successful
                     showMyAnimatedSnackBar(
                       context: context,

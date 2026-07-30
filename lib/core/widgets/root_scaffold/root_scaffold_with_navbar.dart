@@ -47,7 +47,7 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
                   color: myColorScheme.error,
                 ),
                 dataToDisplay:
-                    "Nothing to checkout in here. \nYou have to scan the items first.",
+                    "Nothing to checkout in here. \nYou have to scan an item first.",
               );
               return;
             }

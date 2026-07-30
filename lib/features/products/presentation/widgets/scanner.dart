@@ -96,6 +96,7 @@ class _MyScannerState extends ConsumerState<MyScanner> {
 
             // Return immediately if the product quantity is 0
             if (!isQuantityQualifiesTheMinimum) {
+              myAudioPlayer.playLocalAudio("audios/bruhh_sound_effect.mp3");
               showMyAnimatedSnackBar(
                 context: context,
                 icon: Icon(
