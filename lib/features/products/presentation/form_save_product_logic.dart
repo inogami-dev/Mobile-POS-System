@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/widgets/my_alert_dialog.dart';
 import 'package:pos_system/core/widgets/my_snackbar.dart';
+import 'package:pos_system/core/widgets/progress_indicator_static.dart';
 import 'package:pos_system/features/account/presentation/state_management/current_logged_in_user_controller.dart';
 import 'package:pos_system/features/inventory/presentation/state_management/all_listed_products.dart';
 import 'package:pos_system/features/products/data/model/product_model.dart';
 import 'package:pos_system/features/products/presentation/state_management/product_repo_ref_controller.dart';
 
-void saveProductLogic(
+Future<void> saveProductLogic(
   BuildContext context, {
   required WidgetRef ref,
   required String productName,
@@ -17,20 +18,26 @@ void saveProductLogic(
   required String? expirationDate,
   required String scannedBarcode,
   required String pickedProductImage,
-}) {
+}) async {
   return myAlertDialogue(
     context: context,
     alertTitle: "Confirmation to Save Product?",
     alertContent:
         "You are about to save this product, only proceed if you have fill out all the details in the form.",
     onApprovalPressed: () async {
+      showMyAnimatedSnackBar(
+        context: context,
+        widgetToDisplay: MyProgressIndicator(),
+        dataToDisplay: "Saving the new product.",
+      );
       final currentlyLoggedInUser = ref
           .read(currentLoggedInUserControllerProvider)
           .valueOrNull;
       if (currentlyLoggedInUser == null) {
         showMyAnimatedSnackBar(
           context: context,
-          dataToDisplay: "Could not retrieve user info. Please check your connection.",
+          dataToDisplay:
+              "Could not retrieve user info. Please check your connection.",
         );
         return;
       }

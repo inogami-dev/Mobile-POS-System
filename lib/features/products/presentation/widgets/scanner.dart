@@ -69,7 +69,7 @@ class _MyScannerState extends ConsumerState<MyScanner> {
         // Off switch
         if (widget.isTurnedOff) return;
 
-        // Stream
+        // Stream/Continuous
         if (isPastTheSetTimeDelay(
           millDelayPerScan: widget.millDelayPerScan,
           lastTimeScanned: lastTimeScanned,
