@@ -9,6 +9,7 @@ import 'package:pos_system/features/inventory/presentation/inventory_search_bar.
 import 'package:pos_system/features/inventory/presentation/items_area.dart';
 import 'package:pos_system/features/inventory/presentation/bottom_inventory_options_bar.dart';
 import 'package:pos_system/features/products/presentation/add_product_form.dart';
+import 'package:pos_system/features/sales/presentation/sales_page.dart';
 
 class InventoryPage extends ConsumerStatefulWidget {
   const InventoryPage({super.key});
@@ -83,7 +84,13 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
                   inventoryPageOptions(
                     icon: HugeIcon(icon: HugeIcons.strokeRoundedChart),
                     tooltipMessage: "Sales Report",
-                    onTap: () {},
+                    onTap: () {
+                      MyNavigator.goTo(
+                        context,
+                        MySalesPage(),
+                        animationType: MyAnimationType.slideFromBottom,
+                      );
+                    },
                     // icon: HugeIcon(icon: HugeIcons.strokeRoundedEdit02),
                   ),
                   // Placeholders only
