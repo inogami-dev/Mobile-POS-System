@@ -38,22 +38,6 @@ Future<void> updateProductLogic(
       final storeID = currentlyLoggedInUser.currentStoreInView;
       final productRepoRef = ref.read(productRepositoryProvider(storeID));
 
-      // final newProduct = ProductModel(
-      //   id: product.id,
-      //   name: product.name.trim(),
-      //   queryName: product.name.trim().toLowerCase(),
-      //   storeId: storeID,
-      //   description: product.description.trim(),
-      //   barCode: product.barCode.trim(),
-      //   price: product.price,
-      //   quantity: product.quantity,
-      //   picture: product.picture,
-      //   expirationDate: product.expirationDate, // no expiry
-      //   registeredOn: product.registeredOn,
-      //   registeredBy: product.registeredBy,
-      // );
-
-      // Remove the newly added product to the cached list
       ref
           .read(allListedProductsProvider.notifier)
           .removeProductFromTheList(product);

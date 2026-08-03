@@ -92,6 +92,7 @@ class MyItem extends ConsumerWidget {
 
     showMyAnimatedSnackBar(
       context: context,
+      dismissTimeInMillis: 1000,
       widgetToDisplay: HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01),
       dataToDisplay: "Successfully Deleted!",
     );
