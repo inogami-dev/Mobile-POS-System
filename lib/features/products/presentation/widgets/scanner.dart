@@ -51,12 +51,14 @@ class _MyScannerState extends ConsumerState<MyScanner> {
       initialZoom: 500,
       // torchEnabled: true,
       autoZoom: true,
+      autoStart: true,
     );
   }
 
   @override
   void dispose() {
     myAudioPlayer.dispose();
+    cameraController.stop();
     cameraController.dispose();
     super.dispose();
   }

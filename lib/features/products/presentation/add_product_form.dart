@@ -61,7 +61,8 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
   late double height;
   late String pageTitle;
   late String buttonText;
-  Color? buttonColor;
+  Color? buttonColor = Colors.grey.shade600;
+  bool hasAlreadyPressedSubmit = false;
 
   @override
   void initState() {
@@ -88,9 +89,8 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
     else {
       pageTitle = "Add Product";
       buttonText = "Save Product";
+      buttonColor = Colors.grey.shade600;
     }
-
-    buttonColor = Colors.grey.shade600;
 
     // Listeners for changes (for products that already existed)
     productNameController.addListener(isToBeUpdatedProductBeenAltered);
@@ -130,6 +130,10 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
       if (newImage.isNotEmpty) {
         setState(() {
           pickedProductImage = newImage;
+          if (xpicture != pickedProductImage) {
+            // xpicture = newImage;
+            buttonColor = null;
+          }
         });
       }
     });
@@ -339,6 +343,16 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
                             buttonText: buttonText,
                             color: buttonColor,
                             onTap: () async {
+                              if (hasAlreadyPressedSubmit) {
+                                showMyAnimatedSnackBar(
+                                  context: context,
+                                  dataToDisplay:
+                                      "The button has already been pressed. Please wait for the process to complete.",
+                                );
+                                return;
+                              }
+                              hasAlreadyPressedSubmit = true;
+
                               if (pickedProductImage.isEmpty ||
                                   scannedBarcode.isEmpty ||
                                   productNameController.text.isEmpty ||
@@ -385,10 +399,12 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
                                       registeredBy: registeredBy,
                                     ),
                                   );
+
+                                  hasAlreadyPressedSubmit = false;
                                 }
                               } else {
                                 log("Nope");
-                                saveProductLogic(
+                                await saveProductLogic(
                                   context,
                                   ref: ref,
                                   productName: productNameController.text,
@@ -397,10 +413,14 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
                                   productPrice: productPriceController.text,
                                   productQuantity:
                                       productQuantityController.text,
-                                  expirationDate: expirationDate.toString(),
+                                  expirationDate: (expirationDate != null)
+                                      ? expirationDate.toString()
+                                      : "",
                                   scannedBarcode: scannedBarcode,
                                   pickedProductImage: pickedProductImage,
                                 );
+
+                                hasAlreadyPressedSubmit = false;
                               }
                             },
                           ),
@@ -465,27 +485,28 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
   /// This is for the Update not when adding new Product
   /// To prevent calling firebase whenever there is no change when updating.
   bool isToBeUpdatedProductBeenAltered() {
-    // log("01: ${productNameController.text}");
-    // log("02: ${xname}");
-    // log("11: ${productDescriptionController.text}");
-    // log("12: ${xdescription}");
-    // log("21: ${productPriceController.text}");
-    // log("22: ${xprice.toString()}");
-    // log("31: ${productQuantityController.text}");
-    // log("32: ${xquantity.toString()}");
-    // log("41: ${expirationDate.toString()}");
-    // log("42: ${xexpirationDate}");
-    // log("51: ${scannedBarcode}");
-    // log("52: ${xbarCode}");
-    // log("61: ${pickedProductImage.length}");
-    // log("62: ${xpicture.length}");
+    final tempExpDate = expirationDate ?? "";
+    log("01: ${productNameController.text}");
+    log("02: ${xname}");
+    log("11: ${productDescriptionController.text}");
+    log("12: ${xdescription}");
+    log("21: ${productPriceController.text}");
+    log("22: ${xprice.toString()}");
+    log("31: ${productQuantityController.text}");
+    log("32: ${xquantity.toString()}");
+    log("41: ${tempExpDate}");
+    log("42: ${xexpirationDate}");
+    log("51: ${scannedBarcode}");
+    log("52: ${xbarCode}");
+    log("61: ${pickedProductImage.length}");
+    log("62: ${xpicture.length}");
     if (pickedProductImage != xpicture ||
         scannedBarcode != xbarCode ||
         productNameController.text != xname ||
         productDescriptionController.text != xdescription ||
         productPriceController.text != xprice.toString() ||
         productQuantityController.text != xquantity.toString() ||
-        expirationDate.toString() != xexpirationDate) {
+        tempExpDate != xexpirationDate) {
       setState(() => buttonColor = null);
       return true;
     }
@@ -494,6 +515,13 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
     } else {
       setState(() => buttonColor = null);
     }
+
+    showMyAnimatedSnackBar(
+      context: context,
+      dataToDisplay: "No changes detected. Update is aborted.",
+    );
+    hasAlreadyPressedSubmit = false;
+
     return false;
   }
 
