@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,16 +19,17 @@ import 'package:pos_system/features/products/presentation/state_management/produ
 
 class MyItem extends ConsumerWidget {
   final ProductModel product;
-  const MyItem({super.key, required this.product});
+  final Uint8List? productImage;
+  const MyItem({super.key, required this.product, required this.productImage});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     double displayWidth = MediaQuery.of(context).size.width * 0.45;
     double displayHeight = MediaQuery.of(context).size.height * 0.08;
     final myColorScheme = Theme.of(context).colorScheme;
-    final productImage = MyImageProcessor.decodeStringToUint8List(
-      product.picture,
-    );
+    // final productImage = MyImageProcessor.decodeStringToUint8List(
+    //   product.picture,
+    // );
 
     return GestureDetector(
       onTap: () {
@@ -63,7 +65,7 @@ class MyItem extends ConsumerWidget {
                   height: displayHeight,
                   product: product,
                   isExpanded: false,
-                  encodedProductImage: productImage,
+                  encodedProductImage: productImage!,
                 ),
               ),
             )

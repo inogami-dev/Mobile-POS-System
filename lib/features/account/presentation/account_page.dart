@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/constants/app_layout.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
-import 'package:pos_system/core/widgets/appbar.dart';
 import 'package:pos_system/core/widgets/button.dart';
 import 'package:pos_system/core/widgets/my_alert_dialog.dart';
 import 'package:pos_system/core/widgets/progress_indicator_static.dart';
@@ -58,7 +57,8 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: MyText(
-                        text: "Error loading profile details. Please check your internet connection.",
+                        text:
+                            "Error loading profile details. Please check your internet connection.",
                         color: myColorScheme.error,
                       ),
                     ),
@@ -76,9 +76,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                         (isLoggingOut)
                             ? const MyProgressIndicator()
                             : loggoutButton(context),
-                        SizedBox(
-                          height: MyAppLayout.bottomNavbarHeight + 16,
-                        ),
+                        SizedBox(height: MyAppLayout.bottomNavbarHeight + 16),
                       ],
                     ),
                   ),

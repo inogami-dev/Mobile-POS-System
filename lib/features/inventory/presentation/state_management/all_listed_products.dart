@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:pos_system/features/account/presentation/state_management/current_logged_in_user_controller.dart';
+import 'package:pos_system/features/inventory/presentation/state_management/decoded_image_cache.dart';
 import 'package:pos_system/features/products/data/model/product_model.dart';
 import 'package:pos_system/features/products/presentation/state_management/product_repo_ref_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -20,6 +21,14 @@ class AllListedProducts extends _$AllListedProducts {
     );
     final products = await productRepository.getAllRecords();
     products.sort((a, b) => a.queryName.compareTo(b.queryName));
+
+    // Cache a decoded image for each product in the list to avoid decoding the same image multiple times
+    for (var product in products) {
+      ref
+          .read(myDecodedImageCacheProvider.notifier)
+          .addImageToDecode(product.picture);
+    }
+
     return products;
   }
 

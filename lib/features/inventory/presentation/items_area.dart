@@ -6,6 +6,7 @@ import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/progress_indicator_static.dart';
 import 'package:pos_system/core/widgets/scrollbar.dart';
 import 'package:pos_system/features/inventory/presentation/state_management/all_listed_products.dart';
+import 'package:pos_system/features/inventory/presentation/state_management/decoded_image_cache.dart';
 import 'package:pos_system/features/inventory/presentation/widgets/item.dart';
 import 'package:pos_system/features/products/presentation/state_management/queried_products.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
@@ -31,6 +32,7 @@ class _MyItemsAreaState extends ConsumerState<MyItemsArea> {
   Widget build(BuildContext context) {
     final queriedProducts = ref.watch(queriedProductsProvider);
     final allProductsState = ref.watch(allListedProductsProvider);
+    final allDecodedImageCache = ref.watch(myDecodedImageCacheProvider);
 
     if (allProductsState.hasError) {
       return Center(
@@ -76,7 +78,11 @@ class _MyItemsAreaState extends ConsumerState<MyItemsArea> {
           itemBuilder: (context, index) {
             return (allListedProducts == null)
                 ? MyProgressIndicator()
-                : MyItem(product: allListedProducts[index]);
+                : MyItem(
+                    product: allListedProducts[index],
+                    productImage:
+                        allDecodedImageCache[allListedProducts[index].picture],
+                  );
           },
         ),
       ),
