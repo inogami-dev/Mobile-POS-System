@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:pos_system/core/utilities/image_picker.dart';
 import 'package:pos_system/core/widgets/hero.dart';
 import 'package:pos_system/core/widgets/my_alert_dialog.dart';
 import 'package:pos_system/core/widgets/my_snackbar.dart';
@@ -27,9 +26,6 @@ class MyItem extends ConsumerWidget {
     double displayWidth = MediaQuery.of(context).size.width * 0.45;
     double displayHeight = MediaQuery.of(context).size.height * 0.08;
     final myColorScheme = Theme.of(context).colorScheme;
-    // final productImage = MyImageProcessor.decodeStringToUint8List(
-    //   product.picture,
-    // );
 
     return GestureDetector(
       onTap: () {

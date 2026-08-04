@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
-import 'package:pos_system/features/account/presentation/state_management/all_users_controller.dart';
 import 'package:pos_system/features/account/presentation/widget/logged_in_user_account_store_details.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -15,7 +14,6 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
-    final myColorScheme = Theme.of(context).colorScheme;
     double width = MyDimensions.getWidth(context);
     double height = MyDimensions.getHeight(context);
 
