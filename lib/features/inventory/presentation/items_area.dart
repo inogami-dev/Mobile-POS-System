@@ -59,7 +59,7 @@ class _MyItemsAreaState extends ConsumerState<MyItemsArea> {
     return Container(
       width: width,
       // color: Colors.amber,
-      padding: EdgeInsets.only(top: 8, left: 16, right: 16, bottom: 2),
+      padding: EdgeInsets.only(top: 8, left: 16, right: 16, bottom: 0.5),
       child: MyScrollBar(
         controller: _scrollController,
         padding: EdgeInsets.only(

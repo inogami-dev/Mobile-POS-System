@@ -46,7 +46,8 @@ class _MySearchBarState extends ConsumerState<MySearchBar> {
           if (states.contains(WidgetState.focused)) {
             return myColorScheme.surface.withAlpha(180);
           }
-          return Colors.transparent;
+          // return Colors.transparent;
+          return myColorScheme.surface.withAlpha(128);
         }),
         barSide: WidgetStateBorderSide.resolveWith((state) {
           if (state.contains(WidgetState.focused)) {
@@ -61,7 +62,7 @@ class _MySearchBarState extends ConsumerState<MySearchBar> {
             );
           }
         }),
-        barElevation: WidgetStateProperty.all(2),
+        barElevation: WidgetStateProperty.all(0),
         viewHeaderHeight: MyDimensions.getHeight(context) * 0.06,
         isFullScreen: false,
         barPadding: WidgetStateProperty.all(

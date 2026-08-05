@@ -34,6 +34,8 @@
 //   );
 // }
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:pos_system/core/constants/app_layout.dart';
 
@@ -77,10 +79,25 @@ class MyBottomInventoryPageOptionsBar extends StatelessWidget {
             8,
             MyAppLayout.bottomNavbarHeight + 8,
           ),
-          child: Flex(
-            direction: Axis.horizontal,
-            mainAxisAlignment: mainAxisAlignment,
-            children: children,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Positioned.fill(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                  child: Container(
+                    width: width,
+                    height: inventoryPageOptionsBarHeight,
+                    // color: Colors.amber,
+                  ),
+                ),
+              ),
+              Flex(
+                direction: Axis.horizontal,
+                mainAxisAlignment: mainAxisAlignment,
+                children: children,
+              ),
+            ],
           ),
         ),
       ),
