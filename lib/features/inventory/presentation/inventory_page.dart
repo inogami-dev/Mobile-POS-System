@@ -38,70 +38,80 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
 
     return Scaffold(
       body: SingleChildScrollView(
-        child: Container(
-          width: width,
-          height: height,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SafeArea(bottom: false, child: MyInventorySearchBar()),
-              Expanded(
-                child: AnimatedOpacity(
-                  duration: Duration(milliseconds: 1000),
-                  curve: Curves.easeInOut,
-                  opacity: isInventoryPageVisible ? 1 : 0,
-                  child: MyItemsArea(),
-                ),
-              ),
-              // Spacer(),
-              MyBottomInventoryPageOptionsBar(
-                isInventoryPageVisible: isInventoryPageVisible,
-                inventoryPageOptionsBarHeight: inventoryPageOptionsBarHeight,
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            Container(
+              width: width,
+              height: height,
+              padding: EdgeInsets.only(top: kToolbarHeight - 28),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  inventoryPageOptions(
-                    icon: HugeIcon(icon: HugeIcons.strokeRoundedAddInvoice),
-                    tooltipMessage: "Add Product",
-                    onTap: () {
-                      // showMyBottomSheet(
-                      //   context: context,
-                      //   child: AddProductSheet(),
-                      // );
-                      MyNavigator.goTo(
-                        context,
-                        AddProductForm(),
-                        animationType: MyAnimationType.slideFromBottom,
-                      );
-                    },
+                  Expanded(
+                    child: AnimatedOpacity(
+                      duration: Duration(milliseconds: 1000),
+                      curve: Curves.easeInOut,
+                      opacity: isInventoryPageVisible ? 1 : 0,
+                      child: MyItemsArea(),
+                    ),
                   ),
-                  // Placeholders only
-                  inventoryPageOptions(
-                    onTap: () {},
-                    // icon: HugeIcon(icon: HugeIcons.strokeRoundedFile01),
-                  ),
-                  SizedBox(width: 32),
-                  // Placeholders only
-                  inventoryPageOptions(
-                    icon: HugeIcon(icon: HugeIcons.strokeRoundedChart),
-                    tooltipMessage: "Sales Report",
-                    onTap: () {
-                      MyNavigator.goTo(
-                        context,
-                        MySalesPage(),
-                        animationType: MyAnimationType.slideFromBottom,
-                      );
-                    },
-                    // icon: HugeIcon(icon: HugeIcons.strokeRoundedEdit02),
-                  ),
-                  // Placeholders only
-                  inventoryPageOptions(
-                    onTap: () {},
-                    // icon: HugeIcon(icon: HugeIcons.strokeRoundedDelete03),
+                  // Spacer(),
+                  MyBottomInventoryPageOptionsBar(
+                    isInventoryPageVisible: isInventoryPageVisible,
+                    inventoryPageOptionsBarHeight:
+                        inventoryPageOptionsBarHeight,
+                    children: [
+                      inventoryPageOptions(
+                        icon: HugeIcon(icon: HugeIcons.strokeRoundedAddInvoice),
+                        tooltipMessage: "Add Product",
+                        onTap: () {
+                          // showMyBottomSheet(
+                          //   context: context,
+                          //   child: AddProductSheet(),
+                          // );
+                          MyNavigator.goTo(
+                            context,
+                            AddProductForm(),
+                            animationType: MyAnimationType.slideFromBottom,
+                          );
+                        },
+                      ),
+                      // Placeholders only
+                      inventoryPageOptions(
+                        onTap: () {},
+                        // icon: HugeIcon(icon: HugeIcons.strokeRoundedFile01),
+                      ),
+                      SizedBox(width: 32),
+                      // Placeholders only
+                      inventoryPageOptions(
+                        icon: HugeIcon(icon: HugeIcons.strokeRoundedChart),
+                        tooltipMessage: "Sales Report",
+                        onTap: () {
+                          MyNavigator.goTo(
+                            context,
+                            MySalesPage(),
+                            animationType: MyAnimationType.slideFromBottom,
+                          );
+                        },
+                        // icon: HugeIcon(icon: HugeIcons.strokeRoundedEdit02),
+                      ),
+                      // Placeholders only
+                      inventoryPageOptions(
+                        onTap: () {},
+                        // icon: HugeIcon(icon: HugeIcons.strokeRoundedDelete03),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+            Positioned(
+              // top: kToolbarHeight,
+              child: SafeArea(bottom: false, child: MyInventorySearchBar()),
+            ),
+          ],
         ),
       ),
     );

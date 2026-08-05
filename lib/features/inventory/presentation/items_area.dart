@@ -54,6 +54,7 @@ class _MyItemsAreaState extends ConsumerState<MyItemsArea> {
     final myColorScheme = Theme.of(context).colorScheme;
 
     width = MyDimensions.getWidth(context);
+    final topHeightPaddingToAvoidSearchBarOverlap = kToolbarHeight + 8;
 
     return Container(
       width: width,
@@ -61,12 +62,22 @@ class _MyItemsAreaState extends ConsumerState<MyItemsArea> {
       padding: EdgeInsets.only(top: 8, left: 16, right: 16, bottom: 2),
       child: MyScrollBar(
         controller: _scrollController,
-        padding: EdgeInsets.only(left: 10, bottom: 10, right: -15),
+        padding: EdgeInsets.only(
+          top: kToolbarHeight - 56,
+          left: 10,
+          bottom: 10,
+          right: -15,
+        ),
         isInteractive: true,
         thumbColor: myColorScheme.onSurfaceVariant.withAlpha(100),
         trackColor: myColorScheme.onSurface.withAlpha(50),
         child: GridView.builder(
-          padding: EdgeInsets.all(0),
+          padding: EdgeInsets.fromLTRB(
+            0,
+            topHeightPaddingToAvoidSearchBarOverlap,
+            0,
+            10,
+          ),
           controller: _scrollController,
           itemCount: allListedProducts?.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

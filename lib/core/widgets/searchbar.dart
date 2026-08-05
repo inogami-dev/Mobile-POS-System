@@ -42,6 +42,25 @@ class _MySearchBarState extends ConsumerState<MySearchBar> {
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: SearchAnchor.bar(
         searchController: searchController,
+        barBackgroundColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.focused)) {
+            return myColorScheme.surface.withAlpha(180);
+          }
+          return Colors.transparent;
+        }),
+        barSide: WidgetStateBorderSide.resolveWith((state) {
+          if (state.contains(WidgetState.focused)) {
+            return BorderSide(
+              color: myColorScheme.primary.withAlpha(200),
+              width: 1.5,
+            );
+          } else {
+            return BorderSide(
+              color: myColorScheme.onSurface.withAlpha(100),
+              width: 1.5,
+            );
+          }
+        }),
         barElevation: WidgetStateProperty.all(2),
         viewHeaderHeight: MyDimensions.getHeight(context) * 0.06,
         isFullScreen: false,
@@ -61,7 +80,9 @@ class _MySearchBarState extends ConsumerState<MySearchBar> {
         ),
         viewConstraints: const BoxConstraints(maxHeight: 200),
         viewBuilder: (Iterable<Widget> suggestions) {
-          // NOTE: The arguments of the Iterable suggestions parameter came from suggestionsBuilder property
+          // To my Future Self
+          // NOTE: The arguments of the Iterable suggestions parameter
+          //       came from suggestionsBuilder property
           return Theme(
             data: Theme.of(context).copyWith(
               scrollbarTheme: ScrollbarThemeData(

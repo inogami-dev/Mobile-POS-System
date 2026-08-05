@@ -5,9 +5,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'decoded_image_cache.g.dart';
 
+/// For you future self:
 /// This caching method is necessary to avoid decoding the same image multiple
 /// times. Causing the image to blink when scrolling through the list of products.
-/// This is because the image is being decoded every time the widget is rebuilt. By caching the decoded image, we can avoid this issue.
+/// This is because the image is being decoded every time the widget is rebuilt.
+/// By caching the decoded image, we can avoid this issue.
 @Riverpod(keepAlive: true)
 class MyDecodedImageCache extends _$MyDecodedImageCache {
   @override
