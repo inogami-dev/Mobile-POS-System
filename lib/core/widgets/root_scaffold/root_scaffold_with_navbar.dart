@@ -14,6 +14,7 @@ import 'package:pos_system/features/cashier/presentation/state_management/to_che
 import 'package:pos_system/features/cashier/presentation/state_management/to_counter_items.dart';
 import 'package:pos_system/features/home/presentation/home_page.dart';
 import 'package:pos_system/features/inventory/presentation/inventory_page.dart';
+import 'package:pos_system/features/sales/presentation/sales_page.dart';
 import 'package:pos_system/features/utang/presentation/utang_page.dart';
 
 class MyRootScaffoldWithNavBar extends ConsumerWidget {
@@ -114,13 +115,24 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
             ),
           ),
 
+          // _myCurvedNavigationBarItem(
+          //   label: 'Utang',
+          //   color: labelAndIconColor,
+          //   icon: _toVertiCenterIcon(
+          //     isTheCurretIndex: (currentIndex == 3),
+          //     icon: HugeIcon(
+          //       icon: HugeIcons.strokeRoundedReceiptText,
+          //       size: 24,
+          //     ),
+          //   ),
+          // ),
           _myCurvedNavigationBarItem(
-            label: 'Utang',
+            label: 'Sales',
             color: labelAndIconColor,
             icon: _toVertiCenterIcon(
               isTheCurretIndex: (currentIndex == 3),
               icon: HugeIcon(
-                icon: HugeIcons.strokeRoundedReceiptText,
+                icon: HugeIcons.strokeRoundedChartAnalysis,
                 size: 24,
               ),
             ),
@@ -148,7 +160,8 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
     HomePage(),
     CashierPage(),
     InventoryPage(),
-    UtangPage(),
+    // UtangPage(),
+    MySalesPage(),
     AccountPage(),
   ];
 

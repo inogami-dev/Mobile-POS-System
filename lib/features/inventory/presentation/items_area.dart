@@ -69,6 +69,7 @@ class _MyItemsAreaState extends ConsumerState<MyItemsArea> {
           right: -15,
         ),
         isInteractive: true,
+        thickness: 3,
         thumbColor: myColorScheme.onSurfaceVariant.withAlpha(100),
         trackColor: myColorScheme.onSurface.withAlpha(50),
         child: GridView.builder(
