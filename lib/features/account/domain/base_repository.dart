@@ -100,6 +100,25 @@ abstract class BaseRepository<T extends BaseEntity> {
     }
   }
 
+  Future<List<T>> getRecordsBaseOnTimeSpan({
+    required DateTime baseDate,
+    required DateTime fromTheTime,
+    required DateTime untilTheTime,
+  }) async {
+    QuerySnapshot snapshot = await collection
+        .where(
+          baseDate,
+          isGreaterThanOrEqualTo: fromTheTime,
+          isLessThan: untilTheTime,
+        )
+        .get();
+    final data = snapshot.docs.map((doc) {
+      return fromMap(doc.data() as Map<String, dynamic>, doc.id);
+    }).toList();
+
+    return data;
+  }
+
   Future<bool> doesThisRecordExist({required String recordID}) async {
     // final doc = await collection.where('id', isEqualTo: userID).limit(1);
 

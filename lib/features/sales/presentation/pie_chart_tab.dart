@@ -1,17 +1,16 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
-import 'package:pos_system/core/widgets/my_snackbar.dart';
 import 'package:pos_system/features/sales/presentation/widgets/pie_chart_section_data.dart';
 
-class MyPieChart extends StatefulWidget {
-  const MyPieChart({super.key});
+class MyPieChartTab extends StatefulWidget {
+  const MyPieChartTab({super.key});
 
   @override
-  State<MyPieChart> createState() => _MyPieChartState();
+  State<MyPieChartTab> createState() => _MyPieChartState();
 }
 
-class _MyPieChartState extends State<MyPieChart> {
+class _MyPieChartState extends State<MyPieChartTab> {
   @override
   Widget build(BuildContext context) {
     final width = MyDimensions.getWidth(context);
@@ -19,13 +18,14 @@ class _MyPieChartState extends State<MyPieChart> {
     // final myColorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      width: width,
-      height: height,
-      // color: Colors.amber.shade200,
+      width: width * 0.8,
+      // height: height * 0.3,
+      color: Colors.purple.shade400,
       child: PieChart(
         curve: Curves.easeInOut,
         PieChartData(
-          centerSpaceRadius: width * 0.1,
+          // centerSpaceRadius: width * 0.1,
+          centerSpaceRadius: 0,
           sectionsSpace: 0,
           // pieTouchData: PieTouchData(
           //   touchCallback: (FlTouchEvent event, pieTouchResponse) {

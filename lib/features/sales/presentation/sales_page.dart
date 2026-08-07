@@ -3,7 +3,7 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/tab.dart';
 import 'package:pos_system/core/widgets/tab_view.dart';
-import 'package:pos_system/features/sales/presentation/widgets/pie_chart.dart';
+import 'package:pos_system/features/sales/presentation/pie_chart_tab.dart';
 
 class MySalesPage extends StatefulWidget {
   const MySalesPage({super.key});
@@ -59,7 +59,7 @@ class _MySalesPageState extends State<MySalesPage> {
                 width: width * 0.8,
                 height: height * 0.3,
                 // color: Colors.amber,
-                child: MyPieChart(),
+                child: MyPieChartTab(),
               ),
               Container(
                 width: width * 0.8,

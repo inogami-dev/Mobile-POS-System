@@ -8,11 +8,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'sales_controller.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class SalesController extends _$SalesController {
   @override
-  SalesModel? build() {
-    return null;
+  List<SalesModel> build() {
+    return [];
   }
 
   Future<void> saveToFirebase({
@@ -52,5 +52,11 @@ class SalesController extends _$SalesController {
         "An error: $e, occured when calling saveToFirebase in SalesController. Stacktrace: $stackTrace",
       );
     }
+  }
+
+  Future<List<SalesModel>> getAllSales() async {
+    final salesRepo = ref.read(salesRepoProvider);
+    final allSales = await salesRepo.getAllRecords();
+    return allSales;
   }
 }
