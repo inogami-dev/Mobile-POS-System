@@ -51,6 +51,7 @@ dependencies:
   flutter_lints: ^6.0.0
   mobile_scanner: ^7.2.0
   audioplayers: ^6.7.1
+  fl_chart: ^1.2.0
 
 dev_dependencies:
   flutter_test:

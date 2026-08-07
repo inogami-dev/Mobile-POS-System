@@ -24,6 +24,7 @@ Future<void> updateProductLogic(
         widgetToDisplay: MyProgressIndicator(),
         dataToDisplay: "Saving changes",
       );
+
       final currentlyLoggedInUser = ref
           .read(currentLoggedInUserControllerProvider)
           .valueOrNull;
@@ -35,6 +36,7 @@ Future<void> updateProductLogic(
         );
         return;
       }
+
       final storeID = currentlyLoggedInUser.currentStoreInView;
       final productRepoRef = ref.read(productRepositoryProvider(storeID));
 

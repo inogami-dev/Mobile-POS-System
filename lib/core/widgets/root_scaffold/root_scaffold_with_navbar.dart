@@ -15,7 +15,6 @@ import 'package:pos_system/features/cashier/presentation/state_management/to_cou
 import 'package:pos_system/features/home/presentation/home_page.dart';
 import 'package:pos_system/features/inventory/presentation/inventory_page.dart';
 import 'package:pos_system/features/sales/presentation/sales_page.dart';
-import 'package:pos_system/features/utang/presentation/utang_page.dart';
 
 class MyRootScaffoldWithNavBar extends ConsumerWidget {
   const MyRootScaffoldWithNavBar({super.key});

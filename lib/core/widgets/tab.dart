@@ -18,7 +18,7 @@ class MyTab extends StatelessWidget {
     this.height,
     required this.text,
     required this.icon,
-    this.iconTextSpacing = 0,
+    this.iconTextSpacing = 8.0,
     this.child,
     this.isTextSizeAdaptive = false,
     this.fontSize = kDefaultFontSize,
@@ -27,10 +27,7 @@ class MyTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveHeight =
-        height ??
-        MyDimensions.getHeight(context) *
-            0.07; // Default height if not provided
+    final effectiveHeight = height ?? MyDimensions.getHeight(context) * 0.07;
 
     return Tab(
       height: effectiveHeight,
