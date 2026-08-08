@@ -1,21 +1,24 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
+import 'package:pos_system/features/sales/presentation/state_management/sales_controller.dart';
 import 'package:pos_system/features/sales/presentation/widgets/pie_chart_section_data.dart';
 
-class MyPieChartTab extends StatefulWidget {
+class MyPieChartTab extends ConsumerStatefulWidget {
   const MyPieChartTab({super.key});
 
   @override
-  State<MyPieChartTab> createState() => _MyPieChartState();
+  ConsumerState<MyPieChartTab> createState() => _MyPieChartState();
 }
 
-class _MyPieChartState extends State<MyPieChartTab> {
+class _MyPieChartState extends ConsumerState<MyPieChartTab> {
   @override
   Widget build(BuildContext context) {
     final width = MyDimensions.getWidth(context);
-    final height = MyDimensions.getHeight(context);
+    // final height = MyDimensions.getHeight(context);
     // final myColorScheme = Theme.of(context).colorScheme;
+    final sales = ref.watch(salesControllerProvider);
 
     return Container(
       width: width * 0.8,

@@ -8,6 +8,9 @@ part 'sales_model.freezed.dart';
 class SalesModel with _$SalesModel implements BaseEntity {
   factory SalesModel({
     String? id,
+
+    /// The elements in [particulars] is a String containing productID and quantity
+    /// combined separated by colon. Example: "productID:4"
     required List<String> particulars,
     required double totalAmount,
     required double payment,

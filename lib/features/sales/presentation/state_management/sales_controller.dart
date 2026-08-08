@@ -23,9 +23,10 @@ class SalesController extends _$SalesController {
     try {
       final salesRepo = ref.read(salesRepoProvider);
 
-      List<String> itemIDs = [];
+      List<String> itemIDandQty = [];
       for (var item in items) {
-        itemIDs.add(item.id!);
+        String i = "${item.id!}:${item.quantity}";
+        itemIDandQty.add(i);
       }
 
       double totalAmount = items.fold<double>(0, (total, currentVal) {
@@ -39,7 +40,7 @@ class SalesController extends _$SalesController {
 
       await salesRepo.add(
         SalesModel(
-          particulars: itemIDs,
+          particulars: itemIDandQty,
           totalAmount: totalAmount,
           payment: payment,
           change: change,
