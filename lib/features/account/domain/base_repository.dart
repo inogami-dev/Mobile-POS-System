@@ -45,7 +45,7 @@ abstract class BaseRepository<T extends BaseEntity> {
       if (snapshot.exists && snapshot.data() != null) {
         return fromMap(snapshot.data() as Map<String, dynamic>, snapshot.id);
       } else {
-        log("Document with ID $id does not exist in $collectionPath");
+        // log("Document with ID $id does not exist in $collectionPath");
         return null; // Return null instead of an empty list for a single item request
       }
     } catch (e, stackTrace) {
@@ -101,13 +101,12 @@ abstract class BaseRepository<T extends BaseEntity> {
   }
 
   Future<List<T>> getRecordsBaseOnTimeSpan({
-    required DateTime baseDate,
-    required DateTime fromTheTime,
-    required DateTime untilTheTime,
+    required String fromTheTime,
+    required String untilTheTime,
   }) async {
     QuerySnapshot snapshot = await collection
         .where(
-          baseDate,
+          "dateTime",
           isGreaterThanOrEqualTo: fromTheTime,
           isLessThan: untilTheTime,
         )
@@ -115,6 +114,10 @@ abstract class BaseRepository<T extends BaseEntity> {
     final data = snapshot.docs.map((doc) {
       return fromMap(doc.data() as Map<String, dynamic>, doc.id);
     }).toList();
+
+    log(
+      "The method getRecordsBaseOnTimeSpan in BaseRepository is returning: ${data.length} number of data.",
+    );
 
     return data;
   }

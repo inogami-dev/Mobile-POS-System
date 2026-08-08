@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/account/presentation/widget/logged_in_user_account_store_details.dart';
+import 'package:pos_system/features/sales/presentation/state_management/sales_controller.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -16,6 +17,9 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) {
     double width = MyDimensions.getWidth(context);
     double height = MyDimensions.getHeight(context);
+
+    // To initialize the sales controller
+    ref.read(salesControllerProvider);
 
     // return Scaffold(
     //   backgroundColor: myColorScheme.surface,
