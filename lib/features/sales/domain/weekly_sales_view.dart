@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:pos_system/features/sales/data/model/sales_model.dart';
 
 /// Returns the top N sold items, and groups the rest into an "Others" category.
@@ -57,5 +59,6 @@ List<Map<String, double>> weeklySalesView({
     chartData.add({"Others": othersTotal});
   }
 
+  log("weeklySalesView returned a list of length: ${chartData.length}");
   return chartData;
 }

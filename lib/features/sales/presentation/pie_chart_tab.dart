@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/inventory/presentation/state_management/all_listed_products.dart';
+import 'package:pos_system/features/sales/domain/constant/piechart_constants.dart';
 import 'package:pos_system/features/sales/presentation/state_management/sales_controller.dart';
 import 'package:pos_system/features/sales/presentation/widgets/pie_chart_section_data.dart';
 
@@ -16,16 +17,18 @@ class MyPieChartTab extends ConsumerStatefulWidget {
 
 class _MyPieChartState extends ConsumerState<MyPieChartTab> {
   late double width;
+  late ColorScheme myColorScheme;
   @override
   Widget build(BuildContext context) {
     width = MyDimensions.getWidth(context);
     final height = MyDimensions.getHeight(context);
+    myColorScheme = Theme.of(context).colorScheme;
 
-    // ✅ 1. Watch the STATE of the provider so it rebuilds when data changes!
+    // Watch the STATE of the provider so it rebuilds when data changes!
     final salesState = ref.watch(salesControllerProvider);
     final inventoryState = ref.watch(allListedProductsProvider);
 
-    // ✅ 2. Use .when() to handle the loading delay perfectly
+    // Use .when() to handle the loading delay perfectly
     return salesState.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) => Center(child: Text('Error: $error')),
@@ -35,57 +38,85 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
           return const Center(child: CircularProgressIndicator());
         }
 
-        // ✅ 3. Now that the data is loaded, safely read your calculated list!
+        // Now that the data is loaded, safely read your calculated list!
         final salesThisWeek = ref
             .read(salesControllerProvider.notifier)
             .getMostSoldProducts();
+        // final salesPreviousWeek = ref
+        //     .read(salesControllerProvider.notifier)
+        //     .getMostSoldProducts();
 
         return Container(
           width: width * 0.8,
           height: height * 0.3,
           // color: Colors.purple.shade400,
-          child: Column(
-            children: [
-              MyText(text: salesThisWeek.length.toString(), fontSize: 56),
-              Expanded(
-                child: PieChart(
-                  curve: Curves.easeInOut,
-                  PieChartData(
-                    centerSpaceRadius: 0,
-                    sectionsSpace: 0,
-                    titleSunbeamLayout: false,
-                    sections: _myPieChartItterator(salesThisWeek),
-                  ),
+          child: (salesThisWeek.isEmpty)
+              ? Center(child: MyText(text: "No Sales this week yet.."))
+              : Column(
+                  children: [
+                    MyText(text: salesThisWeek.length.toString(), fontSize: 56),
+                    Expanded(
+                      child: PieChart(
+                        curve: Curves.easeInOut,
+                        PieChartData(
+                          centerSpaceRadius: 0,
+                          sectionsSpace: 2,
+                          titleSunbeamLayout: false,
+                          sections: _myPieChartItterator(salesThisWeek),
+                        ),
+                      ),
+                    ),
+                    // Planned to add previous week's sale.
+                    // Expanded(
+                    //   child: PieChart(
+                    //     curve: Curves.easeInOut,
+                    //     PieChartData(
+                    //       centerSpaceRadius: 0,
+                    //       sectionsSpace: 0,
+                    //       titleSunbeamLayout: false,
+                    //       sections: _myPieChartItterator(salesThisWeek),
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
                 ),
-              ),
-            ],
-          ),
         );
       },
     );
   }
 
   // A curated palette of soft, distinct colors
+  // final List<Color> _chartColors = [
+  //   const Color.fromARGB(255, 51, 121, 179),
+  //   const Color.fromARGB(255, 183, 81, 81),
+  //   const Color(0xFF66BB6A),
+  //   Colors.yellow.shade400,
+  //   Colors.orange.shade400,
+  //   Colors.purple.shade400,
+  //   Colors.pink.shade400,
+  //   Colors.teal.shade400,
+  //   Colors.indigo.shade400,
+  //   Colors.brown.shade400,
+  //   // const Color(0xFF5C6BC0), // Soft Indigo
+  //   // const Color(0xFF66BB6A), // Muted Green
+  //   // const Color(0xFFEF5350), // Soft Red
+  //   // const Color(0xFFFFCA28), // Warm Amber
+  //   // const Color(0xFF26C6DA), // Gentle Cyan
+  //   // const Color(0xFFAB47BC), // Muted Purple
+  //   // const Color(0xFF8D6E63), // Soft Brown
+  //   // const Color(0xFF78909C), // Blue Grey
+  // ];
   final List<Color> _chartColors = [
-    Colors.blue.shade400,
-    Colors.red.shade400,
-    Colors.green.shade400,
-    Colors.yellow.shade400,
-    Colors.orange.shade400,
-    Colors.purple.shade400,
-    Colors.pink.shade400,
-    Colors.teal.shade400,
-    Colors.indigo.shade400,
-    Colors.brown.shade400,
-    Colors.grey.shade400,
-    // const Color(0xFF5C6BC0), // Soft Indigo
-    // const Color(0xFF66BB6A), // Muted Green
-    // const Color(0xFFEF5350), // Soft Red
-    // const Color(0xFFFFCA28), // Warm Amber
-    // const Color(0xFF26C6DA), // Gentle Cyan
-    // const Color(0xFFAB47BC), // Muted Purple
-    // const Color(0xFF8D6E63), // Soft Brown
-    // const Color(0xFF78909C), // Blue Grey
+    const Color(0xFF64B5F6), // Soft Blue
+    const Color(0xFFE57373), // Soft Red
+    const Color(0xFF81C784), // Soft Green
+    const Color(0xFFFFD54F), // Soft Yellow (Amber-toned for better contrast)
+    const Color(0xFFFFB74D), // Soft Orange
+    const Color(0xFFBA68C8), // Soft Purple
+    const Color(0xFFF06292), // Soft Pink
+    const Color(0xFF4DB6AC), // Soft Teal
+    const Color(0xFF7986CB), // Soft Indigo
+    const Color(0xFFA1887F), // Soft Brown
   ];
 
   // List<PieChartSectionData> _myPieChartItterator(
@@ -106,9 +137,8 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
   // }
 
   List<PieChartSectionData> _myPieChartItterator(
-    List<Map<String, double>> items, {
-    int maxNumberOfItemsToDisplay = 3,
-  }) {
+    List<Map<String, double>> items,
+  ) {
     List<PieChartSectionData> pie = [];
     double totalSum = items.fold(0.0, (sum, item) => sum + item.values.first);
 
@@ -121,8 +151,9 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
       Color sliceColor = _chartColors[i % _chartColors.length];
 
       String tempTitleFormat = "";
-      if (item.keys.first.length >= 7) {
-        tempTitleFormat = "${item.keys.first.substring(0, 6)}...";
+      if (item.keys.first.length >= MyPiechartConstants.maxNameCharInPie) {
+        tempTitleFormat =
+            "${item.keys.first.substring(0, MyPiechartConstants.maxNameCharInPie)}...";
       } else {
         tempTitleFormat = item.keys.first;
       }
@@ -130,18 +161,24 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
           ? (item.values.first / totalSum) * 100
           : 0.0;
       String formattedTitle =
-          "${tempTitleFormat}\n${item.values.first.toStringAsFixed(0)} (${percentage.toStringAsFixed(0)}%)";
+          "${tempTitleFormat}\n${item.values.first.toStringAsFixed(0)}";
 
       pie.add(
         myPieChartSectionData(
           title: formattedTitle,
           value: item.values.first,
           radius: width * 0.20,
+          cornerRadius: 8,
           color:
               (i == items.length - 1 &&
-                  items.length > maxNumberOfItemsToDisplay)
+                  items.length > MyPiechartConstants.maxNumberOfItemInPie)
               ? Colors.grey
               : sliceColor, // Apply the dynamic color here
+          badgeWidget: MyText(
+            text: "${percentage.toStringAsFixed(0)}%",
+            fontWeight: FontWeight.bold,
+            color: myColorScheme.surface,
+          ),
         ),
       );
     }

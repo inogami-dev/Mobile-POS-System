@@ -6,6 +6,7 @@ import 'package:pos_system/features/cashier/data/model/scanned_item.dart';
 import 'package:pos_system/features/inventory/presentation/state_management/all_listed_products.dart';
 import 'package:pos_system/features/products/data/model/product_model.dart';
 import 'package:pos_system/features/sales/data/model/sales_model.dart';
+import 'package:pos_system/features/sales/domain/constant/piechart_constants.dart';
 import 'package:pos_system/features/sales/domain/sales_view_option.dart';
 import 'package:pos_system/features/sales/domain/weekly_sales_view.dart';
 import 'package:pos_system/features/sales/presentation/state_management/sales_repo_provider.dart';
@@ -131,6 +132,7 @@ class SalesController extends _$SalesController {
   /// This could be view Weekly or Monthly sales (not yet implemented).
   List<Map<String, double>> getMostSoldProducts({
     SalesViewOption salesViewOption = SalesViewOption.Weekly,
+    // bool usePreviousWeek = false,
   }) {
     List<ProductModel> inventoryItems =
         ref.read(allListedProductsProvider).value ?? [];
@@ -141,25 +143,17 @@ class SalesController extends _$SalesController {
       //   return [];
       default:
         final tempAllSales = weeklySalesView(sales: state.value ?? []);
-        log("${tempAllSales.length}");
-        log("It works here (after tempAllSales)");
-        // for (var sale in tempAllSales) {
         for (int i = 0; i < tempAllSales.length; i++) {
           for (var item in inventoryItems) {
             if (item.barCode == tempAllSales[i].keys.first) {
               mostSoldProducts.add({item.name: tempAllSales[i].values.first});
             }
-
-            // if (sale.keys.first == tempAllSales.last.keys.first) {
-            //   log("Other was executed");
-            //   mostSoldProducts.add({"Others": tempAllSales.last.values.first});
-            // }
           }
-          if (i == tempAllSales.length - 1) {
+          if (i == tempAllSales.length - 1 &&
+              tempAllSales.length > MyPiechartConstants.maxNumberOfItemInPie) {
             mostSoldProducts.add({"Others": tempAllSales[i].values.first});
           }
         }
-        log("${mostSoldProducts.length}");
         return mostSoldProducts;
     }
   }
