@@ -43,6 +43,7 @@ class MyItemContents extends StatelessWidget {
       padding: EdgeInsets.all(0),
       clipBehavior: Clip.hardEdge,
       borderColor: myColorScheme.outlineVariant,
+      borderWidth: (isExpanded) ? 1 : 0,
       // color: Colors.blue,
       child: Stack(
         alignment: Alignment.center,

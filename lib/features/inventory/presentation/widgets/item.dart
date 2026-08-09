@@ -56,12 +56,18 @@ class MyItem extends ConsumerWidget {
                     },
                   );
                 },
-                child: MyItemContents(
-                  width: displayWidth,
-                  height: displayHeight,
-                  product: product,
-                  isExpanded: false,
-                  encodedProductImage: productImage!,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: myColorScheme.outline, width: 1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: MyItemContents(
+                    width: displayWidth,
+                    height: displayHeight,
+                    product: product,
+                    isExpanded: false,
+                    encodedProductImage: productImage!,
+                  ),
                 ),
               ),
             )

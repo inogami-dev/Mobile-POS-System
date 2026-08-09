@@ -10,6 +10,7 @@ class MyContainer extends StatelessWidget {
   final BorderRadius? customBorderRadius;
   final Border? border;
   final Color? borderColor;
+  final double? borderWidth;
   final bool enableShadow;
   final BlurStyle shadowBlurStyle;
   final double blurRadius;
@@ -26,6 +27,7 @@ class MyContainer extends StatelessWidget {
     this.customBorderRadius,
     this.border,
     this.borderColor,
+    this.borderWidth,
     this.padding,
     this.margin,
     this.enableShadow = true,
@@ -53,7 +55,10 @@ class MyContainer extends StatelessWidget {
             customBorderRadius ?? BorderRadius.circular(borderRadius ?? 10),
         border:
             border ??
-            Border.all(color: borderColor ?? myColorScheme.inversePrimary),
+            Border.all(
+              color: borderColor ?? myColorScheme.inversePrimary,
+              width: borderWidth ?? 1,
+            ),
         boxShadow: (enableShadow)
             ? [
                 BoxShadow(
