@@ -130,6 +130,7 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
             color: labelAndIconColor,
             icon: _toVertiCenterIcon(
               isTheCurretIndex: (currentIndex == 3),
+              hasSpecialVisual: (currentIndex == 3),
               icon: HugeIcon(
                 icon: HugeIcons.strokeRoundedChartAnalysis,
                 size: 24,
@@ -196,7 +197,8 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
     required bool isCheckoutOpen,
     required ColorScheme myColorScheme,
   }) {
-    if (currentIndex == 1 && isCheckoutOpen) {
+    // This is now available for CashierPage and SalesPage
+    if ((currentIndex == 1 && isCheckoutOpen) || currentIndex == 3) {
       return Colors.transparent;
     } else if (currentIndex == 1) {
       return myColorScheme.primary;

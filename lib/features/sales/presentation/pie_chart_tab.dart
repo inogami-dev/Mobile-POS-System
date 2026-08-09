@@ -41,7 +41,7 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
         return Container(
           width: width * 0.8,
           height: height * 0.3,
-          color: Colors.purple.shade400,
+          // color: Colors.purple.shade400,
           child: Column(
             children: [
               MyText(text: salesThisWeek.length.toString(), fontSize: 56),
