@@ -55,7 +55,6 @@ class _CashierPageState extends ConsumerState<CashierPage> {
               Positioned.fill(
                 child: Column(
                   children: [
-                    // if (currentIndex == 1 && !toCheckout) // for further testing
                     AnimatedContainer(
                       duration: Duration(milliseconds: 500),
                       height: (currentIndex == 1 && !toCheckout)
@@ -71,7 +70,7 @@ class _CashierPageState extends ConsumerState<CashierPage> {
                           child: ClipRRect(
                             borderRadius: BorderRadiusGeometry.circular(8),
                             child: MyCounterScanner(
-                              isTurnedOff: (currentIndex == 1 && toCheckout),
+                              isTurnedOff: (currentIndex != 1 || toCheckout),
                             ),
                           ),
                         ),
