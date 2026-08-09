@@ -167,8 +167,12 @@ class LayoutBottomButtonRow extends ConsumerWidget {
                     // Clear the counter
                     onControllerValueReset("");
 
-                    FocusManager.instance.primaryFocus?.unfocus();
                     Navigator.pop(context);
+
+                    // Add a little delay sp that the FocusScope will work properly here.
+                    Future.delayed(Duration(milliseconds: 50), () {
+                      FocusScope.of(context).unfocus();
+                    });
                   },
                 );
               },
