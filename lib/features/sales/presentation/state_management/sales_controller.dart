@@ -93,6 +93,7 @@ class SalesController extends _$SalesController {
   //   return allSales;
   // }
 
+  /// Online
   Future<List<SalesModel>> getSalesThisWeek() async {
     final salesRepo = ref.read(salesRepoProvider);
     DateTime now = DateTime.now();
@@ -126,6 +127,8 @@ class SalesController extends _$SalesController {
     return allSales;
   }
 
+  // Queries are fetched from the cached data in state.
+  /// This could be view Weekly or Monthly sales (not yet implemented).
   List<Map<String, double>> getMostSoldProducts({
     SalesViewOption salesViewOption = SalesViewOption.Weekly,
   }) {
@@ -138,15 +141,25 @@ class SalesController extends _$SalesController {
       //   return [];
       default:
         final tempAllSales = weeklySalesView(sales: state.value ?? []);
+        log("${tempAllSales.length}");
         log("It works here (after tempAllSales)");
-        for (var sale in tempAllSales) {
+        // for (var sale in tempAllSales) {
+        for (int i = 0; i < tempAllSales.length; i++) {
           for (var item in inventoryItems) {
-            if (item.barCode == sale.keys.first) {
-              mostSoldProducts.add({item.name: sale.values.first});
+            if (item.barCode == tempAllSales[i].keys.first) {
+              mostSoldProducts.add({item.name: tempAllSales[i].values.first});
             }
+
+            // if (sale.keys.first == tempAllSales.last.keys.first) {
+            //   log("Other was executed");
+            //   mostSoldProducts.add({"Others": tempAllSales.last.values.first});
+            // }
+          }
+          if (i == tempAllSales.length - 1) {
+            mostSoldProducts.add({"Others": tempAllSales[i].values.first});
           }
         }
-
+        log("${mostSoldProducts.length}");
         return mostSoldProducts;
     }
   }

@@ -15,9 +15,10 @@ class MyPieChartTab extends ConsumerStatefulWidget {
 }
 
 class _MyPieChartState extends ConsumerState<MyPieChartTab> {
+  late double width;
   @override
   Widget build(BuildContext context) {
-    final width = MyDimensions.getWidth(context);
+    width = MyDimensions.getWidth(context);
     final height = MyDimensions.getHeight(context);
 
     // ✅ 1. Watch the STATE of the provider so it rebuilds when data changes!
@@ -29,6 +30,7 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) => Center(child: Text('Error: $error')),
       data: (salesData) {
+        // Inventory's state is necessary here to check if the items were loaded or not yet. As they will be used together with the sales state later in the pie chart.
         if (inventoryState.isLoading) {
           return const Center(child: CircularProgressIndicator());
         }
@@ -104,9 +106,11 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
   // }
 
   List<PieChartSectionData> _myPieChartItterator(
-    List<Map<String, double>> items,
-  ) {
+    List<Map<String, double>> items, {
+    int maxNumberOfItemsToDisplay = 3,
+  }) {
     List<PieChartSectionData> pie = [];
+    double totalSum = items.fold(0.0, (sum, item) => sum + item.values.first);
 
     // Change to a standard for-loop so we can track the index (i)
     for (int i = 0; i < items.length; i++) {
@@ -122,14 +126,22 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
       } else {
         tempTitleFormat = item.keys.first;
       }
+      double percentage = (totalSum > 0)
+          ? (item.values.first / totalSum) * 100
+          : 0.0;
       String formattedTitle =
-          "${tempTitleFormat}\n${item.values.first.toStringAsFixed(0)}";
+          "${tempTitleFormat}\n${item.values.first.toStringAsFixed(0)} (${percentage.toStringAsFixed(0)}%)";
 
       pie.add(
         myPieChartSectionData(
           title: formattedTitle,
           value: item.values.first,
-          color: sliceColor, // Apply the dynamic color here
+          radius: width * 0.20,
+          color:
+              (i == items.length - 1 &&
+                  items.length > maxNumberOfItemsToDisplay)
+              ? Colors.grey
+              : sliceColor, // Apply the dynamic color here
         ),
       );
     }

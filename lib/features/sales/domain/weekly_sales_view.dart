@@ -1,6 +1,12 @@
 import 'package:pos_system/features/sales/data/model/sales_model.dart';
 
-List<Map<String, double>> weeklySalesView({required List<SalesModel> sales}) {
+/// Returns the top N sold items, and groups the rest into an "Others" category.
+/// N is 5 by default. (This is 3 right now for easy testing).
+List<Map<String, double>> weeklySalesView({
+  required List<SalesModel> sales,
+  // int numberOfSalesToView = 10,
+  int numberOfSalesToView = 3,
+}) {
   // 1. Use a single Map to aggregate the total values per product
   Map<String, double> productTotals = {};
 
@@ -16,11 +22,8 @@ List<Map<String, double>> weeklySalesView({required List<SalesModel> sales}) {
         double value = double.tryParse(parts[1].trim()) ?? 0.0;
 
         // Add the value to the existing total for this product
-        if (productTotals.containsKey(productName)) {
-          productTotals[productName] = productTotals[productName]! + value;
-        } else {
-          productTotals[productName] = value;
-        }
+        productTotals[productName] =
+            (productTotals[productName] ?? 0.0) + value;
       }
     }
   }
@@ -31,11 +34,28 @@ List<Map<String, double>> weeklySalesView({required List<SalesModel> sales}) {
   // 4. Sort the list in descending order (highest value first)
   sortedEntries.sort((a, b) => b.value.compareTo(a.value));
 
-  // 5. Take the top 10 and format them into your desired List of Maps
-  List<Map<String, double>> top10Products = sortedEntries
-      .take(10)
-      .map((entry) => {entry.key: entry.value})
-      .toList();
+  // 5. Process data for the Pie Chart
+  List<Map<String, double>> chartData = [];
 
-  return top10Products;
+  // Check if we have more items than our limit
+  if (sortedEntries.length <= numberOfSalesToView) {
+    // If we have fewer or exactly 10 items, just return them all normally
+    chartData = sortedEntries.map((e) => {e.key: e.value}).toList();
+  } else {
+    // Take the exact number of top items we want to view
+    chartData = sortedEntries
+        .take(numberOfSalesToView)
+        .map((e) => {e.key: e.value})
+        .toList();
+
+    // Skip the top items, grab the rest, and calculate their total sum
+    double othersTotal = sortedEntries
+        .skip(numberOfSalesToView)
+        .fold(0.0, (sum, entry) => sum + entry.value);
+
+    // Append the combined "Others" slice to the end of the chart data
+    chartData.add({"Others": othersTotal});
+  }
+
+  return chartData;
 }

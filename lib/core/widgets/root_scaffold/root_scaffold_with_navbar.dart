@@ -69,6 +69,9 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
           myColorScheme: myColorScheme,
         ),
 
+        // animationDuration: Duration(
+        //   milliseconds: (currentIndex == 3) ? 400 : 600,
+        // ),
         items: [
           _myCurvedNavigationBarItem(
             label: 'Home',
@@ -129,6 +132,7 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
             label: 'Sales',
             color: labelAndIconColor,
             icon: _toVertiCenterIcon(
+              durationInMillis: (currentIndex == 3) ? 600 : 200,
               isTheCurretIndex: (currentIndex == 3),
               hasSpecialVisual: (currentIndex == 3),
               icon: HugeIcon(
@@ -181,9 +185,10 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
     required Widget icon,
     required bool isTheCurretIndex,
     bool hasSpecialVisual = false,
+    int durationInMillis = 200,
   }) {
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
+      duration: Duration(milliseconds: durationInMillis),
       margin: EdgeInsets.only(top: (isTheCurretIndex) ? 0 : 8),
       curve: Curves.easeInOut,
       transform: Matrix4.translationValues(0, hasSpecialVisual ? 12.0 : 0, 0),
