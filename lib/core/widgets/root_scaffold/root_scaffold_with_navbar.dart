@@ -112,6 +112,7 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
             label: 'Inventory',
             color: labelAndIconColor,
             icon: _toVertiCenterIcon(
+              hasSpecialVisual: (currentIndex == 2),
               isTheCurretIndex: (currentIndex == 2),
               icon: HugeIcon(icon: HugeIcons.strokeRoundedGroupItems),
             ),
@@ -203,7 +204,9 @@ class MyRootScaffoldWithNavBar extends ConsumerWidget {
     required ColorScheme myColorScheme,
   }) {
     // This is now available for CashierPage and SalesPage
-    if ((currentIndex == 1 && isCheckoutOpen) || currentIndex == 3) {
+    if ((currentIndex == 1 && isCheckoutOpen) ||
+        currentIndex == 3 ||
+        currentIndex == 2) {
       return Colors.transparent;
     } else if (currentIndex == 1) {
       return myColorScheme.primary;

@@ -54,7 +54,7 @@ class _MyTabViewState extends ConsumerState<MyTabView> {
           children: [
             Expanded(child: TabBarView(children: widget.children)),
             AnimatedOpacity(
-              duration: Duration(milliseconds: 600),
+              duration: Duration(milliseconds: 800),
               curve: Curves.easeInOut,
               opacity: (isCurrentlyInSalesPage) ? 1 : 0,
               child: AnimatedContainer(
