@@ -46,40 +46,64 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
         //     .read(salesControllerProvider.notifier)
         //     .getMostSoldProducts();
 
-        return Container(
-          width: width * 0.8,
-          height: height * 0.3,
-          // color: Colors.purple.shade400,
-          child: (salesThisWeek.isEmpty)
-              ? Center(child: MyText(text: "No Sales this week yet.."))
-              : Column(
-                  children: [
-                    MyText(text: salesThisWeek.length.toString(), fontSize: 56),
-                    Expanded(
-                      child: PieChart(
-                        curve: Curves.easeInOut,
-                        PieChartData(
-                          centerSpaceRadius: 0,
-                          sectionsSpace: 2,
-                          titleSunbeamLayout: false,
-                          sections: _myPieChartItterator(salesThisWeek),
+        return SingleChildScrollView(
+          child: Container(
+            width: width * 0.8,
+            height: height * 0.8,
+            color: Colors.purple.shade400,
+            child: (salesThisWeek.isEmpty)
+                ? Center(child: MyText(text: "No Sales this week yet.."))
+                : Column(
+                    spacing: 8,
+                    children: [
+                      SafeArea(child: SizedBox()),
+                      SizedBox(height: 56),
+
+                      Expanded(
+                        child: PieChart(
+                          curve: Curves.easeInOut,
+                          PieChartData(
+                            centerSpaceRadius: 0,
+                            sectionsSpace: 2,
+                            titleSunbeamLayout: false,
+                            sections: _myPieChartItterator(salesThisWeek),
+                          ),
                         ),
                       ),
-                    ),
-                    // Planned to add previous week's sale.
-                    // Expanded(
-                    //   child: PieChart(
-                    //     curve: Curves.easeInOut,
-                    //     PieChartData(
-                    //       centerSpaceRadius: 0,
-                    //       sectionsSpace: 0,
-                    //       titleSunbeamLayout: false,
-                    //       sections: _myPieChartItterator(salesThisWeek),
-                    //     ),
-                    //   ),
-                    // ),
-                  ],
-                ),
+                      SizedBox(height: 56),
+
+                      // Other info
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(width: 8),
+                          MyText(
+                            text: "The total number of items sold this week:  ",
+                            // fontSize: 56,
+                          ),
+                          MyText(
+                            text: salesThisWeek.length.toString(),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ],
+                      ),
+                      // Planned to add previous week's sale.
+                      // Expanded(
+                      //   child: PieChart(
+                      //     curve: Curves.easeInOut,
+                      //     PieChartData(
+                      //       centerSpaceRadius: 0,
+                      //       sectionsSpace: 0,
+                      //       titleSunbeamLayout: false,
+                      //       sections: _myPieChartItterator(salesThisWeek),
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
+                  ),
+          ),
         );
       },
     );
@@ -161,7 +185,7 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
           ? (item.values.first / totalSum) * 100
           : 0.0;
       String formattedTitle =
-          "${tempTitleFormat}\n${item.values.first.toStringAsFixed(0)}";
+          "${tempTitleFormat}\n${item.values.first.toStringAsFixed(0)} ${item.values.first}";
 
       pie.add(
         myPieChartSectionData(
