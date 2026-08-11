@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:pos_system/core/constants/app_layout.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/tab.dart';
 import 'package:pos_system/core/widgets/tab_view.dart';
@@ -17,7 +18,7 @@ class _MySalesPageState extends State<MySalesPage> {
   Widget build(BuildContext context) {
     final width = MyDimensions.getWidth(context);
     final height = MyDimensions.getHeight(context);
-    // final myColorScheme = Theme.of(context).colorScheme;
+    final myColorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       // appBar: AppBar(
@@ -40,19 +41,12 @@ class _MySalesPageState extends State<MySalesPage> {
       //   leadingWidth: 45,
       // ),
       body: SafeArea(
+        bottom: false,
         child: Container(
           width: width,
           height: height,
-          // color: Colors.blueAccent,
-          // child: Column(
-          //   mainAxisAlignment: MainAxisAlignment.start,
-          //   crossAxisAlignment: CrossAxisAlignment.center,
-          //   children: [
-          //     Container(
-          //       width: width * 0.8,
-          //       height: height * 0.3,
-          //       color: Colors.amber,
-          //     ),
+          color: myColorScheme.surfaceContainer,
+          padding: EdgeInsets.only(bottom: MyAppLayout.bottomNavbarHeight),
           child: MyTabView(
             children: [
               Container(

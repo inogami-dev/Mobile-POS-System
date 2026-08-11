@@ -1,10 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:pos_system/core/constants/app_layout.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pos_system/core/widgets/root_scaffold/root_scaffold_state.dart';
 import 'package:pos_system/core/widgets/tab.dart';
 
-class MyTabView extends StatefulWidget {
+class MyTabView extends ConsumerStatefulWidget {
   /// [childrenTabIcons] is represents the children's contents
   final List<MyTab> childrenTabIcons;
   final List<Widget> children;
@@ -18,10 +19,10 @@ class MyTabView extends StatefulWidget {
   });
 
   @override
-  State<MyTabView> createState() => _MyTabViewState();
+  ConsumerState<MyTabView> createState() => _MyTabViewState();
 }
 
-class _MyTabViewState extends State<MyTabView> {
+class _MyTabViewState extends ConsumerState<MyTabView> {
   @override
   void initState() {
     super.initState();
@@ -42,14 +43,55 @@ class _MyTabViewState extends State<MyTabView> {
 
   @override
   Widget build(BuildContext context) {
+    final myColorScheme = Theme.of(context).colorScheme;
+    final currentIndex = ref.watch(rootScaffoldStateProvider);
+    bool isCurrentlyInSalesPage = currentIndex == 3;
+
     return Scaffold(
       body: DefaultTabController(
         length: widget.children.length,
         child: Column(
           children: [
             Expanded(child: TabBarView(children: widget.children)),
-            TabBar(tabs: widget.childrenTabIcons),
-            SizedBox(height: MyAppLayout.bottomNavbarHeight * 0.075),
+            AnimatedOpacity(
+              duration: Duration(milliseconds: 600),
+              curve: Curves.easeInOut,
+              opacity: (isCurrentlyInSalesPage) ? 1 : 0,
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 600),
+                curve: Curves.easeInOut,
+                height: (isCurrentlyInSalesPage) ? 56 : 0,
+                decoration: BoxDecoration(
+                  color: myColorScheme.surfaceContainer,
+                  border: Border(
+                    top: BorderSide(
+                      width: 0.4,
+                      color: myColorScheme.onSurface.withAlpha(156),
+                    ),
+                  ),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: TabBar(
+                    indicator: UnderlineTabIndicator(
+                      borderRadius: BorderRadius.circular(50),
+                      borderSide: BorderSide(
+                        width: 4.0,
+                        color: myColorScheme.primary,
+                      ),
+                    ),
+                    indicatorSize: TabBarIndicatorSize.label,
+                    dividerColor: Colors.transparent,
+                    overlayColor: WidgetStateProperty.all(Colors.transparent),
+                    tabs: widget.childrenTabIcons,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
