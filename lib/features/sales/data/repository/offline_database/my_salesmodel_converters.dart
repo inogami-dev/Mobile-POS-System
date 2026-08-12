@@ -16,7 +16,7 @@ Map<String, dynamic> mySalesModelToMapConverter(SalesModel sales) {
   };
 }
 
-SalesModel mySalesModelFromJsonConverter(Map<String, dynamic> json) {
+SalesModel mySalesModelFromJsonConverter(Map<dynamic, dynamic> json) {
   // return SalesModel.fromJson(
   //   json
   // );
@@ -26,9 +26,9 @@ SalesModel mySalesModelFromJsonConverter(Map<String, dynamic> json) {
 
   return SalesModel(
     particulars: finalHobbiesList,
-    totalAmount: json['totalAmount'],
-    payment: json['payment'],
-    change: json['change'],
+    totalAmount: (json['totalAmount'] as num).toDouble(),
+    payment: (json['payment'] as num).toDouble(),
+    change: (json['change'] as num).toDouble(),
     dateTime: json['dateTime'],
     cashierId: json['cashierId'],
   );

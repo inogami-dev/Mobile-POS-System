@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/inventory/presentation/state_management/all_listed_products.dart';
+import 'package:pos_system/features/products/data/model/product_model.dart';
 import 'package:pos_system/features/sales/domain/constant/piechart_constants.dart';
 import 'package:pos_system/features/sales/presentation/state_management/sales_controller.dart';
 import 'package:pos_system/features/sales/presentation/widgets/pie_chart_section_data.dart';
@@ -67,7 +68,10 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                             centerSpaceRadius: 0,
                             sectionsSpace: 2,
                             titleSunbeamLayout: false,
-                            sections: _myPieChartItterator(salesThisWeek),
+                            sections: _myPieChartItterator(
+                              salesThisWeek,
+                              inventoryState.value ?? [],
+                            ),
                           ),
                         ),
                       ),
@@ -84,7 +88,12 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                             // fontSize: 56,
                           ),
                           MyText(
-                            text: salesThisWeek.length.toString(),
+                            text: salesThisWeek
+                                .fold<double>(
+                                  0.0,
+                                  (sum, item) => sum + item.values.first,
+                                )
+                                .toStringAsFixed(0),
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
                           ),
@@ -163,6 +172,7 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
 
   List<PieChartSectionData> _myPieChartItterator(
     List<Map<String, double>> items,
+    List<ProductModel> inventoryItems,
   ) {
     List<PieChartSectionData> pie = [];
     double totalSum = items.fold(0.0, (sum, item) => sum + item.values.first);
@@ -185,8 +195,19 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
       double percentage = (totalSum > 0)
           ? (item.values.first / totalSum) * 100
           : 0.0;
+
+      double price = 0;
+      double totalAmount = 0;
+      for (var product in inventoryItems) {
+        if (product.name == item.keys.first) {
+          price = product.price;
+          totalAmount = product.price * item.values.first;
+          break;
+        }
+      }
+
       String formattedTitle =
-          "${tempTitleFormat}\n${item.values.first.toStringAsFixed(0)} ${item.values.first}";
+          "${tempTitleFormat}\n(${price}x${item.values.first.toStringAsFixed(0)})\n${totalAmount}";
 
       pie.add(
         myPieChartSectionData(

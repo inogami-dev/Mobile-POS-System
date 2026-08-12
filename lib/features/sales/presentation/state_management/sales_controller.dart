@@ -9,6 +9,7 @@ import 'package:pos_system/features/sales/data/model/sales_model.dart';
 import 'package:pos_system/features/sales/domain/constant/piechart_constants.dart';
 import 'package:pos_system/features/sales/domain/sales_view_option.dart';
 import 'package:pos_system/features/sales/domain/weekly_sales_view.dart';
+import 'package:pos_system/features/sales/presentation/state_management/offline_database/offline_sales.dart';
 import 'package:pos_system/features/sales/presentation/state_management/sales_repo_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -23,6 +24,7 @@ class SalesController extends _$SalesController {
     final sales = await getSalesThisWeek();
     sales.sort((a, b) => b.dateTime.compareTo(a.dateTime));
     log("The build method have finished executing!");
+    log("Retrieved sales: ${sales.length}");
 
     return sales;
   }
@@ -94,9 +96,10 @@ class SalesController extends _$SalesController {
   //   return allSales;
   // }
 
-  /// Online
+  /// Offline
   Future<List<SalesModel>> getSalesThisWeek() async {
-    final salesRepo = ref.read(salesRepoProvider);
+    // final salesRepo = ref.read(salesRepoProvider);
+    final offlineSalesRepo = ref.read(myOfflineSalesProvider.notifier);
     DateTime now = DateTime.now();
 
     // Dart considers Monday as weekday 1.
@@ -120,38 +123,53 @@ class SalesController extends _$SalesController {
       "untilTheTime date: ${MyDateFormatter.formatDate(dateTimeInString: untilTheTime.toString())}",
     );
 
-    final allSales = await salesRepo.getRecordsBaseOnTimeSpan(
+    final allSales = await offlineSalesRepo.getRecordsBaseOnTimeSpan(
       fromTheTime: fromTheTime.toString(),
       untilTheTime: untilTheTime.toString(),
     );
+    // final allSales = await offlineSalesRepo.getAllSales();
 
     return allSales;
+    // return [];
   }
 
   // Queries are fetched from the cached data in state.
   /// This could be view Weekly or Monthly sales (not yet implemented).
   List<Map<String, double>> getMostSoldProducts({
     SalesViewOption salesViewOption = SalesViewOption.Weekly,
-    // bool usePreviousWeek = false,
   }) {
     List<ProductModel> inventoryItems =
         ref.read(allListedProductsProvider).value ?? [];
     List<Map<String, double>> mostSoldProducts = [];
 
     switch (salesViewOption) {
-      // case SalesOption.Weekly:
-      //   return [];
       default:
         final tempAllSales = weeklySalesView(sales: state.value ?? []);
-        for (int i = 0; i < tempAllSales.length; i++) {
-          for (var item in inventoryItems) {
-            if (item.barCode == tempAllSales[i].keys.first) {
-              mostSoldProducts.add({item.name: tempAllSales[i].values.first});
-            }
-          }
-          if (i == tempAllSales.length - 1 &&
-              tempAllSales.length > MyPiechartConstants.maxNumberOfItemInPie) {
-            mostSoldProducts.add({"Others": tempAllSales[i].values.first});
+        for (var saleEntry in tempAllSales) {
+          final barcodeOrOthers = saleEntry.keys.first;
+          final quantity = saleEntry.values.first;
+
+          if (barcodeOrOthers == "Others") {
+            mostSoldProducts.add({"Others": quantity});
+          } else {
+            // Find the product in inventory to resolve its name
+            final matchingItem = inventoryItems.firstWhere(
+              (item) => item.barCode == barcodeOrOthers,
+              orElse: () => ProductModel(
+                name: "Unknown Product ($barcodeOrOthers)",
+                queryName: "",
+                storeId: "",
+                description: "",
+                barCode: barcodeOrOthers,
+                price: 0,
+                quantity: 0,
+                picture: "",
+                expirationDate: null,
+                registeredOn: "",
+                registeredBy: "",
+              ),
+            );
+            mostSoldProducts.add({matchingItem.name: quantity});
           }
         }
         return mostSoldProducts;
