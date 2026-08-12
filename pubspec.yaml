@@ -52,6 +52,8 @@ dependencies:
   mobile_scanner: ^7.2.0
   audioplayers: ^6.7.1
   fl_chart: ^1.2.0
+  sqflite: ^2.4.2+1
+  path_provider: ^2.1.6
 
 dev_dependencies:
   flutter_test:

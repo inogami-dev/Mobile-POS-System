@@ -1,6 +1,6 @@
 class MyPiechartConstants {
   MyPiechartConstants._();
 
-  static int maxNameCharInPie = 7;
-  static int maxNumberOfItemInPie = 3;
+  static const int maxNameCharInPie = 10;
+  static const int maxNumberOfItemInPie = 3;
 }

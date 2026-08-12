@@ -50,14 +50,15 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
           child: Container(
             width: width * 0.8,
             height: height * 0.8,
-            color: Colors.purple.shade400,
+            // color: Colors.purple.shade400,
             child: (salesThisWeek.isEmpty)
                 ? Center(child: MyText(text: "No Sales this week yet.."))
                 : Column(
                     spacing: 8,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       SafeArea(child: SizedBox()),
-                      SizedBox(height: 56),
+                      SizedBox(height: 16),
 
                       Expanded(
                         child: PieChart(
@@ -70,7 +71,7 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 56),
+                      SizedBox(height: 16),
 
                       // Other info
                       Row(
