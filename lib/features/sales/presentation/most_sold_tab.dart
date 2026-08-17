@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/container.dart';
@@ -19,6 +20,15 @@ class MyPieChartTab extends ConsumerStatefulWidget {
 class _MyPieChartState extends ConsumerState<MyPieChartTab> {
   late double width;
   late ColorScheme myColorScheme;
+  FixedExtentScrollController listWheelScrollController =
+      FixedExtentScrollController(initialItem: 1);
+
+  @override
+  void dispose() {
+    listWheelScrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     width = MyDimensions.getWidth(context);
@@ -55,7 +65,7 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
         return SingleChildScrollView(
           child: Container(
             width: width * 0.8,
-            height: height * 0.8,
+            height: height * 1.5,
             // color: Colors.purple.shade400,
             child: (salesThisWeek.isEmpty && salesPreviousWeek.isEmpty)
                 ? Center(
@@ -68,60 +78,153 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                     spacing: 8,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SafeArea(child: SizedBox()),
-                      SizedBox(height: 16),
-
-                      if (salesThisWeek.isNotEmpty)
-                        Expanded(
-                          child: PieChart(
-                            curve: Curves.easeInOut,
-                            PieChartData(
-                              centerSpaceRadius: 0,
-                              sectionsSpace: 2,
-                              titleSunbeamLayout: false,
-                              sections: myPieChartItterator(
-                                items: salesThisWeek,
-                                inventoryItems: inventoryState.value ?? [],
-                                width: width,
-                                myColorScheme: myColorScheme,
-                              ),
-                            ),
-                          ),
-                        ),
-                      if (salesThisWeek.isNotEmpty) SizedBox(height: 16),
-
-                      if (salesPreviousWeek.isNotEmpty)
-                        MyContainer(
-                          width: width * 0.9,
-                          height: height * 0.4,
-                          borderColor: myColorScheme.outlineVariant,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            spacing: 32,
+                      // if (salesThisWeek.isNotEmpty)
+                      //   Expanded(
+                      //     child: PieChart(
+                      //       curve: Curves.easeInOut,
+                      //       PieChartData(
+                      //         centerSpaceRadius: 0,
+                      //         sectionsSpace: 2,
+                      //         titleSunbeamLayout: false,
+                      //         sections: myPieChartItterator(
+                      //           items: salesThisWeek,
+                      //           inventoryItems: inventoryState.value ?? [],
+                      //           width: width,
+                      //           myColorScheme: myColorScheme,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // if (salesThisWeek.isNotEmpty) SizedBox(height: 16),
+                      Container(
+                        width: width,
+                        height: height * 0.5,
+                        // color: Colors.amber,
+                        child: RotatedBox(
+                          quarterTurns: -1,
+                          child: ListWheelScrollView(
+                            controller: listWheelScrollController,
+                            itemExtent: (height * 0.4) + 16,
+                            diameterRatio: 2.5,
+                            physics: const FixedExtentScrollPhysics(),
+                            squeeze: 1.056,
                             children: [
-                              MyText(text: "Previous Week's sales"),
-                              Expanded(
-                                child: PieChart(
-                                  curve: Curves.easeInOut,
-                                  PieChartData(
-                                    centerSpaceRadius: 0,
-                                    sectionsSpace: 2,
-                                    titleSunbeamLayout: false,
-                                    sections: myPieChartItterator(
-                                      items: salesPreviousWeek,
-                                      inventoryItems:
-                                          inventoryState.value ?? [],
-                                      width: width,
-                                      myColorScheme: myColorScheme,
+                              // Temporary ra ning isa ka salesPreviousWeek diri
+                              if (salesPreviousWeek.isNotEmpty)
+                                RotatedBox(
+                                  quarterTurns: 1,
+                                  child: MyContainer(
+                                    width: width * 0.9,
+                                    height: height * 0.4,
+                                    margin: EdgeInsets.only(bottom: 16),
+                                    borderColor: myColorScheme.outlineVariant,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      spacing: 32,
+                                      children: [
+                                        MyText(text: "Previous Week's sales"),
+                                        Expanded(
+                                          child: PieChart(
+                                            curve: Curves.easeInOut,
+                                            PieChartData(
+                                              centerSpaceRadius: 0,
+                                              sectionsSpace: 2,
+                                              titleSunbeamLayout: false,
+                                              sections: myPieChartItterator(
+                                                items: salesPreviousWeek,
+                                                inventoryItems:
+                                                    inventoryState.value ?? [],
+                                                width: width,
+                                                myColorScheme: myColorScheme,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                              ),
+                              if (salesPreviousWeek.isNotEmpty)
+                                RotatedBox(
+                                  quarterTurns: 1,
+                                  child: MyContainer(
+                                    width: width * 0.9,
+                                    height: height * 0.4,
+                                    margin: EdgeInsets.only(bottom: 16),
+                                    borderColor: myColorScheme.outlineVariant,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      spacing: 32,
+                                      children: [
+                                        MyText(text: "Previous Week's sales"),
+                                        Expanded(
+                                          child: PieChart(
+                                            curve: Curves.easeInOut,
+                                            PieChartData(
+                                              centerSpaceRadius: 0,
+                                              sectionsSpace: 2,
+                                              titleSunbeamLayout: false,
+                                              sections: myPieChartItterator(
+                                                items: salesPreviousWeek,
+                                                inventoryItems:
+                                                    inventoryState.value ?? [],
+                                                width: width,
+                                                myColorScheme: myColorScheme,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              if (salesThisWeek.isNotEmpty)
+                                RotatedBox(
+                                  quarterTurns: 1,
+                                  child: MyContainer(
+                                    width: width * 0.9,
+                                    height: height * 0.4,
+                                    margin: EdgeInsets.only(bottom: 16),
+                                    borderColor: myColorScheme.outlineVariant,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      spacing: 32,
+                                      children: [
+                                        MyText(text: "Previous Week's sales"),
+                                        Expanded(
+                                          child: PieChart(
+                                            curve: Curves.easeInOut,
+                                            PieChartData(
+                                              centerSpaceRadius: 0,
+                                              sectionsSpace: 2,
+                                              titleSunbeamLayout: false,
+                                              sections: myPieChartItterator(
+                                                items: salesThisWeek,
+                                                inventoryItems:
+                                                    inventoryState.value ?? [],
+                                                width: width,
+                                                myColorScheme: myColorScheme,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                             ],
                           ),
                         ),
-                      if (salesPreviousWeek.isNotEmpty) SizedBox(height: 16),
+                      ),
 
                       // Other info
                       Row(
