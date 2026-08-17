@@ -1,13 +1,14 @@
 import 'dart:developer';
 
 import 'package:pos_system/features/sales/data/model/sales_model.dart';
+import 'package:pos_system/features/sales/domain/constant/piechart_constants.dart';
 
 /// Returns the top N sold items, and groups the rest into an "Others" category.
 /// N is 5 by default. (This is 3 right now for easy testing).
-List<Map<String, double>> weekly_sales_piechart({
+List<Map<String, double>> weekly_sales_formatter_piechart({
   required List<SalesModel> sales,
   // int numberOfSalesToView = 10,
-  int numberOfSalesToView = 3,
+  int numberOfSalesToView = MyPiechartConstants.maxNumberOfItemInPie,
 }) {
   // 1. Use a single Map to aggregate the total values per product
   Map<String, double> productTotals = {};

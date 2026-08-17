@@ -2,8 +2,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
+import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/inventory/presentation/state_management/all_listed_products.dart';
+import 'package:pos_system/features/sales/domain/enum_sales_view_option.dart';
 import 'package:pos_system/features/sales/presentation/state_management/sales_controller.dart';
 import 'package:pos_system/features/sales/presentation/widgets/piechart/piechart_helpers.dart';
 
@@ -40,20 +42,25 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
         // Now that the data is loaded, safely read your calculated list!
         final salesThisWeek = ref
             .read(salesControllerProvider.notifier)
-            .getMostSoldProductsThisWeek();
+            .getMostSoldProductsThisWeekInMapFormat(
+              salesToRetrieve: SalesToRetrieve.ThisWeek,
+            );
+        // getSalesThisWeek()
         final salesPreviousWeek = ref
             .read(salesControllerProvider.notifier)
-            .getMostSoldProductsThisWeek();
+            .getMostSoldProductsThisWeekInMapFormat(
+              salesToRetrieve: SalesToRetrieve.PreviousWeek,
+            );
 
         return SingleChildScrollView(
           child: Container(
             width: width * 0.8,
             height: height * 0.8,
             // color: Colors.purple.shade400,
-            child: (salesThisWeek.isEmpty)
+            child: (salesThisWeek.isEmpty && salesPreviousWeek.isEmpty)
                 ? Center(
                     child: MyText(
-                      text: "No sales this week yet..",
+                      text: "You have not made any sales yet..",
                       fontSize: kDefaultFontSize + 4,
                     ),
                   )
@@ -64,23 +71,57 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                       SafeArea(child: SizedBox()),
                       SizedBox(height: 16),
 
-                      Expanded(
-                        child: PieChart(
-                          curve: Curves.easeInOut,
-                          PieChartData(
-                            centerSpaceRadius: 0,
-                            sectionsSpace: 2,
-                            titleSunbeamLayout: false,
-                            sections: myPieChartItterator(
-                              items: salesThisWeek,
-                              inventoryItems: inventoryState.value ?? [],
-                              width: width,
-                              myColorScheme: myColorScheme,
+                      if (salesThisWeek.isNotEmpty)
+                        Expanded(
+                          child: PieChart(
+                            curve: Curves.easeInOut,
+                            PieChartData(
+                              centerSpaceRadius: 0,
+                              sectionsSpace: 2,
+                              titleSunbeamLayout: false,
+                              sections: myPieChartItterator(
+                                items: salesThisWeek,
+                                inventoryItems: inventoryState.value ?? [],
+                                width: width,
+                                myColorScheme: myColorScheme,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: 16),
+                      if (salesThisWeek.isNotEmpty) SizedBox(height: 16),
+
+                      if (salesPreviousWeek.isNotEmpty)
+                        MyContainer(
+                          width: width * 0.9,
+                          height: height * 0.4,
+                          borderColor: myColorScheme.outlineVariant,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            spacing: 32,
+                            children: [
+                              MyText(text: "Previous Week's sales"),
+                              Expanded(
+                                child: PieChart(
+                                  curve: Curves.easeInOut,
+                                  PieChartData(
+                                    centerSpaceRadius: 0,
+                                    sectionsSpace: 2,
+                                    titleSunbeamLayout: false,
+                                    sections: myPieChartItterator(
+                                      items: salesPreviousWeek,
+                                      inventoryItems:
+                                          inventoryState.value ?? [],
+                                      width: width,
+                                      myColorScheme: myColorScheme,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      if (salesPreviousWeek.isNotEmpty) SizedBox(height: 16),
 
                       // Other info
                       Row(
@@ -104,18 +145,6 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                           ),
                         ],
                       ),
-                      // Planned to add previous week's sale.
-                      // Expanded(
-                      //   child: PieChart(
-                      //     curve: Curves.easeInOut,
-                      //     PieChartData(
-                      //       centerSpaceRadius: 0,
-                      //       sectionsSpace: 0,
-                      //       titleSunbeamLayout: false,
-                      //       sections: _myPieChartItterator(salesThisWeek),
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
           ),

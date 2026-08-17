@@ -6,7 +6,7 @@ import 'package:pos_system/features/cashier/data/model/scanned_item.dart';
 import 'package:pos_system/features/inventory/presentation/state_management/all_listed_products.dart';
 import 'package:pos_system/features/products/data/model/product_model.dart';
 import 'package:pos_system/features/sales/data/model/sales_model.dart';
-import 'package:pos_system/features/sales/domain/sales_view_option.dart';
+import 'package:pos_system/features/sales/domain/enum_sales_view_option.dart';
 import 'package:pos_system/features/sales/domain/weekly_sales_piechart.dart';
 import 'package:pos_system/features/sales/presentation/state_management/offline_database/offline_sales.dart';
 import 'package:pos_system/features/sales/presentation/state_management/sales_repo_provider.dart';
@@ -20,7 +20,8 @@ class SalesController extends _$SalesController {
   Future<List<SalesModel>> build() async {
     // await Future.delayed(const Duration(seconds: 2));
     log("The build method was executed!");
-    final sales = await getSalesThisWeek();
+    // final sales = await getSalesThisWeek();
+    final sales = await getAllSales();
     sales.sort((a, b) => b.dateTime.compareTo(a.dateTime));
     log("The build method have finished executing!");
     log("Retrieved sales: ${sales.length}");
@@ -90,52 +91,107 @@ class SalesController extends _$SalesController {
   }
 
   /// Offline
-  Future<List<SalesModel>> getSalesThisWeek() async {
+  Future<List<SalesModel>> getAllSales() async {
+    final allSales = await ref
+        .read(myOfflineSalesProvider.notifier)
+        .getAllSales();
+    log(
+      "Number of elements being fetched in getAllSales in sales_controller.dart: ${allSales.length}",
+    );
+    return allSales;
+  }
+
+  /// Offline
+  List<SalesModel> _getSalesInWeeklyBasis({
+    required SalesToRetrieve salesToRetrieve,
+  }) {
     // final salesRepo = ref.read(salesRepoProvider);
-    final offlineSalesRepo = ref.read(myOfflineSalesProvider.notifier);
+    // final offlineSalesRepo = ref.read(myOfflineSalesProvider.notifier);
     DateTime now = DateTime.now();
 
     // Dart considers Monday as weekday 1.
     // Subtracting (weekday - 1) days gets us back to Monday at midnight.
-    DateTime fromTheTime = DateTime(
-      now.year,
-      now.month,
-      now.day - (now.weekday - 1),
-    );
+    late DateTime fromTheTime;
+    if (salesToRetrieve == SalesToRetrieve.ThisWeek) {
+      fromTheTime = DateTime(now.year, now.month, now.day - (now.weekday - 1));
+      log("SalesToRetrieve.ThisWeek was executed");
+    } else {
+      fromTheTime = DateTime(
+        now.year,
+        now.month,
+        now.day - (now.weekday - 1) - 7,
+      );
+      log("SalesToRetrieve.PreviousWeek was executed");
+    }
+
+    // Add 6 days, 23 hours, 59 minutes, and 59 seconds to get to Sunday at 11:59:59 PM.
+    late DateTime untilTheTime;
+    if (salesToRetrieve == SalesToRetrieve.ThisWeek) {
+      untilTheTime = fromTheTime.add(
+        const Duration(days: 6, hours: 23, minutes: 59, seconds: 59),
+      );
+    } else {
+      untilTheTime = fromTheTime.add(
+        const Duration(days: 6, hours: 23, minutes: 59, seconds: 59),
+      );
+    }
 
     log(
       "fromTheTime date: ${MyDateFormatter.formatDate(dateTimeInString: fromTheTime.toString())}",
     );
-
-    // Add 6 days, 23 hours, 59 minutes, and 59 seconds to get to Sunday at 11:59:59 PM.
-    DateTime untilTheTime = fromTheTime.add(
-      const Duration(days: 6, hours: 23, minutes: 59, seconds: 59),
-    );
-
     log(
       "untilTheTime date: ${MyDateFormatter.formatDate(dateTimeInString: untilTheTime.toString())}",
     );
 
-    final allSales = await offlineSalesRepo.getRecordsBaseOnTimeSpan(
-      fromTheTime: fromTheTime.toString(),
-      untilTheTime: untilTheTime.toString(),
-    );
+    // final allSales = await offlineSalesRepo.getRecordsBaseOnTimeSpan(
+    //   fromTheTime: fromTheTime.toString(),
+    //   untilTheTime: untilTheTime.toString(),
+    // );
+    // List<SalesModel> salesBasedOnTimeSpan = state.value?.map((sale) {
+    //   DateTime dateTime = DateTime.parse(sale.dateTime);
+    //   if (dateTime.isAfter(fromTheTime) && dateTime.isBefore(untilTheTime)) {
+    //     return sale;
+    //   }
+    // }).toList();
+    List<SalesModel> salesBasedOnTimeSpan = [];
 
-    return allSales;
+    // Safety net
+    if (!state.hasValue) return [];
+    for (var sale in state.value!) {
+      DateTime dateTime = DateTime.parse(sale.dateTime);
+      if (dateTime.isAfter(fromTheTime) && dateTime.isBefore(untilTheTime)) {
+        salesBasedOnTimeSpan.add(sale);
+      }
+    }
+
+    return salesBasedOnTimeSpan;
   }
 
   // Queries are fetched from the cached data in state.
   /// This could be view Weekly or Monthly sales (not yet implemented).
-  List<Map<String, double>> getMostSoldProductsThisWeek({
+  /// Map< productName : productTotalQuantity >
+  List<Map<String, double>> getMostSoldProductsThisWeekInMapFormat({
+    required SalesToRetrieve salesToRetrieve,
     SalesViewOption salesViewOption = SalesViewOption.Weekly,
   }) {
     List<ProductModel> inventoryItems =
         ref.read(allListedProductsProvider).value ?? [];
+    // List<SalesModel> salesThisWeek = await getSalesThisWeek();
     List<Map<String, double>> mostSoldProducts = [];
 
     switch (salesViewOption) {
       default:
-        final tempAllSales = weekly_sales_piechart(sales: state.value ?? []);
+        List<SalesModel> sales = [];
+        if (salesToRetrieve == SalesToRetrieve.ThisWeek) {
+          sales = _getSalesInWeeklyBasis(
+            salesToRetrieve: SalesToRetrieve.ThisWeek,
+          );
+        } else {
+          sales = _getSalesInWeeklyBasis(
+            salesToRetrieve: SalesToRetrieve.PreviousWeek,
+          );
+        }
+        final tempAllSales = weekly_sales_formatter_piechart(sales: sales);
         for (var saleEntry in tempAllSales) {
           final barcodeOrOthers = saleEntry.keys.first;
           final quantity = saleEntry.values.first;
