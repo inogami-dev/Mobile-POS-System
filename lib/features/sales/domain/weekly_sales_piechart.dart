@@ -4,7 +4,7 @@ import 'package:pos_system/features/sales/data/model/sales_model.dart';
 
 /// Returns the top N sold items, and groups the rest into an "Others" category.
 /// N is 5 by default. (This is 3 right now for easy testing).
-List<Map<String, double>> weeklySalesView({
+List<Map<String, double>> weekly_sales_piechart({
   required List<SalesModel> sales,
   // int numberOfSalesToView = 10,
   int numberOfSalesToView = 3,

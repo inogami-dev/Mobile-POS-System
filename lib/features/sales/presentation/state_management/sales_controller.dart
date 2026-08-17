@@ -6,9 +6,8 @@ import 'package:pos_system/features/cashier/data/model/scanned_item.dart';
 import 'package:pos_system/features/inventory/presentation/state_management/all_listed_products.dart';
 import 'package:pos_system/features/products/data/model/product_model.dart';
 import 'package:pos_system/features/sales/data/model/sales_model.dart';
-import 'package:pos_system/features/sales/domain/constant/piechart_constants.dart';
 import 'package:pos_system/features/sales/domain/sales_view_option.dart';
-import 'package:pos_system/features/sales/domain/weekly_sales_view.dart';
+import 'package:pos_system/features/sales/domain/weekly_sales_piechart.dart';
 import 'package:pos_system/features/sales/presentation/state_management/offline_database/offline_sales.dart';
 import 'package:pos_system/features/sales/presentation/state_management/sales_repo_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -90,12 +89,6 @@ class SalesController extends _$SalesController {
     }
   }
 
-  // Future<List<SalesModel>> getAllSales() async {
-  //   final salesRepo = ref.read(salesRepoProvider);
-  //   final allSales = await salesRepo.getAllRecords();
-  //   return allSales;
-  // }
-
   /// Offline
   Future<List<SalesModel>> getSalesThisWeek() async {
     // final salesRepo = ref.read(salesRepoProvider);
@@ -127,15 +120,13 @@ class SalesController extends _$SalesController {
       fromTheTime: fromTheTime.toString(),
       untilTheTime: untilTheTime.toString(),
     );
-    // final allSales = await offlineSalesRepo.getAllSales();
 
     return allSales;
-    // return [];
   }
 
   // Queries are fetched from the cached data in state.
   /// This could be view Weekly or Monthly sales (not yet implemented).
-  List<Map<String, double>> getMostSoldProducts({
+  List<Map<String, double>> getMostSoldProductsThisWeek({
     SalesViewOption salesViewOption = SalesViewOption.Weekly,
   }) {
     List<ProductModel> inventoryItems =
@@ -144,7 +135,7 @@ class SalesController extends _$SalesController {
 
     switch (salesViewOption) {
       default:
-        final tempAllSales = weeklySalesView(sales: state.value ?? []);
+        final tempAllSales = weekly_sales_piechart(sales: state.value ?? []);
         for (var saleEntry in tempAllSales) {
           final barcodeOrOthers = saleEntry.keys.first;
           final quantity = saleEntry.values.first;

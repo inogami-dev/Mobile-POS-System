@@ -4,7 +4,7 @@ import 'package:pos_system/core/constants/app_layout.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/tab.dart';
 import 'package:pos_system/core/widgets/tab_view.dart';
-import 'package:pos_system/features/sales/presentation/pie_chart_tab.dart';
+import 'package:pos_system/features/sales/presentation/most_sold_tab.dart';
 
 class MySalesPage extends StatefulWidget {
   const MySalesPage({super.key});
