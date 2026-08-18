@@ -19,6 +19,11 @@ class MyPieChartTab extends ConsumerStatefulWidget {
 }
 
 class _MyPieChartState extends ConsumerState<MyPieChartTab> {
+  //
+  double totalNumberOfItemsSoldThisWeek = 0;
+  String curretlyInViewChart = "This Week";
+
+  // Layout Fields
   late double width;
   late ColorScheme myColorScheme;
   FixedExtentScrollController listWheelScrollController =
@@ -56,12 +61,20 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
             .getMostSoldProductsThisWeekInMapFormat(
               salesToRetrieve: SalesToRetrieve.ThisWeek,
             );
-        // getSalesThisWeek()
+        // To initialize totalNumberOfItemsSoldThisWeek
+        if (salesThisWeek.isNotEmpty && totalNumberOfItemsSoldThisWeek == 0) {
+          totalNumberOfItemsSoldThisWeek = salesThisWeek.fold<double>(
+            0.0,
+            (sum, item) => sum + item.values.first,
+          );
+        }
+
         final salesPreviousWeek = ref
             .read(salesControllerProvider.notifier)
             .getMostSoldProductsThisWeekInMapFormat(
               salesToRetrieve: SalesToRetrieve.PreviousWeek,
             );
+
         final salesPreviousPreviousWeek = ref
             .read(salesControllerProvider.notifier)
             .getMostSoldProductsThisWeekInMapFormat(
@@ -84,16 +97,68 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                     ),
                   )
                 : Column(
-                    spacing: 8,
+                    spacing: 4,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+                      // Other info
+                      SizedBox(height: 4),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(width: 8),
+                          MyText(
+                            text: "The total number of items sold this week:  ",
+                            // fontSize: 56,
+                          ),
+                          MyText(
+                            text: totalNumberOfItemsSoldThisWeek
+                                .toStringAsFixed(0),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ],
+                      ),
+
                       Container(
                         width: width,
-                        height: height * 0.5,
+                        height: height * 0.46,
                         // color: Colors.amber,
+                        margin: EdgeInsets.only(top: 8),
                         child: RotatedBox(
                           quarterTurns: -1,
                           child: ListWheelScrollView(
+                            onSelectedItemChanged: (value) {
+                              if (value == 0) {
+                                setState(() {
+                                  curretlyInViewChart =
+                                      "Previous Previous Week's sales";
+                                  totalNumberOfItemsSoldThisWeek =
+                                      salesPreviousPreviousWeek.fold<double>(
+                                        0.0,
+                                        (sum, item) => sum + item.values.first,
+                                      );
+                                });
+                              } else if (value == 1) {
+                                setState(() {
+                                  curretlyInViewChart = "Previous Week's sales";
+                                  totalNumberOfItemsSoldThisWeek =
+                                      salesPreviousWeek.fold<double>(
+                                        0.0,
+                                        (sum, item) => sum + item.values.first,
+                                      );
+                                });
+                              } else if (value == 2) {
+                                setState(() {
+                                  curretlyInViewChart = "This Week's sales";
+                                  totalNumberOfItemsSoldThisWeek = salesThisWeek
+                                      .fold<double>(
+                                        0.0,
+                                        (sum, item) => sum + item.values.first,
+                                      );
+                                });
+                              }
+                            },
                             controller: listWheelScrollController,
                             itemExtent: (height * 0.4) + 16,
                             diameterRatio: 2.5,
@@ -125,29 +190,6 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                           ),
                         ),
                       ),
-
-                      // Other info
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(width: 8),
-                          MyText(
-                            text: "The total number of items sold this week:  ",
-                            // fontSize: 56,
-                          ),
-                          MyText(
-                            text: salesThisWeek
-                                .fold<double>(
-                                  0.0,
-                                  (sum, item) => sum + item.values.first,
-                                )
-                                .toStringAsFixed(0),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ],
-                      ),
                     ],
                   ),
           ),
@@ -172,7 +214,7 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 32,
+          spacing: 24,
           children: [
             MyText(text: title),
             Expanded(
