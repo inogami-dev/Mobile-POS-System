@@ -2,9 +2,11 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
+import 'package:pos_system/core/widgets/tooltip.dart';
 import 'package:pos_system/features/inventory/presentation/state_management/all_listed_products.dart';
 import 'package:pos_system/features/products/data/model/product_model.dart';
 import 'package:pos_system/features/sales/domain/enum_sales_view_option.dart';
@@ -102,23 +104,36 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                     children: [
                       // Other info
                       SizedBox(height: 4),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(width: 8),
-                          MyText(
-                            text:
-                                "Total # of items sold ${curretlyInViewChart}:  ",
-                            // fontSize: 56,
-                          ),
-                          MyText(
-                            text: totalNumberOfItemsSoldThisWeek
-                                .toStringAsFixed(0),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ],
+                      MyTooltip(
+                        message:
+                            "The bases used here is the Sold Quantity of a product.",
+                        widthPercentage: 0.6,
+                        triggerMode: TooltipTriggerMode.tap,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(width: 8),
+                            MyText(
+                              text:
+                                  "Total number of items sold ${curretlyInViewChart}:  ",
+                              // fontSize: 56,
+                            ),
+                            MyText(
+                              text: totalNumberOfItemsSoldThisWeek
+                                  .toStringAsFixed(0),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                            Spacer(),
+                            HugeIcon(
+                              icon: HugeIcons.strokeRoundedInformationCircle,
+                              color: myColorScheme.outlineVariant,
+                              size: kDefaultFontSize + 6,
+                            ),
+                            SizedBox(width: 8),
+                          ],
+                        ),
                       ),
 
                       Container(
