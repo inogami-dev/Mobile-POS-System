@@ -1,3 +1,3 @@
 enum SalesViewOption { Weekly }
 
-enum SalesToRetrieve { ThisWeek, PreviousWeek }
+enum SalesToRetrieve { ThisWeek, PreviousWeek, PreviousPreviousWeek }

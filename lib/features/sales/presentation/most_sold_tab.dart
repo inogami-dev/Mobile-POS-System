@@ -21,7 +21,7 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
   late double width;
   late ColorScheme myColorScheme;
   FixedExtentScrollController listWheelScrollController =
-      FixedExtentScrollController(initialItem: 1);
+      FixedExtentScrollController(initialItem: 2);
 
   @override
   void dispose() {
@@ -61,13 +61,21 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
             .getMostSoldProductsThisWeekInMapFormat(
               salesToRetrieve: SalesToRetrieve.PreviousWeek,
             );
+        final salesPreviousPreviousWeek = ref
+            .read(salesControllerProvider.notifier)
+            .getMostSoldProductsThisWeekInMapFormat(
+              salesToRetrieve: SalesToRetrieve.PreviousPreviousWeek,
+            );
 
         return SingleChildScrollView(
           child: Container(
             width: width * 0.8,
             height: height * 1.5,
             // color: Colors.purple.shade400,
-            child: (salesThisWeek.isEmpty && salesPreviousWeek.isEmpty)
+            child:
+                (salesThisWeek.isEmpty &&
+                    salesPreviousWeek.isEmpty &&
+                    salesPreviousPreviousWeek.isEmpty)
                 ? Center(
                     child: MyText(
                       text: "You have not made any sales yet..",
@@ -109,8 +117,7 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                             physics: const FixedExtentScrollPhysics(),
                             squeeze: 1.056,
                             children: [
-                              // Temporary ra ning isa ka salesPreviousWeek diri
-                              if (salesPreviousWeek.isNotEmpty)
+                              if (salesPreviousPreviousWeek.isNotEmpty)
                                 RotatedBox(
                                   quarterTurns: 1,
                                   child: MyContainer(
@@ -125,7 +132,10 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                                           CrossAxisAlignment.start,
                                       spacing: 32,
                                       children: [
-                                        MyText(text: "Previous Week's sales"),
+                                        MyText(
+                                          text:
+                                              "Previous Previous Week's sales",
+                                        ),
                                         Expanded(
                                           child: PieChart(
                                             curve: Curves.easeInOut,
@@ -134,7 +144,8 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                                               sectionsSpace: 2,
                                               titleSunbeamLayout: false,
                                               sections: myPieChartItterator(
-                                                items: salesPreviousWeek,
+                                                items:
+                                                    salesPreviousPreviousWeek,
                                                 inventoryItems:
                                                     inventoryState.value ?? [],
                                                 width: width,
@@ -199,7 +210,7 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                                           CrossAxisAlignment.start,
                                       spacing: 32,
                                       children: [
-                                        MyText(text: "Previous Week's sales"),
+                                        MyText(text: "This Week's sales"),
                                         Expanded(
                                           child: PieChart(
                                             curve: Curves.easeInOut,

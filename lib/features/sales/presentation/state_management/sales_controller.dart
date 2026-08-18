@@ -115,13 +115,20 @@ class SalesController extends _$SalesController {
     if (salesToRetrieve == SalesToRetrieve.ThisWeek) {
       fromTheTime = DateTime(now.year, now.month, now.day - (now.weekday - 1));
       log("SalesToRetrieve.ThisWeek was executed");
-    } else {
+    } else if (salesToRetrieve == SalesToRetrieve.PreviousWeek) {
       fromTheTime = DateTime(
         now.year,
         now.month,
         now.day - (now.weekday - 1) - 7,
       );
       log("SalesToRetrieve.PreviousWeek was executed");
+    } else {
+      fromTheTime = DateTime(
+        now.year,
+        now.month,
+        now.day - (now.weekday - 1) - 14,
+      );
+      log("SalesToRetrieve.PreviousPreviousWeek was executed");
     }
 
     // Add 6 days, 23 hours, 59 minutes, and 59 seconds to get to Sunday at 11:59:59 PM.
@@ -186,11 +193,16 @@ class SalesController extends _$SalesController {
           sales = _getSalesInWeeklyBasis(
             salesToRetrieve: SalesToRetrieve.ThisWeek,
           );
-        } else {
+        } else if (salesToRetrieve == SalesToRetrieve.PreviousWeek) {
           sales = _getSalesInWeeklyBasis(
             salesToRetrieve: SalesToRetrieve.PreviousWeek,
           );
+        } else {
+          sales = _getSalesInWeeklyBasis(
+            salesToRetrieve: SalesToRetrieve.PreviousPreviousWeek,
+          );
         }
+
         final tempAllSales = weekly_sales_formatter_piechart(sales: sales);
         for (var saleEntry in tempAllSales) {
           final barcodeOrOthers = saleEntry.keys.first;
