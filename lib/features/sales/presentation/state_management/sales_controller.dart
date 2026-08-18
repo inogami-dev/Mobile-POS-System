@@ -190,7 +190,7 @@ class SalesController extends _$SalesController {
           );
         } else {
           sales = _getSalesInWeeklyBasis(
-            salesToRetrieve: SalesToRetrieve.PreviousPreviousWeek,
+            salesToRetrieve: SalesToRetrieve.TwoWeeksAgo,
           );
         }
 

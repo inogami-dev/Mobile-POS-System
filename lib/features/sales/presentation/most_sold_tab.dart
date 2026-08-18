@@ -75,10 +75,10 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
               salesToRetrieve: SalesToRetrieve.PreviousWeek,
             );
 
-        final salesPreviousPreviousWeek = ref
+        final salesTwoWeeksAgo = ref
             .read(salesControllerProvider.notifier)
             .getMostSoldProductsThisWeekInMapFormat(
-              salesToRetrieve: SalesToRetrieve.PreviousPreviousWeek,
+              salesToRetrieve: SalesToRetrieve.TwoWeeksAgo,
             );
 
         return SingleChildScrollView(
@@ -89,7 +89,7 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
             child:
                 (salesThisWeek.isEmpty &&
                     salesPreviousWeek.isEmpty &&
-                    salesPreviousPreviousWeek.isEmpty)
+                    salesTwoWeeksAgo.isEmpty)
                 ? Center(
                     child: MyText(
                       text: "You have not made any sales yet..",
@@ -108,7 +108,8 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                         children: [
                           SizedBox(width: 8),
                           MyText(
-                            text: "The total number of items sold this week:  ",
+                            text:
+                                "Total # of items sold ${curretlyInViewChart}:  ",
                             // fontSize: 56,
                           ),
                           MyText(
@@ -131,17 +132,16 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                             onSelectedItemChanged: (value) {
                               if (value == 0) {
                                 setState(() {
-                                  curretlyInViewChart =
-                                      "Previous Previous Week's sales";
+                                  curretlyInViewChart = "two weeks ago";
                                   totalNumberOfItemsSoldThisWeek =
-                                      salesPreviousPreviousWeek.fold<double>(
+                                      salesTwoWeeksAgo.fold<double>(
                                         0.0,
                                         (sum, item) => sum + item.values.first,
                                       );
                                 });
                               } else if (value == 1) {
                                 setState(() {
-                                  curretlyInViewChart = "Previous Week's sales";
+                                  curretlyInViewChart = "previous week";
                                   totalNumberOfItemsSoldThisWeek =
                                       salesPreviousWeek.fold<double>(
                                         0.0,
@@ -150,7 +150,7 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                                 });
                               } else if (value == 2) {
                                 setState(() {
-                                  curretlyInViewChart = "This Week's sales";
+                                  curretlyInViewChart = "this week";
                                   totalNumberOfItemsSoldThisWeek = salesThisWeek
                                       .fold<double>(
                                         0.0,
@@ -165,11 +165,11 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                             physics: const FixedExtentScrollPhysics(),
                             squeeze: 1.056,
                             children: [
-                              if (salesPreviousPreviousWeek.isNotEmpty)
+                              if (salesTwoWeeksAgo.isNotEmpty)
                                 _rotatedBox(
                                   height: height,
-                                  title: "Previous Previous Week's sales",
-                                  salesThisWeek: salesPreviousPreviousWeek,
+                                  title: "Sales Two Weeks Ago",
+                                  salesThisWeek: salesTwoWeeksAgo,
                                   inventoryState: inventoryState,
                                 ),
                               if (salesPreviousWeek.isNotEmpty)
