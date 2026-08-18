@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -86,7 +87,7 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
         return SingleChildScrollView(
           child: Container(
             width: width * 0.8,
-            height: height * 1.5,
+            height: height * 1.255,
             // color: Colors.purple.shade400,
             child:
                 (salesThisWeek.isEmpty &&
@@ -102,7 +103,6 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                     spacing: 4,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      // Other info
                       SizedBox(height: 4),
                       MyTooltip(
                         message:
@@ -203,6 +203,27 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                                 ),
                             ],
                           ),
+                        ),
+                      ),
+
+                      // List of all items based on the inventory an sold items
+                      // TODO
+                      MyContainer(
+                        width: width * 0.9,
+                        height: height * 0.7,
+                        borderColor: myColorScheme.outlineVariant,
+                        child: ListView.builder(
+                          itemExtent: 32,
+                          itemCount: inventoryState.value?.length ?? 0,
+                          itemBuilder: (context, index) {
+                            final product = inventoryState.value?[index];
+                            return ListTile(
+                              title: MyText(text: product?.name ?? ""),
+                              trailing: MyText(
+                                text: product?.quantity.toString() ?? "",
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ],
