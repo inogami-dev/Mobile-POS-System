@@ -150,20 +150,11 @@ class SalesController extends _$SalesController {
       "untilTheTime date: ${MyDateFormatter.formatDate(dateTimeInString: untilTheTime.toString())}",
     );
 
-    // final allSales = await offlineSalesRepo.getRecordsBaseOnTimeSpan(
-    //   fromTheTime: fromTheTime.toString(),
-    //   untilTheTime: untilTheTime.toString(),
-    // );
-    // List<SalesModel> salesBasedOnTimeSpan = state.value?.map((sale) {
-    //   DateTime dateTime = DateTime.parse(sale.dateTime);
-    //   if (dateTime.isAfter(fromTheTime) && dateTime.isBefore(untilTheTime)) {
-    //     return sale;
-    //   }
-    // }).toList();
     List<SalesModel> salesBasedOnTimeSpan = [];
 
     // Safety net
     if (!state.hasValue) return [];
+
     for (var sale in state.value!) {
       DateTime dateTime = DateTime.parse(sale.dateTime);
       if (dateTime.isAfter(fromTheTime) && dateTime.isBefore(untilTheTime)) {

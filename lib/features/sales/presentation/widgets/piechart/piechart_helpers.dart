@@ -101,12 +101,19 @@ List<PieChartSectionData> myPieChartItterator({
     String formattedTitle =
         "${tempTitleFormat}\n(${price}x${item.values.first.toStringAsFixed(0)})\n${totalAmount}";
 
+    if (tempTitleFormat == "Others") {
+      formattedTitle = "Others\n${item.values.first.toStringAsFixed(0)}";
+    }
+
     pie.add(
       myPieChartSectionData(
         title: formattedTitle,
         value: item.values.first,
         radius: width * 0.20,
         cornerRadius: 8,
+        titleFontColor: (tempTitleFormat == "Others")
+            ? myColorScheme.outline
+            : null,
         color:
             (i == items.length - 1 &&
                 items.length > MyPiechartConstants.maxNumberOfItemInPie)
