@@ -70,8 +70,8 @@ class _MyTabViewState extends ConsumerState<MyTabView> {
                     ),
                   ),
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
                   ),
                 ),
                 child: SingleChildScrollView(

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class MyScrollBar extends StatelessWidget {
   final Widget child;
   final ScrollController controller;
-  final bool isThumbVisible;
-  final bool isTrackVisible;
+  final bool? isThumbVisible;
+  final bool? isTrackVisible;
   final Color? trackColor;
   final double trackRadius;
   final Color? trackBorderColor;

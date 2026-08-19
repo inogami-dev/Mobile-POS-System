@@ -1,11 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/container.dart';
+import 'package:pos_system/core/widgets/scrollbar.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/core/widgets/tooltip.dart';
 import 'package:pos_system/features/inventory/presentation/state_management/all_listed_products.dart';
@@ -31,10 +30,16 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
   late ColorScheme myColorScheme;
   FixedExtentScrollController listWheelScrollController =
       FixedExtentScrollController(initialItem: 2);
+  ScrollController outerScrollController = ScrollController();
+  ScrollController listOfProductsScrollController = ScrollController();
+  Color? trackColor;
+  Color? thumbColor;
 
   @override
   void dispose() {
     listWheelScrollController.dispose();
+    outerScrollController.dispose();
+    listOfProductsScrollController.dispose();
     super.dispose();
   }
 
@@ -43,6 +48,8 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
     width = MyDimensions.getWidth(context);
     final height = MyDimensions.getHeight(context);
     myColorScheme = Theme.of(context).colorScheme;
+    thumbColor ??= myColorScheme.onSurfaceVariant.withAlpha(128);
+    trackColor ??= myColorScheme.onSurfaceVariant.withAlpha(64);
 
     // Watch the STATE of the provider so it rebuilds when data changes!
     final salesState = ref.watch(salesControllerProvider);
@@ -84,153 +91,176 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
               salesToRetrieve: SalesToRetrieve.TwoWeeksAgo,
             );
 
-        return SingleChildScrollView(
-          child: Container(
-            width: width * 0.8,
-            height: height * 1.255,
-            // color: Colors.purple.shade400,
-            child:
-                (salesThisWeek.isEmpty &&
-                    salesPreviousWeek.isEmpty &&
-                    salesTwoWeeksAgo.isEmpty)
-                ? Center(
-                    child: MyText(
-                      text: "You have not made any sales yet..",
-                      fontSize: kDefaultFontSize + 4,
-                    ),
-                  )
-                : Column(
-                    spacing: 4,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 4),
-                      MyTooltip(
-                        message:
-                            "The bases used here is the Sold Quantity of a product.",
-                        widthPercentage: 0.6,
-                        triggerMode: TooltipTriggerMode.tap,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(width: 8),
-                            MyText(
-                              text:
-                                  "Total number of items sold ${curretlyInViewChart}:  ",
-                              // fontSize: 56,
-                            ),
-                            MyText(
-                              text: totalNumberOfItemsSoldThisWeek
-                                  .toStringAsFixed(0),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                            Spacer(),
-                            HugeIcon(
-                              icon: HugeIcons.strokeRoundedInformationCircle,
-                              color: myColorScheme.outlineVariant,
-                              size: kDefaultFontSize + 6,
-                            ),
-                            SizedBox(width: 8),
-                          ],
-                        ),
+        return MyScrollBar(
+          controller: outerScrollController,
+          thumbColor: thumbColor,
+          trackColor: trackColor,
+          isThumbVisible: null,
+          isTrackVisible: null,
+          padding: EdgeInsets.only(left: 8, top: 4),
+          child: SingleChildScrollView(
+            child: Container(
+              width: width * 0.8,
+              height: height * 1,
+              child:
+                  (salesThisWeek.isEmpty &&
+                      salesPreviousWeek.isEmpty &&
+                      salesTwoWeeksAgo.isEmpty)
+                  ? Center(
+                      child: MyText(
+                        text: "You have not made any sales yet..",
+                        fontSize: kDefaultFontSize + 4,
                       ),
+                    )
+                  : Column(
+                      spacing: 4,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 4),
+                        currentCardInViewTitle(),
 
-                      Container(
-                        width: width,
-                        height: height * 0.46,
-                        // color: Colors.amber,
-                        margin: EdgeInsets.only(top: 8),
-                        child: RotatedBox(
-                          quarterTurns: -1,
-                          child: ListWheelScrollView(
-                            onSelectedItemChanged: (value) {
-                              if (value == 0) {
-                                setState(() {
-                                  curretlyInViewChart = "two weeks ago";
-                                  totalNumberOfItemsSoldThisWeek =
-                                      salesTwoWeeksAgo.fold<double>(
-                                        0.0,
-                                        (sum, item) => sum + item.values.first,
-                                      );
-                                });
-                              } else if (value == 1) {
-                                setState(() {
-                                  curretlyInViewChart = "previous week";
-                                  totalNumberOfItemsSoldThisWeek =
-                                      salesPreviousWeek.fold<double>(
-                                        0.0,
-                                        (sum, item) => sum + item.values.first,
-                                      );
-                                });
-                              } else if (value == 2) {
-                                setState(() {
-                                  curretlyInViewChart = "this week";
-                                  totalNumberOfItemsSoldThisWeek = salesThisWeek
-                                      .fold<double>(
-                                        0.0,
-                                        (sum, item) => sum + item.values.first,
-                                      );
-                                });
-                              }
-                            },
-                            controller: listWheelScrollController,
-                            itemExtent: (height * 0.4) + 16,
-                            diameterRatio: 2.5,
-                            physics: const FixedExtentScrollPhysics(),
-                            squeeze: 1.056,
-                            children: [
-                              if (salesTwoWeeksAgo.isNotEmpty)
-                                _rotatedBox(
-                                  height: height,
-                                  title: "Sales Two Weeks Ago",
-                                  salesThisWeek: salesTwoWeeksAgo,
-                                  inventoryState: inventoryState,
-                                ),
-                              if (salesPreviousWeek.isNotEmpty)
-                                _rotatedBox(
-                                  height: height,
-                                  title: "Previous Week's sales",
-                                  salesThisWeek: salesPreviousWeek,
-                                  inventoryState: inventoryState,
-                                ),
-                              if (salesThisWeek.isNotEmpty)
-                                _rotatedBox(
-                                  height: height,
-                                  title: "This Week's sales",
-                                  salesThisWeek: salesThisWeek,
-                                  inventoryState: inventoryState,
-                                ),
-                            ],
+                        Container(
+                          width: width,
+                          height: height * 0.46,
+                          // color: Colors.amber,
+                          margin: EdgeInsets.only(top: 8),
+                          child: RotatedBox(
+                            quarterTurns: -1,
+                            child: ListWheelScrollView(
+                              onSelectedItemChanged: (value) {
+                                if (value == 0) {
+                                  setState(() {
+                                    curretlyInViewChart = "two weeks ago";
+                                    totalNumberOfItemsSoldThisWeek =
+                                        salesTwoWeeksAgo.fold<double>(
+                                          0.0,
+                                          (sum, item) =>
+                                              sum + item.values.first,
+                                        );
+                                  });
+                                } else if (value == 1) {
+                                  setState(() {
+                                    curretlyInViewChart = "previous week";
+                                    totalNumberOfItemsSoldThisWeek =
+                                        salesPreviousWeek.fold<double>(
+                                          0.0,
+                                          (sum, item) =>
+                                              sum + item.values.first,
+                                        );
+                                  });
+                                } else if (value == 2) {
+                                  setState(() {
+                                    curretlyInViewChart = "this week";
+                                    totalNumberOfItemsSoldThisWeek =
+                                        salesThisWeek.fold<double>(
+                                          0.0,
+                                          (sum, item) =>
+                                              sum + item.values.first,
+                                        );
+                                  });
+                                }
+                              },
+                              controller: listWheelScrollController,
+                              itemExtent: (height * 0.4) + 16,
+                              diameterRatio: 2.5,
+                              physics: const FixedExtentScrollPhysics(),
+                              squeeze: 1.056,
+                              children: [
+                                if (salesTwoWeeksAgo.isNotEmpty)
+                                  _rotatedBox(
+                                    height: height,
+                                    title: "Sales Two Weeks Ago",
+                                    salesThisWeek: salesTwoWeeksAgo,
+                                    inventoryState: inventoryState,
+                                  ),
+                                if (salesPreviousWeek.isNotEmpty)
+                                  _rotatedBox(
+                                    height: height,
+                                    title: "Previous Week's sales",
+                                    salesThisWeek: salesPreviousWeek,
+                                    inventoryState: inventoryState,
+                                  ),
+                                if (salesThisWeek.isNotEmpty)
+                                  _rotatedBox(
+                                    height: height,
+                                    title: "This Week's sales",
+                                    salesThisWeek: salesThisWeek,
+                                    inventoryState: inventoryState,
+                                  ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
 
-                      // List of all items based on the inventory an sold items
-                      // TODO
-                      MyContainer(
-                        width: width * 0.9,
-                        height: height * 0.7,
-                        borderColor: myColorScheme.outlineVariant,
-                        child: ListView.builder(
-                          itemExtent: 32,
-                          itemCount: inventoryState.value?.length ?? 0,
-                          itemBuilder: (context, index) {
-                            final product = inventoryState.value?[index];
-                            return ListTile(
-                              title: MyText(text: product?.name ?? ""),
-                              trailing: MyText(
-                                text: product?.quantity.toString() ?? "",
-                              ),
-                            );
-                          },
+                        // List of all items based on the inventory an sold items
+                        // TODO
+                        MyText(text: "Sold Products ${curretlyInViewChart}"),
+                        MyContainer(
+                          width: width * 0.9,
+                          height: height * 0.4,
+                          borderColor: myColorScheme.outlineVariant,
+                          child: MyScrollBar(
+                            controller: listOfProductsScrollController,
+                            thumbColor: thumbColor,
+                            trackColor: trackColor,
+                            isThumbVisible: null,
+                            isTrackVisible: null,
+                            padding: EdgeInsets.only(right: -8),
+                            child: ListView.builder(
+                              controller: listOfProductsScrollController,
+                              itemExtent: 32,
+                              itemCount: inventoryState.value?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                final product = inventoryState.value?[index];
+                                return ListTile(
+                                  title: MyText(text: product?.name ?? ""),
+                                  trailing: MyText(
+                                    text: product?.quantity.toString() ?? "",
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+            ),
           ),
         );
       },
+    );
+  }
+
+  MyTooltip currentCardInViewTitle() {
+    return MyTooltip(
+      message: "The bases used here is the Sold Quantity of a product.",
+      widthPercentage: 0.6,
+      triggerMode: TooltipTriggerMode.tap,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(width: 8),
+          MyText(
+            text: "Total number of items sold ${curretlyInViewChart}:  ",
+            fontSize: (totalNumberOfItemsSoldThisWeek > 99)
+                ? kDefaultFontSize - 4
+                : kDefaultFontSize - 0.5,
+          ),
+          MyText(
+            text: totalNumberOfItemsSoldThisWeek.toStringAsFixed(0),
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+          Spacer(),
+          HugeIcon(
+            icon: HugeIcons.strokeRoundedInformationCircle,
+            color: myColorScheme.outlineVariant,
+            size: kDefaultFontSize + 6,
+          ),
+          SizedBox(width: 16),
+        ],
+      ),
     );
   }
 
