@@ -234,40 +234,6 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
     );
   }
 
-  // MyContainer soldProductsListBuilder(
-  //   double height,
-  //   AsyncValue<List<ProductModel>> inventoryState,
-  // ) {
-  //   return MyContainer(
-  //     width: width * 0.9,
-  //     height: height * 0.4,
-  //     borderColor: myColorScheme.outlineVariant,
-  //     child: MyScrollBar(
-  //       controller: listOfProductsScrollController,
-  //       thumbColor: thumbColor,
-  //       trackColor: trackColor,
-  //       isThumbVisible: null,
-  //       isTrackVisible: null,
-  //       padding: EdgeInsets.only(right: -8),
-  //       child: ListView.builder(
-  //         controller: listOfProductsScrollController,
-  //         itemExtent: 32,
-  //         itemCount: inventoryState.value?.length ?? 0,
-  //         itemBuilder: (context, index) {
-  //           final product = inventoryState.value?[index];
-
-  //           return InventoryDeductionTile(
-  //             product: product,
-  //             weeklySales: salesBaseOnCurrentlyInViewWeek,
-  //             callendarWeekBackwards: callendarWeekBackwards,
-  //             width: width,
-  //           );
-  //         },
-  //       ),
-  //     ),
-  //   );
-  // }
-
   MyTooltip currentCardInViewTitle() {
     return MyTooltip(
       message: "The bases used here is the Sold Quantity of a product.",

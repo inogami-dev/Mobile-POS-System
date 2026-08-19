@@ -15,6 +15,7 @@ import 'package:pos_system/core/widgets/navigator.dart';
 import 'package:pos_system/core/widgets/text_field.dart';
 import 'package:pos_system/core/widgets/text_formatter.dart';
 import 'package:pos_system/features/inventory/presentation/state_management/all_listed_products.dart';
+import 'package:pos_system/features/inventory/presentation/state_management/decoded_image_cache.dart';
 import 'package:pos_system/features/products/data/model/product_model.dart';
 import 'package:pos_system/features/products/presentation/helpers/form_save_product_logic.dart';
 import 'package:pos_system/features/products/presentation/helpers/form_update_product_logic.dart';
@@ -47,13 +48,13 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
   bool isAnExistingProduct = false;
 
   // For Comparison when updating an existing product
-  late String xpicture;
-  late String xbarCode;
-  late String xname;
-  late String xdescription;
-  late double xprice;
-  late int xquantity;
-  late String? xexpirationDate;
+  String xpicture = "";
+  String xbarCode = "";
+  String xname = "";
+  String xdescription = "";
+  double xprice = 0;
+  int xquantity = 0;
+  String? xexpirationDate = "";
 
   // Layout Fields
   late ColorScheme myColorScheme;
@@ -401,6 +402,23 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
                                   );
 
                                   hasAlreadyPressedSubmit = false;
+
+                                  // To update the cached image
+                                  if (pickedProductImage !=
+                                      widget.product!.picture) {
+                                    ref
+                                        .read(
+                                          myDecodedImageCacheProvider.notifier,
+                                        )
+                                        .addImageToDecode(pickedProductImage);
+                                    ref
+                                        .read(
+                                          myDecodedImageCacheProvider.notifier,
+                                        )
+                                        .removeDecodedImage(
+                                          widget.product!.picture,
+                                        );
+                                  }
                                 }
                               } else {
                                 log("Nope");
@@ -420,6 +438,9 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
                                   pickedProductImage: pickedProductImage,
                                 );
 
+                                ref
+                                    .read(myDecodedImageCacheProvider.notifier)
+                                    .addImageToDecode(pickedProductImage);
                                 hasAlreadyPressedSubmit = false;
                               }
                             },
@@ -486,20 +507,22 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
   /// To prevent calling firebase whenever there is no change when updating.
   bool isToBeUpdatedProductBeenAltered() {
     final tempExpDate = expirationDate ?? "";
-    log("01: ${productNameController.text}");
-    log("02: ${xname}");
-    log("11: ${productDescriptionController.text}");
-    log("12: ${xdescription}");
-    log("21: ${productPriceController.text}");
-    log("22: ${xprice.toString()}");
-    log("31: ${productQuantityController.text}");
-    log("32: ${xquantity.toString()}");
-    log("41: ${tempExpDate}");
-    log("42: ${xexpirationDate}");
-    log("51: ${scannedBarcode}");
-    log("52: ${xbarCode}");
-    log("61: ${pickedProductImage.length}");
-    log("62: ${xpicture.length}");
+    if (widget.product != null) {
+      log("01: ${productNameController.text}");
+      log("02: ${xname}");
+      log("11: ${productDescriptionController.text}");
+      log("12: ${xdescription}");
+      log("21: ${productPriceController.text}");
+      log("22: ${xprice.toString()}");
+      log("31: ${productQuantityController.text}");
+      log("32: ${xquantity.toString()}");
+      log("41: ${tempExpDate}");
+      log("42: ${xexpirationDate}");
+      log("51: ${scannedBarcode}");
+      log("52: ${xbarCode}");
+      log("61: ${pickedProductImage.length}");
+      log("62: ${xpicture.length}");
+    }
     if (pickedProductImage != xpicture ||
         scannedBarcode != xbarCode ||
         productNameController.text != xname ||
