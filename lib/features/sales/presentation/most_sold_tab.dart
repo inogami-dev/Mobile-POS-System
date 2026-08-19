@@ -2,7 +2,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:pos_system/core/utilities/date_formatter.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/scrollbar.dart';
@@ -12,6 +11,7 @@ import 'package:pos_system/features/inventory/presentation/state_management/all_
 import 'package:pos_system/features/products/data/model/product_model.dart';
 import 'package:pos_system/features/sales/domain/enum_sales_view_option.dart';
 import 'package:pos_system/features/sales/presentation/state_management/sales_controller.dart';
+import 'package:pos_system/features/sales/presentation/widgets/most_sold_tab_widgets/inventory_deduction_tile.dart';
 import 'package:pos_system/features/sales/presentation/widgets/piechart/piechart_helpers.dart';
 
 class MyPieChartTab extends ConsumerStatefulWidget {
@@ -207,7 +207,6 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                         ),
 
                         // List of all items based on the inventory an sold items
-                        // TODO
                         MyTooltip(
                           message:
                               "The RED colored number indicates the sold quantity from the inventory.",
@@ -261,152 +260,13 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
           itemBuilder: (context, index) {
             final product = inventoryState.value?[index];
 
-            return _getQuantityTrailText(
-              product,
-              salesBaseOnCurrentlyInViewWeek,
+            return InventoryDeductionTile(
+              product: product,
+              weeklySales: salesBaseOnCurrentlyInViewWeek,
+              callendarWeekBackwards: callendarWeekBackwards,
+              width: width,
             );
           },
-        ),
-      ),
-    );
-  }
-
-  // /// Calculates the original quantity before sales and returns a formatted trail string
-  // Widget _getQuantityTrailText(
-  //   ProductModel? product,
-  //   List<Map<String, double>> weeklySales,
-  // ) {
-  //   if (product == null) return SizedBox();
-
-  //   double soldAmount = 0.0;
-
-  //   // Safely search the sales list for this specific product's name
-  //   for (var saleMap in weeklySales) {
-  //     if (saleMap.containsKey(product.name)) {
-  //       soldAmount = saleMap[product.name] ?? 0.0;
-  //       break; // We found the product, no need to keep looping
-  //     }
-  //   }
-
-  //   // Current inventory quantity + what was sold
-  //   double currentQty = product.quantity.toDouble();
-  //   double beforeSoldQty = currentQty + soldAmount;
-
-  //   int dateTheProductWasRegistered = MyDateFormatter.getCalendarWeekBackwards(
-  //     DateTime.parse(product.registeredOn),
-  //   );
-  //   bool doesNotExistYetInThisSpecificWeek = false;
-  //   if (dateTheProductWasRegistered < callendarWeekBackwards) {
-  //     doesNotExistYetInThisSpecificWeek = true;
-  //   }
-
-  //   // Returns formatted Widget like "15 - 5" (Original Qty - Sold Qty)
-  //   return ListTile(
-  //     title: MyText(
-  //       text: product.name,
-  //       color: (doesNotExistYetInThisSpecificWeek)
-  //           ? myColorScheme.outlineVariant
-  //           : null,
-  //     ),
-  //     trailing: Container(
-  //       width: width * 0.15,
-  //       alignment: Alignment.centerRight,
-  //       child: Row(
-  //         mainAxisAlignment: MainAxisAlignment.end,
-  //         children: [
-  //           MyText(
-  //             text: (!doesNotExistYetInThisSpecificWeek)
-  //                 ? "${beforeSoldQty.toStringAsFixed(0)}"
-  //                 : "",
-  //             color: (soldAmount != 0) ? myColorScheme.outline : null,
-  //           ),
-  //           MyText(
-  //             text: (soldAmount != 0)
-  //                 ? " - ${soldAmount.toStringAsFixed(0)}"
-  //                 : "",
-  //             color: Colors.red.shade100,
-  //           ),
-  //           // MyText(text: " = "),
-  //           // MyText(text: "${product.quantity.toStringAsFixed(0)}"),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  /// Calculates the original quantity before sales and returns a formatted trail string
-  Widget _getQuantityTrailText(
-    ProductModel? product,
-    List<Map<String, double>> weeklySales,
-  ) {
-    if (product == null) return SizedBox();
-
-    double soldAmount = 0.0;
-
-    // Safely search the sales list for this specific product's name
-    for (var saleMap in weeklySales) {
-      if (saleMap.containsKey(product.name)) {
-        soldAmount = saleMap[product.name] ?? 0.0;
-        break; // We found the product, no need to keep looping
-      }
-    }
-
-    // Check if the product even existed during this past week
-    int dateTheProductWasRegistered = MyDateFormatter.getCalendarWeekBackwards(
-      DateTime.parse(product.registeredOn),
-    );
-
-    bool doesNotExistYetInThisSpecificWeek =
-        dateTheProductWasRegistered < callendarWeekBackwards;
-
-    // Adaptive UI Logic variables
-    String leftText = "";
-    String rightText = "";
-    Color? leftColor;
-    Color? rightColor = Colors.red.shade100;
-
-    // Product didn't exist yet
-    if (doesNotExistYetInThisSpecificWeek) {
-      leftText = "";
-      rightText = "";
-    }
-    // THIS WEEK: Show the "Before - Sold" format (e.g., "15 - 5")
-    else if (callendarWeekBackwards == 1) {
-      double currentQty = product.quantity.toDouble();
-      double beforeSoldQty = currentQty + soldAmount;
-
-      leftText = (soldAmount != 0 || currentQty != 0)
-          ? beforeSoldQty.toStringAsFixed(0)
-          : "";
-      leftColor = (soldAmount != 0) ? myColorScheme.outline : null;
-      rightText = (soldAmount != 0)
-          ? " - ${soldAmount.toStringAsFixed(0)}"
-          : "";
-    }
-    // PAST WEEKS: Show the exact volume sold without faking the "Before" math (e.g., "Sold: 5")
-    else {
-      leftText = (soldAmount > 0) ? "Sold: " : "";
-      leftColor = myColorScheme.outline;
-      rightText = (soldAmount > 0) ? soldAmount.toStringAsFixed(0) : "";
-      rightColor = (soldAmount > 0) ? Colors.red.shade100 : null;
-    }
-
-    return ListTile(
-      title: MyText(
-        text: product.name,
-        color: (doesNotExistYetInThisSpecificWeek)
-            ? myColorScheme.outlineVariant
-            : null,
-      ),
-      trailing: Container(
-        width: width * 0.25,
-        alignment: Alignment.centerRight,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            MyText(text: leftText, color: leftColor),
-            MyText(text: rightText, color: rightColor),
-          ],
         ),
       ),
     );
