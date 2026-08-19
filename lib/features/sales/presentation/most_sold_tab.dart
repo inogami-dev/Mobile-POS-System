@@ -11,7 +11,8 @@ import 'package:pos_system/features/inventory/presentation/state_management/all_
 import 'package:pos_system/features/products/data/model/product_model.dart';
 import 'package:pos_system/features/sales/domain/enum_sales_view_option.dart';
 import 'package:pos_system/features/sales/presentation/state_management/sales_controller.dart';
-import 'package:pos_system/features/sales/presentation/widgets/most_sold_tab_widgets/inventory_deduction_tile.dart';
+import 'package:pos_system/features/sales/presentation/widgets/most_sold_tab_widgets/inventory_deduction_list.dart';
+import 'package:pos_system/features/sales/presentation/widgets/most_sold_tab_widgets/inventory_deduction_list_title.dart';
 import 'package:pos_system/features/sales/presentation/widgets/piechart/piechart_helpers.dart';
 
 class MyPieChartTab extends ConsumerStatefulWidget {
@@ -206,29 +207,24 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                           ),
                         ),
 
-                        // List of all items based on the inventory an sold items
-                        MyTooltip(
-                          message:
-                              "The RED colored number indicates the sold quantity from the inventory.",
-                          widthPercentage: 0.65,
-                          triggerMode: TooltipTriggerMode.tap,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              MyText(
-                                text:
-                                    "Inventory deduction ${curretlyInViewChart}",
-                              ),
-                              SizedBox(width: 16),
-                              HugeIcon(
-                                icon: HugeIcons.strokeRoundedInformationCircle,
-                                color: myColorScheme.outlineVariant,
-                                size: kDefaultFontSize + 6,
-                              ),
-                            ],
-                          ),
+                        InventoryDeductionListTitle(
+                          myColorScheme: myColorScheme,
+                          curretlyInViewChart: curretlyInViewChart,
                         ),
-                        soldProductsListBuilder(height, inventoryState),
+                        // soldProductsListBuilder(height, inventoryState),
+                        InventoryDeductionList(
+                          width: width,
+                          height: height,
+                          listOfProductsScrollController:
+                              listOfProductsScrollController,
+                          myColorScheme: myColorScheme,
+                          thumbColor: thumbColor,
+                          trackColor: trackColor,
+                          inventory: inventoryState.value ?? [],
+                          salesBaseOnCurrentlyInViewWeek:
+                              salesBaseOnCurrentlyInViewWeek,
+                          callendarWeekBackwards: callendarWeekBackwards,
+                        ),
                       ],
                     ),
             ),
@@ -238,39 +234,39 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
     );
   }
 
-  MyContainer soldProductsListBuilder(
-    double height,
-    AsyncValue<List<ProductModel>> inventoryState,
-  ) {
-    return MyContainer(
-      width: width * 0.9,
-      height: height * 0.4,
-      borderColor: myColorScheme.outlineVariant,
-      child: MyScrollBar(
-        controller: listOfProductsScrollController,
-        thumbColor: thumbColor,
-        trackColor: trackColor,
-        isThumbVisible: null,
-        isTrackVisible: null,
-        padding: EdgeInsets.only(right: -8),
-        child: ListView.builder(
-          controller: listOfProductsScrollController,
-          itemExtent: 32,
-          itemCount: inventoryState.value?.length ?? 0,
-          itemBuilder: (context, index) {
-            final product = inventoryState.value?[index];
+  // MyContainer soldProductsListBuilder(
+  //   double height,
+  //   AsyncValue<List<ProductModel>> inventoryState,
+  // ) {
+  //   return MyContainer(
+  //     width: width * 0.9,
+  //     height: height * 0.4,
+  //     borderColor: myColorScheme.outlineVariant,
+  //     child: MyScrollBar(
+  //       controller: listOfProductsScrollController,
+  //       thumbColor: thumbColor,
+  //       trackColor: trackColor,
+  //       isThumbVisible: null,
+  //       isTrackVisible: null,
+  //       padding: EdgeInsets.only(right: -8),
+  //       child: ListView.builder(
+  //         controller: listOfProductsScrollController,
+  //         itemExtent: 32,
+  //         itemCount: inventoryState.value?.length ?? 0,
+  //         itemBuilder: (context, index) {
+  //           final product = inventoryState.value?[index];
 
-            return InventoryDeductionTile(
-              product: product,
-              weeklySales: salesBaseOnCurrentlyInViewWeek,
-              callendarWeekBackwards: callendarWeekBackwards,
-              width: width,
-            );
-          },
-        ),
-      ),
-    );
-  }
+  //           return InventoryDeductionTile(
+  //             product: product,
+  //             weeklySales: salesBaseOnCurrentlyInViewWeek,
+  //             callendarWeekBackwards: callendarWeekBackwards,
+  //             width: width,
+  //           );
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
 
   MyTooltip currentCardInViewTitle() {
     return MyTooltip(
