@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,6 +47,9 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
   String scannedBarcode = "";
   String pickedProductImage = "";
   bool isAnExistingProduct = false;
+
+  // This will cached the pickedImage to avoid the issue of the pickedImage blinking every time a repaint occurs.
+  Uint8List? decodedPickedImage;
 
   // For Comparison when updating an existing product
   String xpicture = "";
@@ -135,6 +139,11 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
             // xpicture = newImage;
             buttonColor = null;
           }
+
+          // Store a decoded version of the picked image everytime a new image was picked.
+          decodedPickedImage = MyImageProcessor.decodeStringToUint8List(
+            pickedProductImage,
+          );
         });
       }
     });
@@ -248,10 +257,7 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
                                     child: MyImageDisplayer(
                                       displaySize: width * 0.8,
                                       isOval: false,
-                                      imageInBase64Format:
-                                          MyImageProcessor.decodeStringToUint8List(
-                                            pickedProductImage,
-                                          ),
+                                      imageInBase64Format: decodedPickedImage,
                                     ),
                                   ),
                                 ),
