@@ -137,4 +137,40 @@ class MyDateFormatter {
 
   //   return "$earlyYear or $lateYear";
   // }
+
+  /// Identifies which calendar week a date falls into backwards from today.
+  /// (This Week = 1, Last Week = 2, Two Weeks Ago = 3, etc.)
+  static int getCalendarWeekBackwards(DateTime pastDate) {
+    final DateTime now = DateTime.now();
+
+    // Snap 'now' back to the start of the current week (Monday at midnight)
+    final DateTime currentMonday = DateTime(
+      now.year,
+      now.month,
+      now.day - (now.weekday - 1),
+    );
+
+    // Snap the 'pastDate' back to the start of its own week (Monday at midnight)
+    final DateTime pastMonday = DateTime(
+      pastDate.year,
+      pastDate.month,
+      pastDate.day - (pastDate.weekday - 1),
+    );
+
+    // Calculate the difference in days between the two Mondays
+    final int differenceInDays = currentMonday.difference(pastMonday).inDays;
+
+    // Divide by 7 to get the week gap, then add 1 so "This Week" starts at 1
+    return (differenceInDays ~/ 7) + 1;
+  }
+
+  // not yet tested as of Aug 19, 2026
+  /// Converts the backward week integer into a calendar month integer.
+  /// (Weeks 1-4 = Month 1, Weeks 5-8 = Month 2, etc.)
+  static int getCalendarMonthBackwards(int weekInteger) {
+    if (weekInteger <= 0) return 1; // Failsafe for future dates
+
+    // Subtract 1 from the week, divide by 4 (assuming a 4-week month standard), and add 1
+    return ((weekInteger - 1) ~/ 4) + 1;
+  }
 }

@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:pos_system/core/utilities/date_formatter.dart';
 import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/container.dart';
 import 'package:pos_system/core/widgets/scrollbar.dart';
@@ -24,6 +25,7 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
   //
   double totalNumberOfItemsSoldThisWeek = 0;
   String curretlyInViewChart = "This Week";
+  int callendarWeekBackwards = 1;
   List<Map<String, double>> salesBaseOnCurrentlyInViewWeek = [];
 
   // Layout Fields
@@ -72,12 +74,14 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
             .getMostSoldProductsThisWeekInMapFormat(
               salesToRetrieve: SalesToRetrieve.ThisWeek,
             );
-        // To initialize totalNumberOfItemsSoldThisWeek
+
+        // To initialize default variables
         if (salesThisWeek.isNotEmpty && totalNumberOfItemsSoldThisWeek == 0) {
           totalNumberOfItemsSoldThisWeek = salesThisWeek.fold<double>(
             0.0,
             (sum, item) => sum + item.values.first,
           );
+          salesBaseOnCurrentlyInViewWeek = salesThisWeek;
         }
 
         final salesPreviousWeek = ref
@@ -131,7 +135,7 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                               onSelectedItemChanged: (value) {
                                 if (value == 0) {
                                   setState(() {
-                                    curretlyInViewChart = "two weeks ago";
+                                    curretlyInViewChart = "Two Weeks Ago";
                                     totalNumberOfItemsSoldThisWeek =
                                         salesTwoWeeksAgo.fold<double>(
                                           0.0,
@@ -140,10 +144,11 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                                         );
                                     salesBaseOnCurrentlyInViewWeek =
                                         salesTwoWeeksAgo;
+                                    callendarWeekBackwards = 3;
                                   });
                                 } else if (value == 1) {
                                   setState(() {
-                                    curretlyInViewChart = "previous week";
+                                    curretlyInViewChart = "Previous Week";
                                     totalNumberOfItemsSoldThisWeek =
                                         salesPreviousWeek.fold<double>(
                                           0.0,
@@ -152,10 +157,11 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                                         );
                                     salesBaseOnCurrentlyInViewWeek =
                                         salesPreviousWeek;
+                                    callendarWeekBackwards = 2;
                                   });
                                 } else if (value == 2) {
                                   setState(() {
-                                    curretlyInViewChart = "this week";
+                                    curretlyInViewChart = "This Week";
                                     totalNumberOfItemsSoldThisWeek =
                                         salesThisWeek.fold<double>(
                                           0.0,
@@ -164,6 +170,7 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                                         );
                                     salesBaseOnCurrentlyInViewWeek =
                                         salesThisWeek;
+                                    callendarWeekBackwards = 1;
                                   });
                                 }
                               },
@@ -201,7 +208,27 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
 
                         // List of all items based on the inventory an sold items
                         // TODO
-                        MyText(text: "Sold Products ${curretlyInViewChart}"),
+                        MyTooltip(
+                          message:
+                              "The RED colored number indicates the sold quantity from the inventory.",
+                          widthPercentage: 0.65,
+                          triggerMode: TooltipTriggerMode.tap,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              MyText(
+                                text:
+                                    "Inventory deduction ${curretlyInViewChart}",
+                              ),
+                              SizedBox(width: 16),
+                              HugeIcon(
+                                icon: HugeIcons.strokeRoundedInformationCircle,
+                                color: myColorScheme.outlineVariant,
+                                size: kDefaultFontSize + 6,
+                              ),
+                            ],
+                          ),
+                        ),
                         soldProductsListBuilder(height, inventoryState),
                       ],
                     ),
@@ -234,19 +261,78 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
           itemBuilder: (context, index) {
             final product = inventoryState.value?[index];
 
-            return ListTile(
-              title: MyText(text: product?.name ?? "Unknown Product"),
-              // trailing: MyText(text: trail),
-              trailing: _getQuantityTrailText(
-                product,
-                salesBaseOnCurrentlyInViewWeek,
-              ),
+            return _getQuantityTrailText(
+              product,
+              salesBaseOnCurrentlyInViewWeek,
             );
           },
         ),
       ),
     );
   }
+
+  // /// Calculates the original quantity before sales and returns a formatted trail string
+  // Widget _getQuantityTrailText(
+  //   ProductModel? product,
+  //   List<Map<String, double>> weeklySales,
+  // ) {
+  //   if (product == null) return SizedBox();
+
+  //   double soldAmount = 0.0;
+
+  //   // Safely search the sales list for this specific product's name
+  //   for (var saleMap in weeklySales) {
+  //     if (saleMap.containsKey(product.name)) {
+  //       soldAmount = saleMap[product.name] ?? 0.0;
+  //       break; // We found the product, no need to keep looping
+  //     }
+  //   }
+
+  //   // Current inventory quantity + what was sold
+  //   double currentQty = product.quantity.toDouble();
+  //   double beforeSoldQty = currentQty + soldAmount;
+
+  //   int dateTheProductWasRegistered = MyDateFormatter.getCalendarWeekBackwards(
+  //     DateTime.parse(product.registeredOn),
+  //   );
+  //   bool doesNotExistYetInThisSpecificWeek = false;
+  //   if (dateTheProductWasRegistered < callendarWeekBackwards) {
+  //     doesNotExistYetInThisSpecificWeek = true;
+  //   }
+
+  //   // Returns formatted Widget like "15 - 5" (Original Qty - Sold Qty)
+  //   return ListTile(
+  //     title: MyText(
+  //       text: product.name,
+  //       color: (doesNotExistYetInThisSpecificWeek)
+  //           ? myColorScheme.outlineVariant
+  //           : null,
+  //     ),
+  //     trailing: Container(
+  //       width: width * 0.15,
+  //       alignment: Alignment.centerRight,
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.end,
+  //         children: [
+  //           MyText(
+  //             text: (!doesNotExistYetInThisSpecificWeek)
+  //                 ? "${beforeSoldQty.toStringAsFixed(0)}"
+  //                 : "",
+  //             color: (soldAmount != 0) ? myColorScheme.outline : null,
+  //           ),
+  //           MyText(
+  //             text: (soldAmount != 0)
+  //                 ? " - ${soldAmount.toStringAsFixed(0)}"
+  //                 : "",
+  //             color: Colors.red.shade100,
+  //           ),
+  //           // MyText(text: " = "),
+  //           // MyText(text: "${product.quantity.toStringAsFixed(0)}"),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   /// Calculates the original quantity before sales and returns a formatted trail string
   Widget _getQuantityTrailText(
@@ -265,24 +351,63 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
       }
     }
 
-    // Current inventory quantity + what was sold
-    double currentQty = product.quantity.toDouble();
-    double beforeSoldQty = currentQty + soldAmount;
+    // Check if the product even existed during this past week
+    int dateTheProductWasRegistered = MyDateFormatter.getCalendarWeekBackwards(
+      DateTime.parse(product.registeredOn),
+    );
 
-    // Returns formatted Widget like "15 - 5" (Original Qty - Sold Qty)
-    return Container(
-      width: width * 0.15,
-      // color: Colors.amber,
-      alignment: Alignment.centerRight,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          MyText(text: "${beforeSoldQty.toStringAsFixed(0)} - "),
-          MyText(
-            text: "${soldAmount.toStringAsFixed(0)}",
-            color: Colors.red.shade100,
-          ),
-        ],
+    bool doesNotExistYetInThisSpecificWeek =
+        dateTheProductWasRegistered < callendarWeekBackwards;
+
+    // Adaptive UI Logic variables
+    String leftText = "";
+    String rightText = "";
+    Color? leftColor;
+    Color? rightColor = Colors.red.shade100;
+
+    // Product didn't exist yet
+    if (doesNotExistYetInThisSpecificWeek) {
+      leftText = "";
+      rightText = "";
+    }
+    // THIS WEEK: Show the "Before - Sold" format (e.g., "15 - 5")
+    else if (callendarWeekBackwards == 1) {
+      double currentQty = product.quantity.toDouble();
+      double beforeSoldQty = currentQty + soldAmount;
+
+      leftText = (soldAmount != 0 || currentQty != 0)
+          ? beforeSoldQty.toStringAsFixed(0)
+          : "";
+      leftColor = (soldAmount != 0) ? myColorScheme.outline : null;
+      rightText = (soldAmount != 0)
+          ? " - ${soldAmount.toStringAsFixed(0)}"
+          : "";
+    }
+    // PAST WEEKS: Show the exact volume sold without faking the "Before" math (e.g., "Sold: 5")
+    else {
+      leftText = (soldAmount > 0) ? "Sold: " : "";
+      leftColor = myColorScheme.outline;
+      rightText = (soldAmount > 0) ? soldAmount.toStringAsFixed(0) : "";
+      rightColor = (soldAmount > 0) ? Colors.red.shade100 : null;
+    }
+
+    return ListTile(
+      title: MyText(
+        text: product.name,
+        color: (doesNotExistYetInThisSpecificWeek)
+            ? myColorScheme.outlineVariant
+            : null,
+      ),
+      trailing: Container(
+        width: width * 0.25,
+        alignment: Alignment.centerRight,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            MyText(text: leftText, color: leftColor),
+            MyText(text: rightText, color: rightColor),
+          ],
+        ),
       ),
     );
   }
