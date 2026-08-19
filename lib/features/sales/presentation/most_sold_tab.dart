@@ -24,6 +24,7 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
   //
   double totalNumberOfItemsSoldThisWeek = 0;
   String curretlyInViewChart = "This Week";
+  List<Map<String, double>> salesBaseOnCurrentlyInViewWeek = [];
 
   // Layout Fields
   late double width;
@@ -67,7 +68,7 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
 
         // Now that the data is loaded, safely read your calculated list!
         final salesThisWeek = ref
-            .read(salesControllerProvider.notifier)
+            .watch(salesControllerProvider.notifier)
             .getMostSoldProductsThisWeekInMapFormat(
               salesToRetrieve: SalesToRetrieve.ThisWeek,
             );
@@ -137,6 +138,8 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                                           (sum, item) =>
                                               sum + item.values.first,
                                         );
+                                    salesBaseOnCurrentlyInViewWeek =
+                                        salesTwoWeeksAgo;
                                   });
                                 } else if (value == 1) {
                                   setState(() {
@@ -147,6 +150,8 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                                           (sum, item) =>
                                               sum + item.values.first,
                                         );
+                                    salesBaseOnCurrentlyInViewWeek =
+                                        salesPreviousWeek;
                                   });
                                 } else if (value == 2) {
                                   setState(() {
@@ -157,6 +162,8 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                                           (sum, item) =>
                                               sum + item.values.first,
                                         );
+                                    salesBaseOnCurrentlyInViewWeek =
+                                        salesThisWeek;
                                   });
                                 }
                               },
@@ -195,39 +202,88 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                         // List of all items based on the inventory an sold items
                         // TODO
                         MyText(text: "Sold Products ${curretlyInViewChart}"),
-                        MyContainer(
-                          width: width * 0.9,
-                          height: height * 0.4,
-                          borderColor: myColorScheme.outlineVariant,
-                          child: MyScrollBar(
-                            controller: listOfProductsScrollController,
-                            thumbColor: thumbColor,
-                            trackColor: trackColor,
-                            isThumbVisible: null,
-                            isTrackVisible: null,
-                            padding: EdgeInsets.only(right: -8),
-                            child: ListView.builder(
-                              controller: listOfProductsScrollController,
-                              itemExtent: 32,
-                              itemCount: inventoryState.value?.length ?? 0,
-                              itemBuilder: (context, index) {
-                                final product = inventoryState.value?[index];
-                                return ListTile(
-                                  title: MyText(text: product?.name ?? ""),
-                                  trailing: MyText(
-                                    text: product?.quantity.toString() ?? "",
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
+                        soldProductsListBuilder(height, inventoryState),
                       ],
                     ),
             ),
           ),
         );
       },
+    );
+  }
+
+  MyContainer soldProductsListBuilder(
+    double height,
+    AsyncValue<List<ProductModel>> inventoryState,
+  ) {
+    return MyContainer(
+      width: width * 0.9,
+      height: height * 0.4,
+      borderColor: myColorScheme.outlineVariant,
+      child: MyScrollBar(
+        controller: listOfProductsScrollController,
+        thumbColor: thumbColor,
+        trackColor: trackColor,
+        isThumbVisible: null,
+        isTrackVisible: null,
+        padding: EdgeInsets.only(right: -8),
+        child: ListView.builder(
+          controller: listOfProductsScrollController,
+          itemExtent: 32,
+          itemCount: inventoryState.value?.length ?? 0,
+          itemBuilder: (context, index) {
+            final product = inventoryState.value?[index];
+
+            return ListTile(
+              title: MyText(text: product?.name ?? "Unknown Product"),
+              // trailing: MyText(text: trail),
+              trailing: _getQuantityTrailText(
+                product,
+                salesBaseOnCurrentlyInViewWeek,
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  /// Calculates the original quantity before sales and returns a formatted trail string
+  Widget _getQuantityTrailText(
+    ProductModel? product,
+    List<Map<String, double>> weeklySales,
+  ) {
+    if (product == null) return SizedBox();
+
+    double soldAmount = 0.0;
+
+    // Safely search the sales list for this specific product's name
+    for (var saleMap in weeklySales) {
+      if (saleMap.containsKey(product.name)) {
+        soldAmount = saleMap[product.name] ?? 0.0;
+        break; // We found the product, no need to keep looping
+      }
+    }
+
+    // Current inventory quantity + what was sold
+    double currentQty = product.quantity.toDouble();
+    double beforeSoldQty = currentQty + soldAmount;
+
+    // Returns formatted Widget like "15 - 5" (Original Qty - Sold Qty)
+    return Container(
+      width: width * 0.15,
+      // color: Colors.amber,
+      alignment: Alignment.centerRight,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          MyText(text: "${beforeSoldQty.toStringAsFixed(0)} - "),
+          MyText(
+            text: "${soldAmount.toStringAsFixed(0)}",
+            color: Colors.red.shade100,
+          ),
+        ],
+      ),
     );
   }
 
