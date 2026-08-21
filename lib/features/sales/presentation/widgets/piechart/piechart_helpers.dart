@@ -121,9 +121,11 @@ List<PieChartSectionData> myPieChartItterator({
             : sliceColor, // Apply the dynamic color here
         badgeWidget: MyText(
           text: "${percentage.toStringAsFixed(0)}%",
+          fontSize: kDefaultFontSize - ((percentage <= 10) ? 2 : 0),
           fontWeight: FontWeight.bold,
           color: myColorScheme.surface,
         ),
+        badgePositionOffset: (percentage <= 10) ? 0.8 : null,
       ),
     );
   }

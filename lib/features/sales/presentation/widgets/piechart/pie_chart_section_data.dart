@@ -11,6 +11,7 @@ PieChartSectionData myPieChartSectionData({
   Color? titleFontColor,
   FontWeight titleFontWeight = FontWeight.w600,
   Widget? badgeWidget,
+  double? badgePositionOffset,
   double? radius,
 }) {
   return PieChartSectionData(
@@ -27,5 +28,6 @@ PieChartSectionData myPieChartSectionData({
     cornerRadius: cornerRadius,
     titlePositionPercentageOffset: titlePositionPercentageOffset,
     badgeWidget: badgeWidget,
+    badgePositionPercentageOffset: badgePositionOffset,
   );
 }

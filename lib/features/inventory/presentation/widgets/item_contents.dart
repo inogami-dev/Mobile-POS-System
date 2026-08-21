@@ -198,12 +198,12 @@ class MyItemContents extends StatelessWidget {
                   if (isExpanded)
                     MyText(
                       text: "Cost: ₱ ${product.cost.toStringAsFixed(2)}",
-                      fontSize: kDefaultFontSize - 1,
+                      fontSize: kDefaultFontSize - 1.6,
                     ),
                   if (isExpanded)
                     MyText(
                       text: "Category: ₱ ${product.category}",
-                      fontSize: kDefaultFontSize - 1,
+                      fontSize: kDefaultFontSize - 1.6,
                     ),
 
                   // Spacer(),

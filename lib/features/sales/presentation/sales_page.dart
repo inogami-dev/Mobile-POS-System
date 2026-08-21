@@ -58,12 +58,12 @@ class _MySalesPageState extends State<MySalesPage> {
               Container(
                 width: width * 0.8,
                 height: height * 0.3,
-                color: Colors.orange,
+                // color: Colors.orange,
               ),
               Container(
                 width: width * 0.8,
                 height: height * 0.3,
-                color: Colors.green,
+                // color: Colors.green,
               ),
             ],
             childrenTabIcons: [
@@ -72,13 +72,21 @@ class _MySalesPageState extends State<MySalesPage> {
                 icon: HugeIcon(icon: HugeIcons.strokeRoundedPieChart),
               ),
               MyTab(
-                text: "Weekly Trend",
-                icon: HugeIcon(icon: HugeIcons.strokeRoundedChartIncrease),
+                text: "Receipts",
+                icon: HugeIcon(icon: HugeIcons.strokeRoundedReceiptText),
               ),
               MyTab(
                 text: "Profit/Loss",
-                icon: HugeIcon(icon: HugeIcons.strokeRoundedChartGantt),
+                icon: HugeIcon(icon: HugeIcons.strokeRoundedCoins01),
               ),
+              // MyTab(
+              //   text: "Weekly Trend",
+              //   icon: HugeIcon(icon: HugeIcons.strokeRoundedChartIncrease),
+              // ),
+              // MyTab(
+              //   text: "Profit/Loss",
+              //   icon: HugeIcon(icon: HugeIcons.strokeRoundedChartGantt),
+              // ),
             ],
           ),
           //   ],
