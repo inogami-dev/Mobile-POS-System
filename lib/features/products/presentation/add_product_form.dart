@@ -42,6 +42,7 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
   TextEditingController productNameController = TextEditingController();
   TextEditingController productDescriptionController = TextEditingController();
   TextEditingController productPriceController = TextEditingController();
+  TextEditingController productCostController = TextEditingController();
   TextEditingController productQuantityController = TextEditingController();
   DateTime? expirationDate;
   String scannedBarcode = "";
@@ -57,6 +58,7 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
   String xname = "";
   String xdescription = "";
   double xprice = 0;
+  double xcost = 0;
   int xquantity = 0;
   String? xexpirationDate = "";
 
@@ -84,6 +86,7 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
       scannedBarcode = widget.product!.barCode;
       productNameController.text = widget.product!.name;
       productDescriptionController.text = widget.product!.description;
+      productCostController.text = widget.product!.cost.toString();
       productPriceController.text = widget.product!.price.toString();
       productQuantityController.text = widget.product!.quantity.toString();
       expirationDate = DateTime.tryParse(widget.product!.expirationDate!);
@@ -317,6 +320,12 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
                     textController: productDescriptionController,
                   ),
                   MyTextfield(
+                    labelText: "Cost",
+                    textInputType: TextInputType.number,
+                    prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedMoney04),
+                    textController: productCostController,
+                  ),
+                  MyTextfield(
                     labelText: "Price",
                     textInputType: TextInputType.number,
                     prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedMoney04),
@@ -392,12 +401,16 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
                                           .text
                                           .trim(),
                                       barCode: scannedBarcode.trim(),
+                                      cost: double.parse(
+                                        productCostController.text.trim(),
+                                      ),
                                       price: double.parse(
                                         productPriceController.text.trim(),
                                       ),
                                       quantity: int.parse(
                                         productQuantityController.text.trim(),
                                       ),
+                                      category: "",
                                       picture: pickedProductImage,
                                       expirationDate: (expirationDate != null)
                                           ? expirationDate.toString()
@@ -434,9 +447,11 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
                                   productName: productNameController.text,
                                   productDescription:
                                       productDescriptionController.text,
+                                  productCost: productCostController.text,
                                   productPrice: productPriceController.text,
                                   productQuantity:
                                       productQuantityController.text,
+                                  productCategory: "",
                                   expirationDate: (expirationDate != null)
                                       ? expirationDate.toString()
                                       : "",

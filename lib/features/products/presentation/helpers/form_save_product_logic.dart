@@ -13,8 +13,10 @@ Future<void> saveProductLogic(
   required WidgetRef ref,
   required String productName,
   required String productDescription,
+  required String productCost,
   required String productPrice,
   required String productQuantity,
+  required String productCategory,
   required String? expirationDate,
   required String scannedBarcode,
   required String pickedProductImage,
@@ -52,8 +54,10 @@ Future<void> saveProductLogic(
         storeId: storeID,
         description: productDescription.trim(),
         barCode: scannedBarcode,
+        cost: double.parse(productCost.trim()),
         price: double.parse(productPrice.trim()),
         quantity: int.parse(productQuantity.trim()),
+        category: productCategory,
         picture: pickedProductImage,
         expirationDate: (expirationDate == null)
             ? ""

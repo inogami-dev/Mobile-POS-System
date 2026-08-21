@@ -29,6 +29,26 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
     height = MediaQuery.of(context).size.height;
     myColor = Theme.of(context).colorScheme;
 
+    // final xs = ref.read(allListedProductsProvider).value;
+    // if (xs != null) {
+    //   log("XS is not null");
+    //   for (var x in xs) {
+    //      if (x.cost == null || x.cost == 0) {
+    //     final repo = ref.read(
+    //       productRepositoryProvider(
+    //         ref
+    //             .read(currentLoggedInUserControllerProvider)
+    //             .value!
+    //             .currentStoreInView,
+    //       ),
+    //     );
+    //     repo.update(x.id!, x.copyWith(cost: x.price - 5));
+    //     repo.update(x.id!, x.copyWith(category: ""));
+    //     log("Successful cost integration: ${x.id}");
+    //     }
+    //   }
+    // }
+
     // For inventory options bar container
     final bool isInventoryPageVisible =
         ref.watch(rootScaffoldStateProvider) == 2;
