@@ -83,6 +83,9 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
       registeredOn = widget.product!.registeredOn;
       registeredBy = widget.product!.registeredBy;
       pickedProductImage = widget.product!.picture;
+      decodedPickedImage = MyImageProcessor.decodeStringToUint8List(
+        pickedProductImage,
+      );
       scannedBarcode = widget.product!.barCode;
       productNameController.text = widget.product!.name;
       productDescriptionController.text = widget.product!.description;
