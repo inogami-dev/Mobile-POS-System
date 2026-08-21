@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:pos_system/core/utilities/date_formatter.dart';
+import 'package:pos_system/core/utilities/dimension.dart';
 import 'package:pos_system/core/widgets/image_displayer.dart';
 import 'package:pos_system/core/utilities/image_picker.dart';
 import 'package:pos_system/core/widgets/bottom_sheet_decorated.dart';
@@ -60,7 +61,7 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
   double xprice = 0;
   double xcost = 0;
   int xquantity = 0;
-  String? xexpirationDate = "";
+  String xexpirationDate = "";
 
   // Layout Fields
   late ColorScheme myColorScheme;
@@ -107,6 +108,7 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
     productNameController.addListener(isToBeUpdatedProductBeenAltered);
     productDescriptionController.addListener(isToBeUpdatedProductBeenAltered);
     productQuantityController.addListener(isToBeUpdatedProductBeenAltered);
+    productCostController.addListener(isToBeUpdatedProductBeenAltered);
     productPriceController.addListener(isToBeUpdatedProductBeenAltered);
   }
 
@@ -115,6 +117,8 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
     productNameController.dispose();
     productDescriptionController.dispose();
     productPriceController.dispose();
+    productCostController.dispose();
+    productCostController.removeListener(isToBeUpdatedProductBeenAltered);
     productQuantityController.dispose();
     productNameController.removeListener(isToBeUpdatedProductBeenAltered);
     productDescriptionController.removeListener(
@@ -127,9 +131,18 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
 
   @override
   Widget build(BuildContext context) {
-    width = MediaQuery.of(context).size.width;
-    height = MediaQuery.of(context).size.height;
+    width = MyDimensions.getWidth(context);
+    height = MyDimensions.getHeight(context);
     myColorScheme = Theme.of(context).colorScheme;
+
+    // if (FocusScope.of(context).hasFocus && isToBeUpdatedProductBeenAltered()) {
+    //   setState(() {
+    //     log(
+    //       "TTTTTTTTTTTTTTTTTTTTTTTT hasFocus: ${FocusScope.of(context).hasFocus} | been altered: ${isToBeUpdatedProductBeenAltered()}",
+    //     );
+    //     buttonColor = null;
+    //   });
+    // }
 
     // This is for if it is an OLD Product (already registered before)
     // if (widget.product == null) {
@@ -145,7 +158,6 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
             // xpicture = newImage;
             buttonColor = null;
           }
-
           // Store a decoded version of the picked image everytime a new image was picked.
           decodedPickedImage = MyImageProcessor.decodeStringToUint8List(
             pickedProductImage,
@@ -154,7 +166,7 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
       }
     });
 
-    // 1. SAFELY LISTEN FOR BARCODE SCANS
+    // SAFELY LISTEN FOR BARCODE SCANS
     ref.listen<String>(singleScanValueProvider, (previous, newBarcode) {
       if (newBarcode.isNotEmpty && widget.product == null) {
         // 2. Safely search for the product without crashing
@@ -530,7 +542,7 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
   /// This is for the Update not when adding new Product
   /// To prevent calling firebase whenever there is no change when updating.
   bool isToBeUpdatedProductBeenAltered() {
-    final tempExpDate = expirationDate ?? "";
+    String? tempExpDate = expirationDate?.toString() ?? "";
     if (widget.product != null) {
       log("01: ${productNameController.text}");
       log("02: ${xname}");
@@ -538,35 +550,39 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
       log("12: ${xdescription}");
       log("21: ${productPriceController.text}");
       log("22: ${xprice.toString()}");
+      log("21: ${productCostController.text}");
+      log("22: ${xcost.toString()}");
       log("31: ${productQuantityController.text}");
       log("32: ${xquantity.toString()}");
       log("41: ${tempExpDate}");
       log("42: ${xexpirationDate}");
       log("51: ${scannedBarcode}");
-      log("52: ${xbarCode}");
-      log("61: ${pickedProductImage.length}");
-      log("62: ${xpicture.length}");
+      log("52: ${xbarCode} \n");
+      log("61: ${pickedProductImage.substring(1, 10)}\n");
+      log("62: ${xpicture.substring(1, 10)}");
     }
-    if (pickedProductImage != xpicture ||
+    if (pickedProductImage.substring(1, 10) != xpicture.substring(1, 10) ||
         scannedBarcode != xbarCode ||
         productNameController.text != xname ||
         productDescriptionController.text != xdescription ||
         productPriceController.text != xprice.toString() ||
+        productCostController.text != xcost.toString() ||
         productQuantityController.text != xquantity.toString() ||
         tempExpDate != xexpirationDate) {
       setState(() => buttonColor = null);
       return true;
     }
+
     if (isAnExistingProduct) {
       setState(() => buttonColor = myColorScheme.outlineVariant);
     } else {
       setState(() => buttonColor = null);
     }
 
-    showMyAnimatedSnackBar(
-      context: context,
-      dataToDisplay: "No changes detected. Update is aborted.",
-    );
+    // showMyAnimatedSnackBar(
+    //   context: context,
+    //   dataToDisplay: "No changes detected. Update is aborted.",
+    // );
     hasAlreadyPressedSubmit = false;
 
     return false;
@@ -576,9 +592,10 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
     xpicture = widget.product?.picture ?? product.picture;
     xname = widget.product?.name ?? product.name;
     xdescription = widget.product?.description ?? product.description;
+    xcost = widget.product?.cost ?? product.cost;
     xprice = widget.product?.price ?? product.price;
     xquantity = widget.product?.quantity ?? product.quantity;
     xbarCode = widget.product?.barCode ?? product.barCode;
-    xexpirationDate = widget.product?.expirationDate ?? product.expirationDate;
+    xexpirationDate = widget.product?.expirationDate ?? product.expirationDate!;
   }
 }
