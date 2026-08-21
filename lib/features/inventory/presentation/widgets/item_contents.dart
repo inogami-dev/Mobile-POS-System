@@ -85,6 +85,7 @@ class MyItemContents extends StatelessWidget {
               ),
             ),
           ),
+
           // Price Tag
           Positioned(
             top: 2.5,
@@ -120,7 +121,7 @@ class MyItemContents extends StatelessWidget {
                 ),
               ),
               child: MyText(
-                text: "\$${product.price.toStringAsFixed(2)}",
+                text: "₱ ${product.price.toStringAsFixed(2)}",
                 fontWeight: FontWeight.w600,
                 fontSize: kDefaultFontSize + ((isExpanded) ? 4 : 0),
               ),
@@ -193,6 +194,18 @@ class MyItemContents extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 8),
+
+                  if (isExpanded)
+                    MyText(
+                      text: "Cost: ₱ ${product.cost.toStringAsFixed(2)}",
+                      fontSize: kDefaultFontSize - 1,
+                    ),
+                  if (isExpanded)
+                    MyText(
+                      text: "Category: ₱ ${product.category}",
+                      fontSize: kDefaultFontSize - 1,
+                    ),
+
                   // Spacer(),
                   Row(
                     children: [
