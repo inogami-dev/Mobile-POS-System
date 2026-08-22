@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:fl_chart/fl_chart.dart';
@@ -101,6 +102,11 @@ List<PieChartSectionData> myPieChartItterator({
     String formattedTitle =
         "${tempTitleFormat}\n(${price}x${item.values.first.toStringAsFixed(0)})\n${totalAmount}";
 
+    // This will prevent smaller percentage to be displayed in full info
+    if (i > (MyPiechartConstants.maxNumberOfFullTitleDisplayInPie)) {
+      formattedTitle = tempTitleFormat;
+    }
+
     if (tempTitleFormat == "Others") {
       formattedTitle = "Others\n${item.values.first.toStringAsFixed(0)}";
     }
@@ -121,7 +127,7 @@ List<PieChartSectionData> myPieChartItterator({
             : sliceColor, // Apply the dynamic color here
         badgeWidget: MyText(
           text: "${percentage.toStringAsFixed(0)}%",
-          fontSize: kDefaultFontSize - ((percentage <= 10) ? 2 : 0),
+          fontSize: kDefaultFontSize - fontSizeDecreaser(percentage),
           fontWeight: FontWeight.bold,
           color: myColorScheme.surface,
         ),
@@ -131,4 +137,13 @@ List<PieChartSectionData> myPieChartItterator({
   }
 
   return pie;
+}
+
+double fontSizeDecreaser(double percentage) {
+  if (percentage <= 3)
+    return 6;
+  else if (percentage <= 10)
+    return 2;
+  else
+    return 0;
 }
