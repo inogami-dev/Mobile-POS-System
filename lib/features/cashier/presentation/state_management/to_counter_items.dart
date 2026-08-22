@@ -117,14 +117,15 @@ class ToCounterItems extends _$ToCounterItems {
               quantity: product.quantity - item.quantity.toInt(),
             ),
           );
-      // Deduct the quantity from the inventory
-      ref
-          .read(allListedProductsProvider.notifier)
-          .updateProduct(
-            product.copyWith(
-              quantity: product.quantity - item.quantity.toInt(),
-            ),
-          );
+
+      // ref
+      //     .read(allListedProductsProvider.notifier)
+      //     .updateProduct(
+      //       product.copyWith(
+      //         quantity: product.quantity - item.quantity.toInt(),
+      //       ),
+      //     );
+
       // Clear the counter
       state = [];
       log("Success: ${item.name}");

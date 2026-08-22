@@ -57,34 +57,35 @@ class MyItemContents extends StatelessWidget {
           ),
 
           /// Edit Icon
-          Positioned(
-            top: 2.5,
-            right: 2.5,
-            child: GestureDetector(
-              onTap: () {
-                // showMyAnimatedSnackBar(context: context, dataToDisplay: "Test");
-                myAlertDialogue(
-                  context: context,
-                  alertTitle: "Confirm to Edit Product",
-                  alertContent: "Are you sure you want to edit this product?",
-                  onApprovalButtonText: "Edit",
-                  onApprovalPressed: () {
-                    Navigator.pop(context);
-                    MyNavigator.goTo(
-                      context,
-                      AddProductForm(product: product),
-                      animationType: MyAnimationType.slideFromBottom,
-                    );
-                  },
-                );
-              },
-              child: HugeIcon(
-                icon: HugeIcons.strokeRoundedEditTable,
-                color: Colors.white38,
-                size: (isExpanded) ? 32 : 24,
+          if (!isExpanded)
+            Positioned(
+              top: 2.5,
+              right: 2.5,
+              child: GestureDetector(
+                onTap: () {
+                  // showMyAnimatedSnackBar(context: context, dataToDisplay: "Test");
+                  myAlertDialogue(
+                    context: context,
+                    alertTitle: "Confirm to Edit Product",
+                    alertContent: "Are you sure you want to edit this product?",
+                    onApprovalButtonText: "Edit",
+                    onApprovalPressed: () {
+                      Navigator.pop(context);
+                      MyNavigator.goTo(
+                        context,
+                        AddProductForm(product: product),
+                        animationType: MyAnimationType.slideFromBottom,
+                      );
+                    },
+                  );
+                },
+                child: HugeIcon(
+                  icon: HugeIcons.strokeRoundedEditTable,
+                  color: Colors.white38,
+                  size: (isExpanded) ? 32 : 24,
+                ),
               ),
             ),
-          ),
 
           // Price Tag
           Positioned(
@@ -202,7 +203,7 @@ class MyItemContents extends StatelessWidget {
                     ),
                   if (isExpanded)
                     MyText(
-                      text: "Category: ₱ ${product.category}",
+                      text: "Category: ${product.category}",
                       fontSize: kDefaultFontSize - 1.6,
                     ),
 

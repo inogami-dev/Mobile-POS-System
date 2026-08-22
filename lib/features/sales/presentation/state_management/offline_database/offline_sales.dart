@@ -22,6 +22,7 @@ class MyOfflineSales extends _$MyOfflineSales {
     final salesRepo = ref.read(salesRepoProvider);
     List<SalesModel> tempRetrievedSales = [];
 
+    // A one time fetch only when the app is newly installed
     if (offlineSavedSalesData.isEmpty) {
       log("OFFLINE sales table is empty. Syncing all remote records...");
       tempRetrievedSales = await salesRepo.getAllRecords();

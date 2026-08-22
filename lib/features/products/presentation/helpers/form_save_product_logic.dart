@@ -68,15 +68,16 @@ Future<void> saveProductLogic(
 
       // Add the product to the database
       await productRepoRef.add(newProduct);
-      // Fetch the newly added product from the database
-      final fetchedNewlyAddedProduct = await productRepoRef.getByQuery(
-        field: "registeredOn",
-        value: newProduct.registeredOn,
-      );
-      // Add the newly added product to the cached list
-      ref
-          .read(allListedProductsProvider.notifier)
-          .addNewProductToTheList(fetchedNewlyAddedProduct.first);
+
+      // // Fetch the newly added product from the database
+      // final fetchedNewlyAddedProduct = await productRepoRef.getByQuery(
+      //   field: "registeredOn",
+      //   value: newProduct.registeredOn,
+      // );
+      // // Add the newly added product to the cached list
+      // ref
+      //     .read(allListedProductsProvider.notifier)
+      //     .addNewProductToTheList(fetchedNewlyAddedProduct.first);
 
       showMyAnimatedSnackBar(
         context: context,

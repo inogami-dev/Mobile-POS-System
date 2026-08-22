@@ -38,6 +38,58 @@ abstract class BaseRepository<T extends BaseEntity> {
 
   // Read -------------------------------------------------
 
+  // STREAM 1: Get a single document in real-time
+  Stream<T?> streamByID(String id) {
+    try {
+      return collection.doc(id).snapshots().map((snapshot) {
+        if (snapshot.exists && snapshot.data() != null) {
+          return fromMap(snapshot.data() as Map<String, dynamic>, snapshot.id);
+        }
+        return null;
+      });
+    } catch (e, stackTrace) {
+      log("Error streaming data by ID: $e\n$stackTrace");
+      rethrow;
+    }
+  }
+
+  // STREAM 2: Query the collection for multiple documents in real-time
+  Stream<List<T>> streamByQuery({
+    required String field,
+    required dynamic value,
+  }) {
+    try {
+      String searchTerm = value.toString().toLowerCase();
+
+      return collection
+          .where(field, isGreaterThanOrEqualTo: searchTerm)
+          .where(field, isLessThan: searchTerm + '\uf8ff')
+          .snapshots()
+          .map((querySnapshot) {
+            return querySnapshot.docs.map((doc) {
+              return fromMap(doc.data() as Map<String, dynamic>, doc.id);
+            }).toList();
+          });
+    } catch (e, stackTrace) {
+      log("Error streaming data by query: $e\n$stackTrace");
+      rethrow;
+    }
+  }
+
+  // STREAM 3: Listen to all records
+  Stream<List<T>> streamAllRecords() {
+    try {
+      return collection.snapshots().map((snapshot) {
+        return snapshot.docs.map((doc) {
+          return fromMap(doc.data() as Map<String, dynamic>, doc.id);
+        }).toList();
+      });
+    } catch (e, stackTrace) {
+      log("Error streaming all records: $e\n$stackTrace");
+      rethrow;
+    }
+  }
+
   // RESPONSIBILITY 1: Get a single document by its exact ID
   Future<T?> getByID(String id) async {
     try {

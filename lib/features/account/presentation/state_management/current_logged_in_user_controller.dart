@@ -40,16 +40,17 @@ Stream<User?> firebaseAuthStream(FirebaseAuthStreamRef ref) {
 @riverpod
 class CurrentLoggedInUserController extends _$CurrentLoggedInUserController {
   @override
-  Future<PersonalInfo?> build() async {
+  Stream<PersonalInfo?> build() {
     // Watch the auth stream. If it changes (login/logout), this whole build method re-runs!
     final authUser = ref.watch(firebaseAuthStreamProvider).value;
 
     // If there is no user logged into Firebase, return null immediately.
-    if (authUser == null) return null;
+    if (authUser == null) return Stream.value(null);
 
     // If there is a user, fetch their data from Firestore.
     final repository = ref.watch(myPersonalInfoRepoProvider);
-    return await repository.getByID(authUser.uid);
+    // return await repository.getByID(authUser.uid); // old one
+    return repository.streamByID(authUser.uid); // new one
   }
 
   // Inside CurrentLoggedInUserController

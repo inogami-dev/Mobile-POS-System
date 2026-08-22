@@ -75,10 +75,11 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
   @override
   void initState() {
     super.initState();
+    log("IS PRODUCT NOT NULL? ${widget.product != null}");
     // Update
     if (widget.product != null) {
       isAnExistingProduct = true;
-      setXFields(widget.product!);
+      initXFields(widget.product!);
       productID = widget.product!.id;
       storeID = widget.product!.storeId;
       registeredOn = widget.product!.registeredOn;
@@ -183,7 +184,7 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
           // 3. Update the UI and Controllers safely!
           setState(() {
             isAnExistingProduct = true;
-            setXFields(foundProduct);
+            initXFields(foundProduct);
 
             productID = foundProduct.id;
             storeID = foundProduct.storeId;
@@ -501,7 +502,8 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
       onTap: () async {
         expirationDate = await myDatePicker(context);
         log(expirationDate.toString());
-        isToBeUpdatedProductBeenAltered();
+
+        if (isAnExistingProduct) isToBeUpdatedProductBeenAltered();
         setState(() {});
       },
       child: MyContainer(
@@ -563,7 +565,7 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
       log("61: ${pickedProductImage.substring(1, 10)}\n");
       log("62: ${xpicture.substring(1, 10)}");
     }
-    if (pickedProductImage.substring(1, 10) != xpicture.substring(1, 10) ||
+    if (pickedProductImage != xpicture ||
         scannedBarcode != xbarCode ||
         productNameController.text != xname ||
         productDescriptionController.text != xdescription ||
@@ -590,7 +592,7 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
     return false;
   }
 
-  void setXFields(ProductModel product) {
+  void initXFields(ProductModel product) {
     xpicture = widget.product?.picture ?? product.picture;
     xname = widget.product?.name ?? product.name;
     xdescription = widget.product?.description ?? product.description;

@@ -89,9 +89,9 @@ class MyItem extends ConsumerWidget {
         .currentStoreInView;
     // Delete the product in the store that's currently in view
     await ref.read(productRepositoryProvider(storeID)).delete(product.id!);
-    ref
-        .read(allListedProductsProvider.notifier)
-        .removeProductFromTheList(product);
+    // ref
+    //     .read(allListedProductsProvider.notifier)
+    //     .removeProductFromTheList(product);
     log("Product ID await: ${product.id}");
 
     showMyAnimatedSnackBar(

@@ -40,15 +40,17 @@ Future<void> updateProductLogic(
       final storeID = currentlyLoggedInUser.currentStoreInView;
       final productRepoRef = ref.read(productRepositoryProvider(storeID));
 
-      ref
-          .read(allListedProductsProvider.notifier)
-          .removeProductFromTheList(product);
-      // Update the product to the database
+      // ref
+      //     .read(allListedProductsProvider.notifier)
+      //     .removeProductFromTheList(product);
+
+      // Update the product on the database
       await productRepoRef.update(product.id!, product);
-      // Update the newly added product to the cached list
-      ref
-          .read(allListedProductsProvider.notifier)
-          .addNewProductToTheList(product);
+
+      // // Update the newly added product to the cached list
+      // ref
+      //     .read(allListedProductsProvider.notifier)
+      //     .addNewProductToTheList(product);
 
       Navigator.pop(context);
       Navigator.pop(context);
