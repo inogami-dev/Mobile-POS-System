@@ -501,6 +501,7 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
       onTap: () async {
         expirationDate = await myDatePicker(context);
         log(expirationDate.toString());
+        isToBeUpdatedProductBeenAltered();
         setState(() {});
       },
       child: MyContainer(
@@ -543,6 +544,7 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
   /// To prevent calling firebase whenever there is no change when updating.
   bool isToBeUpdatedProductBeenAltered() {
     String? tempExpDate = expirationDate?.toString() ?? "";
+
     if (widget.product != null) {
       log("01: ${productNameController.text}");
       log("02: ${xname}");
