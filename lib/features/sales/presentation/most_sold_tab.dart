@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,7 +26,7 @@ class MyPieChartTab extends ConsumerStatefulWidget {
 
 class _MyPieChartState extends ConsumerState<MyPieChartTab> {
   //
-  double totalNumberOfItemsSoldThisWeek = 0;
+  double totalNumberOfItemsSold = 0;
   String curretlyInViewChart = "This Week";
   int callendarWeekBackwards = 1;
   List<Map<String, double>> salesBaseOnCurrentlyInViewWeek = [];
@@ -66,36 +68,61 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
       data: (salesData) {
         // Inventory's state is necessary here to check if the items were loaded or not yet. As they will be used together with the sales state later in the pie chart.
         if (inventoryState.isLoading) {
+          // setState(() {
+          //   salesBaseOnCurrentlyInViewWeek = salesThisWeek;
+          // });
+          log("INVENTORY IS LOADINGGGG...");
           return const Center(child: CircularProgressIndicator());
         }
 
-        // Now that the data is loaded, safely read your calculated list!
+        // Now that the data is loaded, safely read calculated list!
         final salesThisWeek = ref
             .watch(salesControllerProvider.notifier)
             .getMostSoldProductsThisWeekInMapFormat(
               salesToRetrieve: SalesToRetrieve.ThisWeek,
             );
 
-        // To initialize default variables
-        if (salesThisWeek.isNotEmpty && totalNumberOfItemsSoldThisWeek == 0) {
-          totalNumberOfItemsSoldThisWeek = salesThisWeek.fold<double>(
-            0.0,
-            (sum, item) => sum + item.values.first,
-          );
-          salesBaseOnCurrentlyInViewWeek = salesThisWeek;
-        }
+        // // To initialize default variables
+        // if (salesThisWeek.isNotEmpty && totalNumberOfItemsSoldThisWeek == 0) {
+        //   totalNumberOfItemsSoldThisWeek = salesThisWeek.fold<double>(
+        //     0.0,
+        //     (sum, item) => sum + item.values.first,
+        //   );
+        //   salesBaseOnCurrentlyInViewWeek = salesThisWeek;
+        // }
 
         final salesPreviousWeek = ref
-            .read(salesControllerProvider.notifier)
+            .watch(salesControllerProvider.notifier)
             .getMostSoldProductsThisWeekInMapFormat(
               salesToRetrieve: SalesToRetrieve.PreviousWeek,
             );
 
         final salesTwoWeeksAgo = ref
-            .read(salesControllerProvider.notifier)
+            .watch(salesControllerProvider.notifier)
             .getMostSoldProductsThisWeekInMapFormat(
               salesToRetrieve: SalesToRetrieve.TwoWeeksAgo,
             );
+
+        // 2. Dynamically pick the current week's sales list based on user selection index/state
+        // List<Map<String, double>> currentSalesList;
+        switch (callendarWeekBackwards) {
+          case 3:
+            // currentSalesList = salesTwoWeeksAgo;
+            salesBaseOnCurrentlyInViewWeek = salesTwoWeeksAgo;
+            break;
+          case 2:
+            salesBaseOnCurrentlyInViewWeek = salesPreviousWeek;
+            break;
+          // case 1:
+          default:
+            salesBaseOnCurrentlyInViewWeek = salesThisWeek;
+            break;
+        }
+        // 3. Compute total items sold dynamically on every build
+        totalNumberOfItemsSold = salesBaseOnCurrentlyInViewWeek.fold<double>(
+          0.0,
+          (sum, item) => sum + item.values.first,
+        );
 
         return MyScrollBar(
           controller: outerScrollController,
@@ -134,28 +161,29 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                             quarterTurns: -1,
                             child: ListWheelScrollView(
                               onSelectedItemChanged: (value) {
-                                if (value == 0) {
+                                if (value == 0 && salesTwoWeeksAgo.isNotEmpty) {
                                   setState(() {
                                     curretlyInViewChart = "Two Weeks Ago";
-                                    totalNumberOfItemsSoldThisWeek =
-                                        salesTwoWeeksAgo.fold<double>(
-                                          0.0,
-                                          (sum, item) =>
-                                              sum + item.values.first,
-                                        );
+                                    // totalNumberOfItemsSoldThisWeek =
+                                    //     salesTwoWeeksAgo.fold<double>(
+                                    //       0.0,
+                                    //       (sum, item) =>
+                                    //           sum + item.values.first,
+                                    //     );
                                     salesBaseOnCurrentlyInViewWeek =
                                         salesTwoWeeksAgo;
                                     callendarWeekBackwards = 3;
                                   });
-                                } else if (value == 1) {
+                                } else if (value == 1 &&
+                                    salesPreviousWeek.isNotEmpty) {
                                   setState(() {
                                     curretlyInViewChart = "Previous Week";
-                                    totalNumberOfItemsSoldThisWeek =
-                                        salesPreviousWeek.fold<double>(
-                                          0.0,
-                                          (sum, item) =>
-                                              sum + item.values.first,
-                                        );
+                                    // totalNumberOfItemsSoldThisWeek =
+                                    //     salesPreviousWeek.fold<double>(
+                                    //       0.0,
+                                    //       (sum, item) =>
+                                    //           sum + item.values.first,
+                                    //     );
                                     salesBaseOnCurrentlyInViewWeek =
                                         salesPreviousWeek;
                                     callendarWeekBackwards = 2;
@@ -163,12 +191,12 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
                                 } else if (value == 2) {
                                   setState(() {
                                     curretlyInViewChart = "This Week";
-                                    totalNumberOfItemsSoldThisWeek =
-                                        salesThisWeek.fold<double>(
-                                          0.0,
-                                          (sum, item) =>
-                                              sum + item.values.first,
-                                        );
+                                    // totalNumberOfItemsSoldThisWeek =
+                                    //     salesThisWeek.fold<double>(
+                                    //       0.0,
+                                    //       (sum, item) =>
+                                    //           sum + item.values.first,
+                                    //     );
                                     salesBaseOnCurrentlyInViewWeek =
                                         salesThisWeek;
                                     callendarWeekBackwards = 1;
@@ -246,12 +274,12 @@ class _MyPieChartState extends ConsumerState<MyPieChartTab> {
           SizedBox(width: 8),
           MyText(
             text: "Total number of items sold ${curretlyInViewChart}:  ",
-            fontSize: (totalNumberOfItemsSoldThisWeek > 99)
+            fontSize: (totalNumberOfItemsSold > 99)
                 ? kDefaultFontSize - 4
                 : kDefaultFontSize - 0.5,
           ),
           MyText(
-            text: totalNumberOfItemsSoldThisWeek.toStringAsFixed(0),
+            text: totalNumberOfItemsSold.toStringAsFixed(0),
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),

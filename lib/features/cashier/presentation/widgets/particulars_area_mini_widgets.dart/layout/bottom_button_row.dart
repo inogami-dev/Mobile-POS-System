@@ -170,7 +170,10 @@ class LayoutBottomButtonRow extends ConsumerWidget {
                     Navigator.pop(context);
 
                     // Add a little delay sp that the FocusScope will work properly here.
-                    Future.delayed(Duration(milliseconds: 50), () {
+                    Future.delayed(Duration(milliseconds: 200), () {
+                      // Close the checkout area
+                      ref.read(toCheckoutProvider.notifier).toggle(false);
+                      ref.invalidate(salesControllerProvider);
                       FocusScope.of(context).unfocus();
                     });
                   },

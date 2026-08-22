@@ -72,8 +72,10 @@ class SalesController extends _$SalesController {
         cashierId: loggedInUserID,
       );
 
-      // Save to Database
+      // Save to Database (ONLINE - Firebase)
       await salesRepo.add(newSale);
+      // Save to Database (OFFLINE)
+      ref.read(myOfflineSalesProvider.notifier).insertSales(newSale);
 
       // This grabs the current list of sales, adds the new one, and updates the state.
       if (state.hasValue) {

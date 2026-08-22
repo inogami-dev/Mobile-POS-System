@@ -38,6 +38,7 @@ class MyOfflineSales extends _$MyOfflineSales {
       tempRetrievedSales = snapshot.docs.map((doc) {
         return salesRepo.fromMap(doc.data() as Map<String, dynamic>, doc.id);
       }).toList();
+      log("The OFFLINE sales table is Syncing all remote records...");
     }
 
     // Save remote sales data offline
@@ -52,14 +53,20 @@ class MyOfflineSales extends _$MyOfflineSales {
   }
 
   Future<List<SalesModel>> getAllSales() async {
-    final salesDB = await DatabaseHelper().database;
-    List<Map> tempSalesQuery = await salesDB.query('sales');
-    List<SalesModel> sales = tempSalesQuery.map((sale) {
-      return mySalesModelFromJsonConverter(sale);
-    }).toList();
+    try {
+      final salesDB = await DatabaseHelper().database;
+      List<Map> tempSalesQuery = await salesDB.query('sales');
+      List<SalesModel> sales = tempSalesQuery.map((sale) {
+        return mySalesModelFromJsonConverter(sale);
+      }).toList();
 
-    sales.sort((a, b) => b.dateTime.compareTo(a.dateTime));
-    return sales;
+      sales.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+      log("getAllSales (offline) does work!");
+      return sales;
+    } catch (e) {
+      log("ERROR: $e");
+      rethrow;
+    }
   }
 
   Future<int> insertSales(SalesModel sales) async {
